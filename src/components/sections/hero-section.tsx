@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Download } from 'lucide-react';
+import { Spotlight } from '@/components/ui/spotlight';
+import { TextGenerateEffect } from '@/components/ui/text-generate-effect';
 
 export function HeroSection() {
   const version = process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0';
@@ -27,6 +29,10 @@ export function HeroSection() {
 
   return (
     <section className="relative pt-[128px] pb-[64px] md:pt-[192px] md:pb-[96px] overflow-hidden flex flex-col items-center justify-center min-h-[80vh]">
+      <Spotlight
+        className="-top-40 left-0 md:left-60 md:-top-20"
+        fill="rgba(245, 197, 24, 0.8)"
+      />
       {/* Radial Gradient Halo */}
       <div 
         className="absolute top-0 inset-x-0 h-full w-full pointer-events-none"
@@ -55,12 +61,12 @@ export function HeroSection() {
 
           <motion.div variants={item} className="w-[48px] h-[3px] bg-brand-yellow rounded-[2px] mb-8" />
 
-          <motion.p 
-            variants={item}
-            className="text-[1.125rem] leading-[1.7] text-brand-muted max-w-[65ch] mx-auto mb-12"
-          >
-            DawnDesk is a powerful, feature-rich desktop productivity suite. Combining Todo, Photo Editor, Project Manager, Calendar, and Notes into a single, cohesive, lightning-fast application.
-          </motion.p>
+          <motion.div variants={item} className="max-w-[65ch] mx-auto mb-12">
+            <TextGenerateEffect 
+              words="DawnDesk is a powerful, feature-rich desktop productivity suite. Combining Todo, Photo Editor, Project Manager, Calendar, and Notes into a single, cohesive, lightning-fast application."
+              className="text-[1.125rem] text-brand-muted"
+            />
+          </motion.div>
 
           <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link href="/download" tabIndex={-1}>

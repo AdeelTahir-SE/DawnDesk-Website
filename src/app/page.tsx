@@ -426,9 +426,9 @@ function UpcomingSection() {
     <section className="section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
         <div>
-          <p className="eyebrow text-[#c47800]">What's coming</p>
-          <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Upcoming features you'll love</h2>
-          <p className="mt-5 max-w-md leading-7 text-black/65">We're constantly building new features to make DawnDesk even better.</p>
+          <p className="eyebrow text-[#c47800]">What&apos;s coming</p>
+          <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Upcoming features you&apos;ll love</h2>
+          <p className="mt-5 max-w-md leading-7 text-black/65">We&apos;re constantly building new features to make DawnDesk even better.</p>
           <div className="mt-9 space-y-7">
             {upcoming.map((item) => (
               <div className="flex gap-5" key={item.version}>
@@ -454,7 +454,7 @@ function AudienceSection() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <p className="eyebrow text-[#c47800]">Built for everyone</p>
         <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Who is DawnDesk for?</h2>
-        <p className="mt-5 max-w-xl leading-7 text-black/65">Whether you're a freelancer, part of a team, or managing a business, DawnDesk adapts to you.</p>
+        <p className="mt-5 max-w-xl leading-7 text-black/65">Whether you&apos;re a freelancer, part of a team, or managing a business, DawnDesk adapts to you.</p>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {audiences.map(({ title, copy, icon: Icon, tone }) => <InfoCard key={title} title={title} copy={copy} icon={Icon} tone={tone} />)}
         </div>
@@ -473,7 +473,7 @@ function Testimonials() {
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {testimonials.map((item, index) => (
             <article className="rounded-md border border-black/10 bg-white p-8" key={item.name}>
-              <p className="min-h-28 text-lg font-semibold leading-8 text-black/80">"{item.quote}"</p>
+              <p className="min-h-28 text-lg font-semibold leading-8 text-black/80">&quot;{item.quote}&quot;</p>
               <div className="mt-7 flex items-center gap-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-[#ffc400]">{item.name.charAt(0)}</div>
                 <div><h3 className="font-black">{item.name}</h3><p className="text-sm text-black/55">{item.role}</p></div>

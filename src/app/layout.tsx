@@ -1,33 +1,20 @@
 import type { Metadata } from "next";
-import { Syne, DM_Sans, JetBrains_Mono } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import "./globals.css";
 
-const syne = Syne({
-  variable: "--font-syne",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Download DawnDesk — All-in-One Desktop Productivity Suite",
-  description: "Download DawnDesk for Windows, macOS, or Linux. Free, fast, and powerful.",
+  title: "DawnDesk - All-in-One Desktop Productivity Suite",
+  description:
+    "DawnDesk brings tasks, notes, projects, editing tools, prompts, and productivity workflows into one focused desktop app.",
   openGraph: {
-    title: "Download DawnDesk",
+    title: "DawnDesk",
     images: ["/og-image.png"],
   },
 };
@@ -38,13 +25,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${syne.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased font-body bg-brand-black text-brand-white min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-1">
-          {children}
-        </main>
-        <Footer />
+    <html lang="en" className={jakarta.variable}>
+      <body className="min-h-screen bg-brand-bg font-body text-brand-text antialiased">
+        <main>{children}</main>
         <Analytics />
       </body>
     </html>

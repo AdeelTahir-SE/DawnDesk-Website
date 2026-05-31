@@ -19,7 +19,6 @@ import {
   ImageIcon,
   LayoutGrid,
   Lightbulb,
-  Mail,
   Menu,
   Monitor,
   Palette,
@@ -40,103 +39,76 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import type { ElementType } from "react";
+import siteContent from "@/content/site.json";
 
 type ToolFeature = readonly [string, string, ElementType];
 
-const navItems = ["Features", "Solutions", "Sub Apps", "Resources", "Download"];
+const iconMap = {
+  Apple,
+  BadgeCheck,
+  Bell,
+  BriefcaseBusiness,
+  CalendarDays,
+  CircleUserRound,
+  Cloud,
+  Code2,
+  FileArchive,
+  FileText,
+  Film,
+  FolderKanban,
+  GraduationCap,
+  Heart,
+  ImageIcon,
+  LayoutGrid,
+  Lightbulb,
+  Menu,
+  Monitor,
+  Palette,
+  PenTool,
+  Search,
+  Settings2,
+  Share2,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Tags,
+  TimerReset,
+  Upload,
+  UsersRound,
+  Video,
+  Wand2,
+} satisfies Record<string, ElementType>;
 
-const dashboardItems = [
-  "Dashboard",
-  "Projects",
-  "Tasks",
-  "Calendar",
-  "Notes",
-  "Photo Editor",
-  "Video Editor",
-  "Finance",
-  "Dev Tools",
-  "Settings",
-];
+type IconName = keyof typeof iconMap;
+type ToolType = "photo" | "video" | "prompt";
 
-const platformItems = [
-  { name: "Windows", detail: "Version 2.0.1", icon: Monitor, active: true },
-  { name: "macOS", detail: "Coming soon", icon: Apple },
-  { name: "Linux", detail: "Coming soon", icon: Cloud },
-];
+function getIcon(icon: string): ElementType {
+  return iconMap[icon as IconName] ?? Sparkles;
+}
 
-const featureCards = [
-  { title: "Task Management", copy: "Organize tasks with priorities, due dates and reminders.", icon: BadgeCheck, tone: "text-violet-600 bg-violet-100" },
-  { title: "Project Tracking", copy: "Track progress and collaborate with your team.", icon: FolderKanban, tone: "text-amber-600 bg-amber-100" },
-  { title: "Notes & Docs", copy: "Create, edit, and store notes and documents securely.", icon: FileText, tone: "text-sky-600 bg-sky-100" },
-  { title: "Calendar Integration", copy: "Sync with your calendar and never miss a deadline.", icon: CalendarDays, tone: "text-purple-600 bg-purple-100" },
-  { title: "AI Assistant", copy: "Get smart suggestions and automate repetitive tasks.", icon: Sparkles, tone: "text-indigo-600 bg-indigo-100" },
-  { title: "File Management", copy: "Store and organize your files in one place.", icon: FileArchive, tone: "text-rose-600 bg-rose-100" },
-];
+function mapFeature(feature: { title: string; copy: string; icon: string }): ToolFeature {
+  return [feature.title, feature.copy, getIcon(feature.icon)];
+}
 
-const suiteTools = ["Dashboard", "Tasks & To-Do", "Projects", "Notes", "Calendar", "Photo & Video Editor", "Finance Tracker", "Dev Tools", "And more..."];
-
-const upcoming = [
-  { version: "v2.1", title: "Team Collaboration", copy: "Real-time collaboration and comments", state: "Coming Soon", color: "bg-amber-400" },
-  { version: "v2.2", title: "Advanced Analytics", copy: "Deep insights and productivity reports", state: "In Progress", color: "bg-sky-400" },
-  { version: "v2.3", title: "Automation Builder", copy: "Create repeatable workflows without extra setup", state: "Planned", color: "bg-violet-400" },
-];
-
-const audiences = [
-  { title: "Freelancers", copy: "Manage client projects, deadlines, and invoices with ease.", icon: CircleUserRound, tone: "text-emerald-600 bg-emerald-100" },
-  { title: "Teams", copy: "Collaborate, assign tasks, and track progress together.", icon: UsersRound, tone: "text-cyan-600 bg-cyan-100" },
-  { title: "Businesses", copy: "Streamline operations, improve productivity, and grow faster.", icon: BriefcaseBusiness, tone: "text-orange-600 bg-orange-100" },
-  { title: "Students", copy: "Organize notes, assignments, and study schedules.", icon: GraduationCap, tone: "text-indigo-600 bg-indigo-100" },
-  { title: "Developers", copy: "Use built-in dev tools to code, test, and deploy faster.", icon: Code2, tone: "text-violet-600 bg-violet-100" },
-  { title: "Creators", copy: "Edit photos, videos, and content without leaving the app.", icon: Palette, tone: "text-pink-600 bg-pink-100" },
-];
-
-const testimonials = [
-  { quote: "DawnDesk completely changed how I manage my work. Everything is so organized now!", name: "Aarav Mehta", role: "Freelancer" },
-  { quote: "The all-in-one tools save me hours every week. Highly recommended!", name: "Priya Sharma", role: "Project Manager" },
-  { quote: "Finally, a productivity app that does everything I need and more.", name: "Rohan Verma", role: "Developer" },
-];
-
-const subApps = [
-  { title: "Photo Editor", icon: ImageIcon, href: "/sub-apps/photo-editor" },
-  { title: "Video Editor", icon: Video, href: "/sub-apps/video-editor" },
-  { title: "Prompt Manager", icon: PenTool, href: "/sub-apps/prompt-manager" },
-  { title: "Project Tracker", icon: FolderKanban, href: "/sub-apps/project-tracker" },
-  { title: "Notes & Docs", icon: FileText, href: "/sub-apps/notes-docs" },
-  { title: "View All", icon: Menu, href: "/sub-apps" },
-];
-
-const photoFeatures: ToolFeature[] = [
-  ["AI Enhance", "One-click image enhancement", Wand2],
-  ["Filters & Effects", "Stunning filters and creative effects", Sparkles],
-  ["Crop & Resize", "Perfect your composition", LayoutGrid],
-  ["Adjustments", "Fine-tune light, color and more", Settings2],
-  ["Retouch", "Remove blemishes and imperfections", PenTool],
-  ["Text & Stickers", "Add text, stickers and shapes", Tags],
-  ["Frames", "Add stylish frames to your photos", ImageIcon],
-  ["Batch Edit", "Edit multiple photos at once", FileArchive],
-];
-
-const videoFeatures: ToolFeature[] = [
-  ["Multi-track Timeline", "Edit video, audio and effects separately", Film],
-  ["Transitions", "Add smooth transitions", Share2],
-  ["Text & Titles", "Add animated text and titles", Tags],
-  ["Effects & Filters", "Apply cinematic effects", Wand2],
-  ["Audio Tools", "Adjust volume and add music", Bell],
-  ["Speed Control", "Slow down or speed up your videos", TimerReset],
-  ["Export Options", "Export in multiple resolutions", Upload],
-  ["Video Stabilizer", "Stabilize shaky footage", ShieldCheck],
-];
-
-const promptFeatures: ToolFeature[] = [
-  ["Categories & Tags", "Organize prompts with ease", Tags],
-  ["Quick Search", "Search by keyword, tag or category", Search],
-  ["Favorites", "Keep your best prompts handy", Heart],
-  ["Usage History", "Track and reuse your prompts", TimerReset],
-  ["Import & Export", "Import or export prompt files", Upload],
-  ["Cloud Sync", "Access prompts across devices", Cloud],
-  ["Prompt Templates", "Pre-built templates to start fast", FileText],
-  ["Share Prompts", "Share prompts with your team", Share2],
-];
+const navItems = siteContent.navigation.mainItems;
+const dashboardItems = siteContent.dashboard.items;
+const dashboardStats = siteContent.dashboard.stats;
+const productivityHeights = siteContent.dashboard.productivityHeights;
+const platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+const featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+const suiteTools = siteContent.suiteTools;
+const upcoming = siteContent.upcoming;
+const audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+const testimonials = siteContent.testimonials;
+const subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+const photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
+const videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
+const promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
+const toolFeaturesByType: Record<ToolType, ToolFeature[]> = {
+  photo: photoFeatures,
+  video: videoFeatures,
+  prompt: promptFeatures,
+};
 
 export default function Home() {
   return (
@@ -148,11 +120,11 @@ export default function Home() {
       <FeatureSection />
       <SuiteShowcase />
       <ToolHero type="photo" />
-      <ToolGrid kicker="PHOTO EDITOR FEATURES" title="Everything you need to edit like a pro" features={photoFeatures} notice="More features coming soon! We're working on AI background removal, object erase, and more." />
+      <ToolGrid kicker={siteContent.toolGrids.photo.kicker} title={siteContent.toolGrids.photo.title} features={photoFeatures} notice={siteContent.toolGrids.photo.notice} />
       <ToolHero type="video" />
-      <ToolGrid kicker="VIDEO EDITOR FEATURES" title="Powerful tools for stunning videos" features={videoFeatures} notice="More powerful features on the way! Green screen, AI subtitles, motion tracking and more coming soon." />
+      <ToolGrid kicker={siteContent.toolGrids.video.kicker} title={siteContent.toolGrids.video.title} features={videoFeatures} notice={siteContent.toolGrids.video.notice} />
       <ToolHero type="prompt" />
-      <ToolGrid kicker="PROMPT MANAGER FEATURES" title="Manage your prompts like never before" features={promptFeatures} notice="More coming soon! AI prompt suggestions, community prompts and collaboration features." />
+      <ToolGrid kicker={siteContent.toolGrids.prompt.kicker} title={siteContent.toolGrids.prompt.title} features={promptFeatures} notice={siteContent.toolGrids.prompt.notice} />
       <UpcomingSection />
       <AudienceSection />
       <Testimonials />

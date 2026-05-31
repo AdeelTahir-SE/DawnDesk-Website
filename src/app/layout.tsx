@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-const jakarta = Plus_Jakarta_Sans({
-  variable: "--font-jakarta",
-  subsets: ["latin"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "DawnDesk - All-in-One Desktop Productivity Suite",
   description:
     "DawnDesk brings tasks, notes, projects, editing tools, prompts, and productivity workflows into one focused desktop app.",
@@ -25,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={jakarta.variable}>
+    <html lang="en">
       <body className="min-h-screen bg-brand-bg font-body text-brand-text antialiased">
         <main>{children}</main>
         <Analytics />

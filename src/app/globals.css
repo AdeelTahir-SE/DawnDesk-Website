@@ -26,6 +26,7 @@
 :root {
   --color-bg: #FBFAF7;
   --color-text: #171717;
+  --font-jakarta: "Plus Jakarta Sans", "Segoe UI", Arial, sans-serif;
 }
 
 * {

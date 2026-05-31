@@ -160,19 +160,21 @@ function Header({ dark = false }: { dark?: boolean }) {
 }
 
 function Hero() {
+  const hero = siteContent.hero;
+
   return (
     <section className="relative overflow-hidden bg-black text-white">
       <Glow />
       <div className="mx-auto grid min-h-[720px] max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-[0.82fr_1.18fr] lg:px-8">
         <div className="relative z-10">
-          <p className="mb-7 text-xs font-extrabold uppercase tracking-[0.18em] text-[#ffc400]">Smarter work. Every day.</p>
+          <p className="mb-7 text-xs font-extrabold uppercase tracking-[0.18em] text-[#ffc400]">{hero.eyebrow}</p>
           <h1 className="max-w-xl text-5xl font-black leading-[1.04] md:text-7xl">
-            Your workflow. <span className="text-[#ffc400]">All in one place.</span>
+            {hero.title} <span className="text-[#ffc400]">{hero.highlight}</span>
           </h1>
-          <p className="mt-8 max-w-md text-lg leading-8 text-white/78">DawnDesk helps you stay organized, get more done, and focus on what matters most.</p>
+          <p className="mt-8 max-w-md text-lg leading-8 text-white/78">{hero.copy}</p>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="#download">Download Now</a>
-            <a className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">Explore Features</a>
+            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="#download">{hero.primaryCta}</a>
+            <a className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</a>
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
             <span className="font-semibold italic">Available for</span>
@@ -210,7 +212,7 @@ function SubAppsOverview() {
             <div className="mt-8 rounded-md border border-black/10 bg-white p-6 shadow-sm">
               <h3 className="text-lg font-black">Included free</h3>
               <ul className="mt-5 space-y-3 text-sm font-bold text-black/65">
-                {["No paid tiers", "No feature locks", "One install for every tool"].map((item) => (
+                {siteContent.subAppsPreview.included.map((item) => (
                   <li className="flex items-center gap-3" key={item}>
                     <Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} />
                     {item}
@@ -220,18 +222,14 @@ function SubAppsOverview() {
             </div>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            {subApps.map(({ title, icon: Icon, href }) => (
+            {subApps.map(({ title, icon: Icon, href, copy }) => (
               <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400] hover:shadow-xl" href={href} key={title}>
                 <div className="flex items-start justify-between gap-5">
                   <Icon className="rounded-md bg-[#fff3bf] p-2 text-[#d29300]" size={42} />
                   <ChevronRight className="mt-2 text-black/25 transition group-hover:translate-x-1 group-hover:text-[#d29300]" size={20} />
                 </div>
                 <h3 className="mt-6 text-xl font-black">{title}</h3>
-                <p className="mt-3 text-sm leading-6 text-black/58">
-                  {title === "View All"
-                    ? "Browse the complete DawnDesk toolkit and open each detail page."
-                    : `Open the ${title.toLowerCase()} workspace and keep your work connected.`}
-                </p>
+                <p className="mt-3 text-sm leading-6 text-black/58">{copy}</p>
               </Link>
             ))}
           </div>
@@ -242,6 +240,8 @@ function SubAppsOverview() {
 }
 
 function DownloadSection() {
+  const windows = siteContent.download.windows;
+
   return (
     <section id="download" className="section">
       <div className="mx-auto max-w-5xl px-5">
@@ -263,12 +263,12 @@ function DownloadSection() {
               <Monitor size={48} />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-black">DawnDesk for Windows</h3>
-              <p className="mt-2 text-sm text-black/60">Version 2.0.1 <span className="mx-3">|</span> 120 MB</p>
-              <p className="mt-2 text-sm text-black/60">Compatible with Windows 10/11 (64-bit)</p>
+              <h3 className="text-xl font-black">{windows.title}</h3>
+              <p className="mt-2 text-sm text-black/60">{windows.version} <span className="mx-3">|</span> {windows.size}</p>
+              <p className="mt-2 text-sm text-black/60">{windows.compatibility}</p>
               <div className="mt-7 flex flex-wrap gap-4">
-                <button className="rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black">Download for Windows</button>
-                <button className="rounded-md border border-black/15 px-7 py-3 text-sm font-bold">Download portable version</button>
+                <button className="rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black">{windows.primaryCta}</button>
+                <button className="rounded-md border border-black/15 px-7 py-3 text-sm font-bold">{windows.secondaryCta}</button>
               </div>
             </div>
           </div>
@@ -314,58 +314,29 @@ function SuiteShowcase() {
 }
 
 function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
-  const content = {
-    photo: {
-      label: "Photo Editor",
-      title: "Photo Editor",
-      accent: "Edit. Enhance. Inspire.",
-      copy: "A powerful photo editing tool built for everyone. Edit like a pro with advanced tools and beautiful filters.",
-      button: "Open Photo Editor",
-      features: photoFeatures.slice(0, 4),
-      visual: <EditorMockup type="photo" />,
-      icon: ImageIcon,
-    },
-    video: {
-      label: "Video Editor",
-      title: "Create. Edit. Share.",
-      accent: "",
-      copy: "Edit videos with ease using professional tools designed for creators, marketers, and businesses.",
-      button: "Open Video Editor",
-      features: videoFeatures.slice(0, 4),
-      visual: <EditorMockup type="video" />,
-      icon: Video,
-    },
-    prompt: {
-      label: "Prompt Manager",
-      title: "Organize. Optimize.",
-      accent: "Generate better.",
-      copy: "Save, organize, and manage your AI prompts efficiently. Boost your creativity and save time.",
-      button: "Open Prompt Manager",
-      features: promptFeatures.slice(0, 4),
-      visual: <EditorMockup type="prompt" />,
-      icon: PenTool,
-    },
-  }[type];
+  const content = siteContent.toolHeroes[type];
+  const features = toolFeaturesByType[content.featureSet as ToolType].slice(0, 4);
   const Icon = content.icon;
+  const IconComponent = getIcon(Icon);
 
   return (
     <section className="section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
         <div>
-          <div className="mb-6 flex items-center gap-2 text-sm font-extrabold"><Icon className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
+          <div className="mb-6 flex items-center gap-2 text-sm font-extrabold"><IconComponent className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
           <h2 className="text-4xl font-black leading-tight md:text-6xl">
             {content.title} {content.accent && <span className="block text-[#ffb400]">{content.accent}</span>}
           </h2>
           <p className="mt-6 max-w-lg leading-7 text-black/65">{content.copy}</p>
           <div className="mt-9 grid gap-4 sm:grid-cols-2">
-            {content.features.map(([title, copy, Icon]) => <MiniFeature key={title as string} title={title as string} copy={copy as string} icon={Icon} />)}
+            {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
           </div>
           <div className="mt-8 flex items-center gap-6">
             <button className="rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">{content.button}</button>
             <span className="text-sm font-semibold text-black/55">100% Free Forever</span>
           </div>
         </div>
-        {content.visual}
+        <EditorMockup type={type} />
       </div>
     </section>
   );
@@ -482,26 +453,21 @@ function DownloadCta() {
 }
 
 function Footer() {
-  const groups = [
-    ["Product", "Features", "Download", "Sub Apps", "Changelog", "Roadmap"],
-    ["Resources", "Documentation", "Blog", "Help Center", "Guides", "Community"],
-    ["Company", "About Us", "Careers", "Contact Us", "Privacy Policy", "Terms of Service"],
-    ["Support", "FAQ", "System Status", "Report a Bug", "Request a Feature"],
-  ];
+  const footer = siteContent.footer;
 
   return (
     <footer className="bg-black px-5 py-16 text-white lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.2fr_2.6fr_1.6fr]">
         <div>
           <h2 className="text-3xl font-black text-[#ffc400]">DawnDesk</h2>
-          <p className="mt-5 max-w-xs leading-8 text-white/68">Your workflow. All in one place. Stay organized, get more done, and focus on what matters most.</p>
+          <p className="mt-5 max-w-xs leading-8 text-white/68">{footer.copy}</p>
           <div className="mt-8 flex gap-4 text-white/70">
-            {["f", "x", "ig", "in", "yt"].map((item) => <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold" key={item}>{item}</span>)}
+            {footer.socials.map((item) => <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold" key={item}>{item}</span>)}
           </div>
-          <p className="mt-16 text-sm text-white/45">© 2024 DawnDesk. All rights reserved.</p>
+          <p className="mt-16 text-sm text-white/45">{footer.copyright}</p>
         </div>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {groups.map(([title, ...items]) => (
+          {footer.groups.map(({ title, items }) => (
             <div key={title}>
               <h3 className="mb-5 font-black">{title}</h3>
               <ul className="space-y-4 text-white/62">
@@ -512,11 +478,11 @@ function Footer() {
         </div>
         <div>
           <div className="rounded-md border border-white/15 bg-white/[0.06] p-7">
-            <h3 className="text-xl font-black">Stay in the loop</h3>
-            <p className="mt-4 leading-7 text-white/62">Get the latest updates, tips, and productivity insights straight to your inbox.</p>
+            <h3 className="text-xl font-black">{footer.newsletter.title}</h3>
+            <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
             <form className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
-              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" placeholder="Enter your email" />
-              <button className="bg-[#ffc400] px-5 text-sm font-extrabold text-black">Subscribe</button>
+              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" placeholder={footer.newsletter.placeholder} />
+              <button className="bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
             </form>
           </div>
         </div>
@@ -567,7 +533,7 @@ function DashboardMockup({ large = false }: { large?: boolean }) {
             <h3 className="text-xl font-black text-white">Welcome back to DawnDesk</h3>
             <p className="mt-2 text-xs text-white/45">Monitor your workflow, jump into tasks quickly, and keep track of current projects.</p>
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {["Active Tasks", "Projects Completed", "AI Requests"].map((item, index) => <div className="rounded-md border border-white/10 bg-white/[0.04] p-4" key={item}><p className="text-xs text-white/45">{item}</p><p className="mt-2 text-2xl font-black text-white">{[12, 24, 48][index]}</p><p className="text-xs font-bold text-[#ffc400]">{["5 high priority", "+3 this week", "100% accurate"][index]}</p></div>)}
+              {dashboardStats.map((item) => <div className="rounded-md border border-white/10 bg-white/[0.04] p-4" key={item.label}><p className="text-xs text-white/45">{item.label}</p><p className="mt-2 text-2xl font-black text-white">{item.value}</p><p className="text-xs font-bold text-[#ffc400]">{item.detail}</p></div>)}
             </div>
             <div className="mt-6 rounded-md border border-white/10 bg-white/[0.04] p-5">
               <h4 className="text-sm font-black text-white">Latest Pending Tasks</h4>
@@ -576,7 +542,7 @@ function DashboardMockup({ large = false }: { large?: boolean }) {
             <div className="mt-6 rounded-md border border-white/10 bg-white/[0.04] p-5">
               <h4 className="text-sm font-black text-white">Productivity (7 Days)</h4>
               <div className="mt-4 flex h-20 items-end gap-2">
-                {[35, 50, 42, 75, 62, 90, 70].map((height, index) => <span className="flex-1 rounded-t bg-[#ffc400]" style={{ height: `${height}%` }} key={index} />)}
+                {productivityHeights.map((height, index) => <span className="flex-1 rounded-t bg-[#ffc400]" style={{ height: `${height}%` }} key={index} />)}
               </div>
             </div>
           </main>

@@ -42,6 +42,15 @@ import type { ElementType } from "react";
 import siteContent from "@/content/site.json";
 
 type ToolFeature = readonly [string, string, ElementType];
+type ToolHeroContent = {
+  label: string;
+  title: string;
+  accent: string;
+  copy: string;
+  button: string;
+  featureSet: ToolType;
+  icon: ElementType;
+};
 
 const iconMap = {
   Apple,
@@ -90,6 +99,14 @@ function mapFeature(feature: { title: string; copy: string; icon: string }): Too
   return [feature.title, feature.copy, getIcon(feature.icon)];
 }
 
+function mapToolHero(hero: (typeof siteContent.toolHeroes)[ToolType]): ToolHeroContent {
+  return {
+    ...hero,
+    featureSet: hero.featureSet as ToolType,
+    icon: getIcon(hero.icon),
+  };
+}
+
 const navItems = siteContent.navigation.mainItems;
 const dashboardItems = siteContent.dashboard.items;
 const dashboardStats = siteContent.dashboard.stats;
@@ -108,6 +125,11 @@ const toolFeaturesByType: Record<ToolType, ToolFeature[]> = {
   photo: photoFeatures,
   video: videoFeatures,
   prompt: promptFeatures,
+};
+const toolHeroes: Record<ToolType, ToolHeroContent> = {
+  photo: mapToolHero(siteContent.toolHeroes.photo),
+  video: mapToolHero(siteContent.toolHeroes.video),
+  prompt: mapToolHero(siteContent.toolHeroes.prompt),
 };
 
 export default function Home() {
@@ -314,16 +336,15 @@ function SuiteShowcase() {
 }
 
 function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
-  const content = siteContent.toolHeroes[type];
-  const features = toolFeaturesByType[content.featureSet as ToolType].slice(0, 4);
+  const content = toolHeroes[type];
+  const features = toolFeaturesByType[content.featureSet].slice(0, 4);
   const Icon = content.icon;
-  const IconComponent = getIcon(Icon);
 
   return (
     <section className="section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
         <div>
-          <div className="mb-6 flex items-center gap-2 text-sm font-extrabold"><IconComponent className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
+          <div className="mb-6 flex items-center gap-2 text-sm font-extrabold"><Icon className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
           <h2 className="text-4xl font-black leading-tight md:text-6xl">
             {content.title} {content.accent && <span className="block text-[#ffb400]">{content.accent}</span>}
           </h2>

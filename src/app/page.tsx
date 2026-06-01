@@ -40,7 +40,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
-import { getSiteContent } from "@/lib/content";
+import { getAppReleasesContent, getSiteContent, type AppReleaseContent } from "@/lib/content";
+import { DownloadChooser } from "@/components/DownloadChooser";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 import { UserMenu } from "@/components/UserMenu";
 
@@ -159,14 +160,15 @@ function setSiteContent(content: typeof siteFallback) {
 }
 
 export default async function Home() {
-  setSiteContent(await getSiteContent());
+  const [content, releases] = await Promise.all([getSiteContent(), getAppReleasesContent()]);
+  setSiteContent(content);
 
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <Header dark />
       <Hero />
       <SubAppsOverview />
-      <DownloadSection />
+      <DownloadSection releases={releases} />
       <FeatureSection />
       <SuiteShowcase />
       <ToolHero type="photo" />
@@ -292,40 +294,14 @@ function SubAppsOverview() {
   );
 }
 
-function DownloadSection() {
-  const windows = siteContent.download.windows;
-
+function DownloadSection({ releases }: { releases: AppReleaseContent[] }) {
   return (
     <section id="download" className="section">
       <div className="mx-auto max-w-5xl px-5">
         <p className="eyebrow text-[#c47800]">Download DawnDesk</p>
         <h2 className="mt-4 max-w-xl text-4xl font-black leading-tight md:text-5xl">Get DawnDesk<br />for your device</h2>
-        <p className="mt-4 max-w-md text-base leading-7 text-black/65">Choose your platform and start boosting your productivity today.</p>
-        <div className="mt-10 overflow-hidden rounded-md border border-black/15 bg-white shadow-sm">
-          <div className="grid border-b border-black/10 md:grid-cols-3">
-            {platformItems.map(({ name, icon: Icon, active }) => (
-              <button className={`flex items-center justify-center gap-3 px-5 py-5 text-sm font-extrabold ${active ? "border-b-2 border-[#ffc400] text-black" : "text-black/50"}`} key={name}>
-                <Icon size={20} />
-                {name}
-                {!active && <span className="rounded bg-black/5 px-2 py-1 text-[10px] font-bold">Coming Soon</span>}
-              </button>
-            ))}
-          </div>
-          <div className="flex flex-col gap-8 p-8 md:flex-row md:items-center">
-            <div className="flex h-20 w-20 items-center justify-center rounded-md bg-sky-50 text-sky-500">
-              <Monitor size={48} />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-xl font-black">{windows.title}</h3>
-              <p className="mt-2 text-sm text-black/60">{windows.version} <span className="mx-3">|</span> {windows.size}</p>
-              <p className="mt-2 text-sm text-black/60">{windows.compatibility}</p>
-              <div className="mt-7 flex flex-wrap gap-4">
-                <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href="/api/download/windows">{windows.primaryCta}</a>
-                <a className="btn-animated rounded-md border border-black/15 px-7 py-3 text-sm font-bold" href={windows.url}>{windows.secondaryCta}</a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <p className="mt-4 max-w-md text-base leading-7 text-black/65">DawnDesk detects your system automatically, and you can still choose another platform or version manually.</p>
+        <DownloadChooser releases={releases} />
       </div>
     </section>
   );

@@ -3,7 +3,7 @@ import { MermaidDiagram } from "./MermaidDiagram";
 
 type MarkdownBlock =
   | { type: "code"; language: string; value: string }
-  | { type: "heading"; depth: 2 | 3; value: string }
+  | { type: "heading"; depth: 2 | 3; id: string; value: string }
   | { type: "image"; alt: string; src: string }
   | { type: "list"; ordered: boolean; items: string[] }
   | { type: "paragraph"; value: string };
@@ -35,7 +35,8 @@ function parseMarkdown(markdown: string): MarkdownBlock[] {
     }
 
     if (line.startsWith("### ")) {
-      blocks.push({ type: "heading", depth: 3, value: line.slice(4).trim() });
+      const value = line.slice(4).trim();
+      blocks.push({ type: "heading", depth: 3, id: slugifyHeading(value), value });
       index += 1;
       continue;
     }
@@ -48,7 +49,8 @@ function parseMarkdown(markdown: string): MarkdownBlock[] {
     }
 
     if (line.startsWith("## ")) {
-      blocks.push({ type: "heading", depth: 2, value: line.slice(3).trim() });
+      const value = line.slice(3).trim();
+      blocks.push({ type: "heading", depth: 2, id: slugifyHeading(value), value });
       index += 1;
       continue;
     }
@@ -91,6 +93,21 @@ function parseMarkdown(markdown: string): MarkdownBlock[] {
   }
 
   return blocks;
+}
+
+export function getMarkdownHeadings(markdown: string) {
+  return parseMarkdown(markdown)
+    .filter((block): block is Extract<MarkdownBlock, { type: "heading" }> => block.type === "heading")
+    .map((heading) => ({ id: heading.id, title: heading.value, depth: heading.depth }));
+}
+
+function slugifyHeading(value: string) {
+  return value
+    .replace(/[`*_]/g, "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function renderInline(text: string): ReactNode[] {
@@ -137,7 +154,7 @@ export function MarkdownContent({ content }: { content: string }) {
       {blocks.map((block, index) => {
         if (block.type === "heading") {
           const Heading = block.depth === 2 ? "h2" : "h3";
-          return <Heading className={block.depth === 2 ? "mt-10 text-3xl font-black tracking-normal text-black first:mt-0" : "mt-8 text-2xl font-black tracking-normal text-black"} key={index}>{renderInline(block.value)}</Heading>;
+          return <Heading id={block.id} className={block.depth === 2 ? "scroll-mt-28 mt-10 text-3xl font-black tracking-normal text-black first:mt-0" : "scroll-mt-28 mt-8 text-2xl font-black tracking-normal text-black"} key={index}>{renderInline(block.value)}</Heading>;
         }
 
         if (block.type === "paragraph") {

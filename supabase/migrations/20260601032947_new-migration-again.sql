@@ -525,7 +525,7 @@ values ('homepage', $json${
   },
   "footer": {
     "copy": "Your workflow. All in one place. Stay organized, get more done, and focus on what matters most.",
-    "copyright": "? 2026 DawnDesk. All rights reserved.",
+    "copyright": "(c) 2026 DawnDesk. All rights reserved.",
     "socials": [
       "f",
       "x",
@@ -539,9 +539,7 @@ values ('homepage', $json${
         "items": [
           "Features",
           "Download",
-          "Sub Apps",
-          "Changelog",
-          "Roadmap"
+          "Sub Apps"
         ]
       },
       {

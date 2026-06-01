@@ -2,24 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
-
-const posts = [
-  {
-    title: "Designing a calmer command center",
-    category: "Product",
-    summary: "How DawnDesk keeps projects, notes, prompts, and creative tools close without overwhelming the workspace.",
-  },
-  {
-    title: "A practical workflow for creative assets",
-    category: "Workflow",
-    summary: "Use the photo and video workspaces to prepare assets, then keep the outputs connected to active work.",
-  },
-  {
-    title: "What is coming next for DawnDesk",
-    category: "Updates",
-    summary: "A quick look at workspace sync, collaboration improvements, and refinements planned for upcoming releases.",
-  },
-];
+import { getBlogPostsContent } from "@/lib/content";
 
 export const metadata = createPageMetadata({
   title: "Blog",
@@ -27,7 +10,9 @@ export const metadata = createPageMetadata({
   path: "/blog",
 });
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getBlogPostsContent();
+
   return (
     <main className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <SiteHeader />
@@ -47,9 +32,9 @@ export default function BlogPage() {
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[#c47800]">{post.category}</p>
               <h2 className="mt-4 text-2xl font-black leading-tight">{post.title}</h2>
               <p className="mt-4 text-sm leading-7 text-black/62">{post.summary}</p>
-              <span className="mt-7 inline-flex items-center gap-2 text-sm font-extrabold text-black">
-                Coming soon <ArrowRight size={17} />
-              </span>
+              <Link className="mt-7 inline-flex items-center gap-2 text-sm font-extrabold text-black" href={`/blog/${post.slug}`}>
+                Read post <ArrowRight size={17} />
+              </Link>
             </article>
           ))}
         </div>

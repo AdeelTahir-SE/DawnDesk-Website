@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Check,
   ChevronRight,
+  CircleUserRound,
   Cloud,
   Code2,
   Download,

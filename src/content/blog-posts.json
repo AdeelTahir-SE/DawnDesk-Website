@@ -1,0 +1,26 @@
+[
+  {
+    "slug": "calmer-command-center",
+    "title": "Designing a calmer command center",
+    "category": "Product",
+    "summary": "How DawnDesk keeps projects, notes, prompts, and creative tools close without overwhelming the workspace.",
+    "content": "DawnDesk is built around a command center that keeps active work visible without turning every screen into noise. The dashboard highlights connected workspaces, saved prompts, recent operations, and useful shortcuts so users can move into the right tool quickly.",
+    "publishedAt": "2026-06-01"
+  },
+  {
+    "slug": "creative-asset-workflow",
+    "title": "A practical workflow for creative assets",
+    "category": "Workflow",
+    "summary": "Use the photo and video workspaces to prepare assets, then keep the outputs connected to active work.",
+    "content": "Creative work often lives beside planning work. DawnDesk keeps photo and video editing close to notes, project context, and prompt workflows so assets can be prepared and reused without jumping between disconnected tools.",
+    "publishedAt": "2026-06-01"
+  },
+  {
+    "slug": "what-is-coming-next",
+    "title": "What is coming next for DawnDesk",
+    "category": "Updates",
+    "summary": "A quick look at workspace sync, collaboration improvements, and refinements planned for upcoming releases.",
+    "content": "Upcoming DawnDesk work focuses on stronger sync, better workspace handoffs, practical collaboration features, and smoother documentation around each sub-app. The goal is to make the suite easier to trust in daily work.",
+    "publishedAt": "2026-06-01"
+  }
+]

@@ -1,10 +1,12 @@
 import siteFallback from "@/content/site.json";
 import subAppsFallback from "@/content/sub-apps.json";
+import blogPostsFallback from "@/content/blog-posts.json";
 import { unstable_cache } from "next/cache";
 import { createPublicSupabaseClient } from "./supabase";
 
 export type SiteContent = typeof siteFallback;
 export type SubAppContent = (typeof subAppsFallback)[number];
+export type BlogPostContent = (typeof blogPostsFallback)[number];
 
 async function readSiteContent(): Promise<SiteContent> {
   const supabase = createPublicSupabaseClient();
@@ -45,6 +47,25 @@ async function readSubAppsContent(): Promise<SubAppContent[]> {
   return data.map((row) => row.content as SubAppContent);
 }
 
+async function readBlogPostsContent(): Promise<BlogPostContent[]> {
+  const supabase = createPublicSupabaseClient();
+
+  if (!supabase) {
+    return blogPostsFallback;
+  }
+
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("content")
+    .order("published_at", { ascending: false });
+
+  if (error || !data?.length) {
+    return blogPostsFallback;
+  }
+
+  return data.map((row) => row.content as BlogPostContent);
+}
+
 export const getSiteContent = unstable_cache(readSiteContent, ["site-content-homepage"], {
   revalidate: 3600,
   tags: ["site-content"],
@@ -55,7 +76,17 @@ export const getSubAppsContent = unstable_cache(readSubAppsContent, ["sub-apps-c
   tags: ["sub-apps-content"],
 });
 
+export const getBlogPostsContent = unstable_cache(readBlogPostsContent, ["blog-posts-content"], {
+  revalidate: 3600,
+  tags: ["blog-posts-content"],
+});
+
 export async function getSubAppContent(slug: string): Promise<SubAppContent | undefined> {
   const apps = await getSubAppsContent();
   return apps.find((app) => app.slug === slug);
+}
+
+export async function getBlogPostContent(slug: string): Promise<BlogPostContent | undefined> {
+  const posts = await getBlogPostsContent();
+  return posts.find((post) => post.slug === slug);
 }

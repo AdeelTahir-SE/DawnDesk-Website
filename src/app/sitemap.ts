@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import subAppsFallback from "@/content/sub-apps.json";
+import blogPostsFallback from "@/content/blog-posts.json";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dawndesk.app";
 
@@ -37,5 +38,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
       },
     ]),
+    ...blogPostsFallback.map((post) => ({
+      url: `${siteUrl}/blog/${post.slug}`,
+      lastModified: new Date(post.publishedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
   ];
 }

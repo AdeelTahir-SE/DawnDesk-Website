@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
-import { getSiteContent, getSubAppsContent } from "@/lib/content";
+import { getBlogPostsContent, getSiteContent, getSubAppsContent } from "@/lib/content";
 import { SiteHeader } from "@/components/SiteHeader";
 
 type SearchPageProps = {
@@ -41,7 +41,7 @@ export const metadata = {
 export default async function SearchPage(props: SearchPageProps) {
   const searchParams = await props.searchParams;
   const query = (searchParams?.q ?? "").trim();
-  const [siteContent, subApps] = await Promise.all([getSiteContent(), getSubAppsContent()]);
+  const [siteContent, subApps, blogPosts] = await Promise.all([getSiteContent(), getSubAppsContent(), getBlogPostsContent()]);
 
   const results: SearchResult[] = [
     {
@@ -77,8 +77,15 @@ export default async function SearchPage(props: SearchPageProps) {
       category: "Blog",
       href: "/blog",
       summary: "Product notes, workflow ideas, and release updates from DawnDesk.",
-      haystack: "blog resources updates workflow product release notes",
+      haystack: `blog updates workflow product release notes ${JSON.stringify(blogPosts)}`,
     },
+    ...blogPosts.map((post) => ({
+      title: post.title,
+      category: "Blog",
+      href: `/blog/${post.slug}`,
+      summary: post.summary,
+      haystack: JSON.stringify(post),
+    })),
     {
       title: "Request a Feature",
       category: "Support",

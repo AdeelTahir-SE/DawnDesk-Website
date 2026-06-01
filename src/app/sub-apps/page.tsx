@@ -1,13 +1,15 @@
 import Link from "next/link";
 import { ArrowRight, Check, Download, Search, Sparkles } from "lucide-react";
-import { subApps } from "./sub-app-data";
+import { getSubApps } from "./sub-app-data";
 
 export const metadata = {
   title: "Sub Apps - DawnDesk",
-  description: "Explore DawnDesk's free built-in sub apps for editing, prompts, projects, notes, and developer workflows.",
+  description: "Explore DawnDesk's built-in sub apps for editing, prompts, projects, notes, and developer workflows.",
 };
 
-export default function SubAppsPage() {
+export default async function SubAppsPage() {
+  const subApps = await getSubApps();
+
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/92 text-white backdrop-blur-xl">
@@ -31,7 +33,7 @@ export default function SubAppsPage() {
           <div>
             <p className="eyebrow text-[#ffc400]">DawnDesk sub apps</p>
             <h1 className="mt-5 max-w-3xl text-5xl font-black leading-[1.05] md:text-7xl">
-              Every tool is free, focused, and built into one workflow.
+              Every tool is focused and built into one workflow.
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">
               Explore the complete DawnDesk toolkit. Each sub app has its own workspace, feature set, and detail page.
@@ -74,7 +76,7 @@ export default function SubAppsPage() {
                     <Link className="inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/sub-apps/${app.slug}`}>
                       More Detail <ArrowRight size={17} />
                     </Link>
-                    <Link className="rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/#download">Download Free</Link>
+                    <Link className="rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/#download">Download DawnDesk</Link>
                   </div>
                 </div>
                 <div className="rounded-xl border border-black/10 bg-white p-6 shadow-xl">
@@ -109,13 +111,13 @@ export default function SubAppsPage() {
       <section className="bg-black px-5 py-20 text-white lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="eyebrow text-[#ffc400]">No paid tiers</p>
-            <h2 className="mt-4 text-4xl font-black">All sub apps are included for free.</h2>
-            <p className="mt-4 max-w-xl leading-7 text-white/65">Install DawnDesk once and use the full toolkit without subscriptions, unlocks, or upgrade prompts.</p>
+            <p className="eyebrow text-[#ffc400]">DawnDesk toolkit</p>
+            <h2 className="mt-4 text-4xl font-black">All sub apps are built into one workspace.</h2>
+            <p className="mt-4 max-w-xl leading-7 text-white/65">Install DawnDesk once and use the full toolkit for creative, project, and productivity workflows.</p>
           </div>
           <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
             <Download size={18} />
-            Download Free
+            Download DawnDesk
           </Link>
         </div>
       </section>

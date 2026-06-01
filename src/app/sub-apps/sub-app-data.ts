@@ -19,7 +19,7 @@ import {
   Wand2,
 } from "lucide-react";
 import type { ElementType } from "react";
-import subAppsContent from "@/content/sub-apps.json";
+import { getSubAppsContent, type SubAppContent } from "@/lib/content";
 
 const iconMap = {
   Bell,
@@ -67,7 +67,8 @@ function getIcon(icon: string): ElementType {
   return iconMap[icon as IconName] ?? Sparkles;
 }
 
-export const subApps: SubApp[] = subAppsContent.map((app) => ({
+export function mapSubApps(content: SubAppContent[]): SubApp[] {
+  return content.map((app) => ({
   ...app,
   icon: getIcon(app.icon),
   features: app.features.map((feature) => ({
@@ -75,7 +76,13 @@ export const subApps: SubApp[] = subAppsContent.map((app) => ({
     icon: getIcon(feature.icon),
   })),
 }));
+}
 
-export function getSubApp(slug: string) {
+export async function getSubApps() {
+  return mapSubApps(await getSubAppsContent());
+}
+
+export async function getSubApp(slug: string) {
+  const subApps = await getSubApps();
   return subApps.find((app) => app.slug === slug);
 }

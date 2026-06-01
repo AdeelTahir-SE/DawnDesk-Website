@@ -72,7 +72,7 @@ Top-level format:
     { "quote": "Quote text.", "name": "Person Name", "role": "Role" }
   ],
   "subAppsPreview": {
-    "included": ["No paid tiers"],
+    "included": ["Focused workspaces"],
     "items": [
       { "title": "Photo Editor", "icon": "ImageIcon", "href": "/sub-apps/photo-editor", "copy": "Preview card copy." }
     ]

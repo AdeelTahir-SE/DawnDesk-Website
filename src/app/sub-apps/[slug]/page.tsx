@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Download, Sparkles } from "lucide-react";
-import { getSubApp, subApps } from "../sub-app-data";
+import subAppsFallback from "@/content/sub-apps.json";
+import { getSubApp } from "../sub-app-data";
 
 export function generateStaticParams() {
-  return subApps.map((app) => ({ slug: app.slug }));
+  return subAppsFallback.map((app) => ({ slug: app.slug }));
 }
 
 export async function generateMetadata(props: PageProps<"/sub-apps/[slug]">) {
   const { slug } = await props.params;
-  const app = getSubApp(slug);
+  const app = await getSubApp(slug);
 
   if (!app) {
     return {
@@ -25,7 +26,7 @@ export async function generateMetadata(props: PageProps<"/sub-apps/[slug]">) {
 
 export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug]">) {
   const { slug } = await props.params;
-  const app = getSubApp(slug);
+  const app = await getSubApp(slug);
 
   if (!app) {
     notFound();
@@ -65,7 +66,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             <div className="mt-9 flex flex-wrap gap-4">
               <Link className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/#download">
                 <Download size={18} />
-                Download Free
+                Download DawnDesk
               </Link>
               <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/sub-apps">View All Sub Apps</Link>
             </div>
@@ -75,7 +76,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             <div className="rounded-lg border border-white/10 bg-[#101012] p-5">
               <div className="mb-5 flex items-center justify-between text-xs text-white/55">
                 <span className="font-black text-[#ffc400]">{app.name}</span>
-                <span>Free Included Tool</span>
+                <span>Included Tool</span>
               </div>
               <div className="grid min-h-[340px] gap-4 sm:grid-cols-[150px_1fr]">
                 <aside className="rounded-md bg-black/35 p-3">
@@ -131,10 +132,10 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
           <div className="rounded-xl bg-black p-8 text-white md:p-12">
             <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
               <div>
-                <p className="eyebrow text-[#ffc400]">Free forever</p>
+                <p className="eyebrow text-[#ffc400]">DawnDesk toolkit</p>
                 <h2 className="mt-4 text-3xl font-black md:text-5xl">{app.name} is included with DawnDesk.</h2>
                 <ul className="mt-7 grid gap-3 text-sm font-bold text-white/72 sm:grid-cols-3">
-                  {["No paid upgrade", "No checkout screen", "No feature lock"].map((item) => (
+                  {["Focused workspace", "Connected workflow", "Regular updates"].map((item) => (
                     <li className="flex items-center gap-3" key={item}>
                       <Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} />
                       {item}

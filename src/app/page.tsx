@@ -40,7 +40,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
-import siteContent from "@/content/site.json";
+import siteFallback from "@/content/site.json";
+import { getSiteContent } from "@/lib/content";
 
 type ToolFeature = readonly [string, string, ElementType];
 type ToolHeroContent = {
@@ -100,7 +101,7 @@ function mapFeature(feature: { title: string; copy: string; icon: string }): Too
   return [feature.title, feature.copy, getIcon(feature.icon)];
 }
 
-function mapToolHero(hero: (typeof siteContent.toolHeroes)[ToolType]): ToolHeroContent {
+function mapToolHero(hero: (typeof siteFallback.toolHeroes)[ToolType]): ToolHeroContent {
   return {
     ...hero,
     featureSet: hero.featureSet as ToolType,
@@ -108,29 +109,57 @@ function mapToolHero(hero: (typeof siteContent.toolHeroes)[ToolType]): ToolHeroC
   };
 }
 
-const navItems = siteContent.navigation.mainItems;
-const platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-const featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-const suiteTools = siteContent.suiteTools;
-const upcoming = siteContent.upcoming;
-const audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-const testimonials = siteContent.testimonials;
-const subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-const photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
-const videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
-const promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
-const toolFeaturesByType: Record<ToolType, ToolFeature[]> = {
+let siteContent = siteFallback;
+let navItems = siteContent.navigation.mainItems;
+let platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+let featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+let suiteTools = siteContent.suiteTools;
+let upcoming = siteContent.upcoming;
+let audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+let testimonials = siteContent.testimonials;
+let subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+let photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
+let videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
+let promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
+let toolFeaturesByType: Record<ToolType, ToolFeature[]> = {
   photo: photoFeatures,
   video: videoFeatures,
   prompt: promptFeatures,
 };
-const toolHeroes: Record<ToolType, ToolHeroContent> = {
+let toolHeroes: Record<ToolType, ToolHeroContent> = {
   photo: mapToolHero(siteContent.toolHeroes.photo),
   video: mapToolHero(siteContent.toolHeroes.video),
   prompt: mapToolHero(siteContent.toolHeroes.prompt),
 };
 
-export default function Home() {
+function setSiteContent(content: typeof siteFallback) {
+  siteContent = content;
+  navItems = siteContent.navigation.mainItems;
+  platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+  featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+  suiteTools = siteContent.suiteTools;
+  upcoming = siteContent.upcoming;
+  audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+  testimonials = siteContent.testimonials;
+  subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+  photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
+  videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
+  promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
+  toolFeaturesByType = {
+    photo: photoFeatures,
+    video: videoFeatures,
+    prompt: promptFeatures,
+  };
+  toolHeroes = {
+    photo: mapToolHero(siteContent.toolHeroes.photo),
+    video: mapToolHero(siteContent.toolHeroes.video),
+    prompt: mapToolHero(siteContent.toolHeroes.prompt),
+  };
+}
+
+export default async function Home() {
+  setSiteContent(await getSiteContent());
+
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <Header dark />
@@ -220,7 +249,7 @@ function SubAppsOverview() {
             <p className="eyebrow text-[#c47800]">Powerful sub apps</p>
             <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Choose the right tool for the moment.</h2>
             <p className="mt-5 max-w-md text-base leading-7 text-black/65">
-              DawnDesk is a free suite of focused workspaces. Open a tool when you need it, then bring the output back into your daily workflow.
+              DawnDesk is a suite of focused workspaces. Open a tool when you need it, then bring the output back into your daily workflow.
             </p>
             <Link
               className="mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black"
@@ -230,7 +259,7 @@ function SubAppsOverview() {
               <ChevronRight size={18} />
             </Link>
             <div className="mt-8 rounded-md border border-black/10 bg-white p-6 shadow-sm">
-              <h3 className="text-lg font-black">Included free</h3>
+              <h3 className="text-lg font-black">Included tools</h3>
               <ul className="mt-5 space-y-3 text-sm font-bold text-black/65">
                 {siteContent.subAppsPreview.included.map((item) => (
                   <li className="flex items-center gap-3" key={item}>
@@ -352,7 +381,7 @@ function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
           </div>
           <div className="mt-8 flex items-center gap-6">
             <button className="rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">{content.button}</button>
-            <span className="text-sm font-semibold text-black/55">100% Free Forever</span>
+            <span className="text-sm font-semibold text-black/55">Built into DawnDesk</span>
           </div>
         </div>
         <EditorMockup type={type} />
@@ -458,7 +487,7 @@ function DownloadCta() {
           <p className="eyebrow text-[#ffc400]">Download DawnDesk</p>
           <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Download DawnDesk<br />and boost your productivity today!</h2>
           <ul className="mt-8 space-y-4 text-sm font-bold text-white/80">
-            {["100% Free Forever", "All core features included", "Regular updates", "Works on Windows, macOS & Linux", "No subscriptions or paid tiers"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
+            {["Core tools included", "Regular updates", "Works on Windows, macOS & Linux", "Focused workspaces"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
           </ul>
           <div className="mt-9 flex flex-wrap gap-4">
             <button className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black"><Download className="mr-2 inline" size={17} />Download for Windows</button>
@@ -628,7 +657,7 @@ function BrandPanel({ copy }: { copy: string }) {
   return (
     <div className="mx-auto flex min-h-[360px] w-full max-w-md flex-col items-center justify-center rounded-xl border border-black/10 bg-[#121215] p-10 text-center text-white shadow-2xl">
       <div className="mb-8 h-24 w-32 rounded-full bg-[#ffc400] blur-2xl" />
-      <Sparkles className="-mt-20 mb-4 text-[#ffc400]" size={76} />
+      <Image className="-mt-20 mb-4 h-24 w-24 object-contain" src="/realistic_logo.png" alt="DawnDesk logo" width={96} height={96} />
       <h3 className="text-3xl font-black text-[#ffc400]">DawnDesk</h3>
       <p className="mt-4 max-w-xs leading-7 text-white/75">{copy}</p>
     </div>

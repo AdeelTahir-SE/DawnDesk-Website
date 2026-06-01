@@ -1,11 +1,15 @@
 import Link from "next/link";
-import { ArrowRight, Check, Download, Search, Sparkles } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, Check, Download, Sparkles } from "lucide-react";
 import { getSubApps } from "./sub-app-data";
+import { SearchOverlayButton } from "@/components/SearchOverlayButton";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Sub Apps - DawnDesk",
+export const metadata = createPageMetadata({
+  title: "Sub Apps",
   description: "Explore DawnDesk's built-in sub apps for editing, prompts, projects, notes, and developer workflows.",
-};
+  path: "/sub-apps",
+});
 
 export default async function SubAppsPage() {
   const subApps = await getSubApps();
@@ -14,14 +18,17 @@ export default async function SubAppsPage() {
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/92 text-white backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <Link className="text-xl font-extrabold text-[#ffc400]" href="/">DawnDesk</Link>
+          <Link className="flex items-center gap-3 text-xl font-extrabold text-[#ffc400]" href="/">
+            <Image src="/realistic_logo.png" alt="DawnDesk logo" width={48} height={48} className="h-12 w-12 object-contain" />
+            DawnDesk
+          </Link>
           <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
             <Link className="text-[#ffc400]" href="/sub-apps">Sub Apps</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#features">Features</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#download">Download</Link>
           </nav>
           <div className="flex items-center gap-4 text-white/85">
-            <Search size={18} />
+            <SearchOverlayButton />
             <Sparkles size={18} />
           </div>
         </div>
@@ -40,7 +47,7 @@ export default async function SubAppsPage() {
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
               <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="#sub-app-list">Explore Sub Apps</a>
-              <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/#download">Download DawnDesk</Link>
+              <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/api/download/windows">Download DawnDesk</Link>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -76,7 +83,7 @@ export default async function SubAppsPage() {
                     <Link className="inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/sub-apps/${app.slug}`}>
                       More Detail <ArrowRight size={17} />
                     </Link>
-                    <Link className="rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/#download">Download DawnDesk</Link>
+                    <Link className="rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/api/download/windows">Download DawnDesk</Link>
                   </div>
                 </div>
                 <div className="rounded-xl border border-black/10 bg-white p-6 shadow-xl">
@@ -115,7 +122,7 @@ export default async function SubAppsPage() {
             <h2 className="mt-4 text-4xl font-black">All sub apps are built into one workspace.</h2>
             <p className="mt-4 max-w-xl leading-7 text-white/65">Install DawnDesk once and use the full toolkit for creative, project, and productivity workflows.</p>
           </div>
-          <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
+          <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
             <Download size={18} />
             Download DawnDesk
           </Link>

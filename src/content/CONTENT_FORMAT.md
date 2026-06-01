@@ -28,7 +28,7 @@ Top-level format:
 ```json
 {
   "navigation": {
-    "mainItems": ["Features", "Solutions", "Sub Apps", "Resources", "Download"]
+    "mainItems": ["Features", "Solutions", "Sub Apps", "Download"]
   },
   "dashboard": {
     "items": ["Dashboard", "Projects"],

@@ -4,7 +4,6 @@
       "Features",
       "Solutions",
       "Sub Apps",
-      "Resources",
       "Download"
     ]
   },
@@ -433,7 +432,7 @@
   },
   "footer": {
     "copy": "Your workflow. All in one place. Stay organized, get more done, and focus on what matters most.",
-    "copyright": "? 2026 DawnDesk. All rights reserved.",
+    "copyright": "(c) 2026 DawnDesk. All rights reserved.",
     "socials": [
       "f",
       "x",
@@ -453,7 +452,7 @@
         ]
       },
       {
-        "title": "Resources",
+        "title": "Learn",
         "items": [
           "Documentation",
           "Blog",

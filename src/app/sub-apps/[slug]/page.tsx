@@ -1,8 +1,10 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Download, Sparkles } from "lucide-react";
 import subAppsFallback from "@/content/sub-apps.json";
 import { getSubApp } from "../sub-app-data";
+import { createPageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
   return subAppsFallback.map((app) => ({ slug: app.slug }));
@@ -19,8 +21,11 @@ export async function generateMetadata(props: PageProps<"/sub-apps/[slug]">) {
   }
 
   return {
-    title: `${app.name} - DawnDesk`,
-    description: app.summary,
+    ...createPageMetadata({
+      title: app.name,
+      description: app.summary,
+      path: `/sub-apps/${app.slug}`,
+    }),
   };
 }
 
@@ -38,7 +43,10 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/92 text-white backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-          <Link className="text-xl font-extrabold text-[#ffc400]" href="/">DawnDesk</Link>
+          <Link className="flex items-center gap-3 text-xl font-extrabold text-[#ffc400]" href="/">
+            <Image src="/realistic_logo.png" alt="DawnDesk logo" width={48} height={48} className="h-12 w-12 object-contain" />
+            DawnDesk
+          </Link>
           <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
             <Link className="text-white/80 hover:text-[#ffc400]" href="/sub-apps">Sub Apps</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#features">Features</Link>
@@ -64,7 +72,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             <p className="mt-6 text-2xl font-extrabold text-[#ffc400]">{app.accent}</p>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{app.detail}</p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <Link className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/#download">
+              <Link className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
                 <Download size={18} />
                 Download DawnDesk
               </Link>
@@ -143,7 +151,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
                   ))}
                 </ul>
               </div>
-              <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
+              <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
                 <Download size={18} />
                 Download DawnDesk
               </Link>

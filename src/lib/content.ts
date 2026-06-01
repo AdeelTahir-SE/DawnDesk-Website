@@ -1,11 +1,12 @@
 import siteFallback from "@/content/site.json";
 import subAppsFallback from "@/content/sub-apps.json";
+import { unstable_cache } from "next/cache";
 import { createPublicSupabaseClient } from "./supabase";
 
 export type SiteContent = typeof siteFallback;
 export type SubAppContent = (typeof subAppsFallback)[number];
 
-export async function getSiteContent(): Promise<SiteContent> {
+async function readSiteContent(): Promise<SiteContent> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
@@ -25,7 +26,7 @@ export async function getSiteContent(): Promise<SiteContent> {
   return data.content as SiteContent;
 }
 
-export async function getSubAppsContent(): Promise<SubAppContent[]> {
+async function readSubAppsContent(): Promise<SubAppContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
@@ -43,6 +44,16 @@ export async function getSubAppsContent(): Promise<SubAppContent[]> {
 
   return data.map((row) => row.content as SubAppContent);
 }
+
+export const getSiteContent = unstable_cache(readSiteContent, ["site-content-homepage"], {
+  revalidate: 3600,
+  tags: ["site-content"],
+});
+
+export const getSubAppsContent = unstable_cache(readSubAppsContent, ["sub-apps-content"], {
+  revalidate: 3600,
+  tags: ["sub-apps-content"],
+});
 
 export async function getSubAppContent(slug: string): Promise<SubAppContent | undefined> {
   const apps = await getSubAppsContent();

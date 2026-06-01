@@ -23,7 +23,6 @@ import {
   Monitor,
   Palette,
   PenTool,
-  Play,
   Search,
   Settings2,
   Share2,
@@ -42,6 +41,7 @@ import Link from "next/link";
 import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
 import { getSiteContent } from "@/lib/content";
+import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 
 type ToolFeature = readonly [string, string, ElementType];
 type ToolHeroContent = {
@@ -187,20 +187,23 @@ function Header({ dark = false }: { dark?: boolean }) {
   return (
     <header className={`sticky top-0 z-50 border-b ${dark ? "border-white/10 bg-black/90 text-white" : "border-black/10 bg-[#fbfaf7]/90 text-black"} backdrop-blur-xl`}>
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <a className="text-xl font-extrabold text-[#ffc400]" href="#">DawnDesk</a>
+        <a className="flex items-center gap-3 text-xl font-extrabold text-[#ffc400]" href="#">
+          <Image src="/realistic_logo.png" alt="DawnDesk logo" width={48} height={48} className="h-12 w-12 object-contain" />
+          DawnDesk
+        </a>
         <nav className="hidden items-center gap-9 text-sm font-semibold md:flex">
           {navItems.map((item) => (
             <a
               key={item}
               className="opacity-85 transition hover:text-[#ffc400] hover:opacity-100"
-              href={item === "Sub Apps" ? "/sub-apps" : `#${item.toLowerCase()}`}
+              href={item === "Sub Apps" ? "/sub-apps" : item === "Solutions" ? "/solutions" : `#${item.toLowerCase()}`}
             >
               {item}
             </a>
           ))}
         </nav>
         <div className="flex items-center gap-4">
-          <Search size={18} />
+          <SearchOverlayButton tone={dark ? "dark" : "light"} />
           <CircleUserRound size={18} />
         </div>
       </div>
@@ -222,7 +225,7 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-md text-lg leading-8 text-white/78">{hero.copy}</p>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="#download">{hero.primaryCta}</a>
+            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</a>
             <a className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</a>
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
@@ -316,8 +319,8 @@ function DownloadSection() {
               <p className="mt-2 text-sm text-black/60">{windows.version} <span className="mx-3">|</span> {windows.size}</p>
               <p className="mt-2 text-sm text-black/60">{windows.compatibility}</p>
               <div className="mt-7 flex flex-wrap gap-4">
-                <button className="rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black">{windows.primaryCta}</button>
-                <button className="rounded-md border border-black/15 px-7 py-3 text-sm font-bold">{windows.secondaryCta}</button>
+                <a className="rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href="/api/download/windows">{windows.primaryCta}</a>
+                <a className="rounded-md border border-black/15 px-7 py-3 text-sm font-bold" href={windows.url}>{windows.secondaryCta}</a>
               </div>
             </div>
           </div>
@@ -490,7 +493,7 @@ function DownloadCta() {
             {["Core tools included", "Regular updates", "Works on Windows, macOS & Linux", "Focused workspaces"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
           </ul>
           <div className="mt-9 flex flex-wrap gap-4">
-            <button className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black"><Download className="mr-2 inline" size={17} />Download for Windows</button>
+            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</a>
             <button className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold">View Other Platforms</button>
           </div>
         </div>
@@ -502,6 +505,21 @@ function DownloadCta() {
 
 function Footer() {
   const footer = siteContent.footer;
+  const footerHref = (item: string) => {
+    if (item === "Sub Apps") return "/sub-apps";
+    if (item === "Documentation") return "/documentation";
+    if (item === "Blog") return "/blog";
+    if (item === "Report a Bug") return "/report-a-bug";
+    if (item === "Request a Feature") return "/request-a-feature";
+    if (item === "Download") return "#download";
+    if (item === "Features") return "#features";
+    return "#";
+  };
+  const socialHref = (item: string) => {
+    if (item === "x") return "https://x.com/DawnDesk";
+    if (item === "yt") return "https://www.youtube.com/@DawnDeskOfficial";
+    return "#";
+  };
 
   return (
     <footer className="bg-black px-5 py-16 text-white lg:px-8">
@@ -510,7 +528,16 @@ function Footer() {
           <h2 className="text-3xl font-black text-[#ffc400]">DawnDesk</h2>
           <p className="mt-5 max-w-xs leading-8 text-white/68">{footer.copy}</p>
           <div className="mt-8 flex gap-4 text-white/70">
-            {footer.socials.map((item) => <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold" key={item}>{item}</span>)}
+            {footer.socials.map((item) => (
+              <a
+                aria-label={`DawnDesk ${item}`}
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold transition hover:bg-[#ffc400] hover:text-black"
+                href={socialHref(item)}
+                key={item}
+              >
+                <SocialIcon name={item} />
+              </a>
+            ))}
           </div>
           <p className="mt-16 text-sm text-white/45">{footer.copyright}</p>
         </div>
@@ -519,7 +546,7 @@ function Footer() {
             <div key={title}>
               <h3 className="mb-5 font-black">{title}</h3>
               <ul className="space-y-4 text-white/62">
-                {items.map((item) => <li key={item}><a className="hover:text-[#ffc400]" href={item === "Sub Apps" ? "/sub-apps" : "#"}>{item}</a></li>)}
+                {items.map((item) => <li key={item}><a className="hover:text-[#ffc400]" href={footerHref(item)}>{item}</a></li>)}
               </ul>
             </div>
           ))}
@@ -528,8 +555,8 @@ function Footer() {
           <div className="rounded-md border border-white/15 bg-white/[0.06] p-7">
             <h3 className="text-xl font-black">{footer.newsletter.title}</h3>
             <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
-            <form className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
-              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" placeholder={footer.newsletter.placeholder} />
+            <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
+              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={footer.newsletter.placeholder} required />
               <button className="bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
             </form>
           </div>
@@ -598,6 +625,8 @@ function ScreenshotFrame({
         className="h-auto w-full rounded-lg border border-white/10 object-cover"
         height={height}
         priority={priority}
+        quality={85}
+        sizes="(min-width: 1280px) 720px, (min-width: 1024px) 56vw, 94vw"
         src={src}
         width={width}
       />
@@ -619,10 +648,21 @@ function EditorMockup({ type }: { type: "photo" | "video" | "prompt" }) {
     );
   }
 
+  if (type === "video") {
+    return (
+      <ScreenshotFrame
+        alt="DawnDesk video editor timeline workspace"
+        height={667}
+        src="/screenshots/dawndesk-video-editor.png"
+        width={1186}
+      />
+    );
+  }
+
   return (
     <div className="rounded-xl border border-black/15 bg-[#101012] p-4 shadow-2xl">
       <div className="mb-4 flex items-center justify-between text-xs text-white/70">
-        <span>{type === "video" ? "Video Editor" : "Prompt Manager"}</span>
+        <span>Prompt Manager</span>
         <span>＋ ○ ×</span>
       </div>
       {isPrompt ? (
@@ -641,12 +681,10 @@ function EditorMockup({ type }: { type: "photo" | "video" | "prompt" }) {
             <div className="absolute left-1/2 top-14 h-24 w-56 -translate-x-1/2 rounded-full bg-white/40 blur-2xl" />
             <div className="absolute bottom-16 left-[18%] h-28 w-48 skew-x-[-18deg] bg-slate-700/45" />
             <div className="absolute bottom-20 right-[12%] h-36 w-56 skew-x-[18deg] bg-slate-800/50" />
-            {type === "video" && <Play className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black/65 p-4 text-white" size={70} />}
           </div>
           <div className="mt-4 grid grid-cols-7 gap-2">
             {Array.from({ length: 7 }).map((_, index) => <div className="h-14 rounded bg-gradient-to-br from-sky-300 to-stone-500" key={index} />)}
           </div>
-          {type === "video" && <div className="mt-4 space-y-2">{["bg-violet-500", "bg-emerald-500", "bg-sky-500"].map((color) => <div className={`h-4 rounded ${color}`} key={color} />)}</div>}
         </>
       )}
     </div>
@@ -657,7 +695,7 @@ function BrandPanel({ copy }: { copy: string }) {
   return (
     <div className="mx-auto flex min-h-[360px] w-full max-w-md flex-col items-center justify-center rounded-xl border border-black/10 bg-[#121215] p-10 text-center text-white shadow-2xl">
       <div className="mb-8 h-24 w-32 rounded-full bg-[#ffc400] blur-2xl" />
-      <Image className="-mt-20 mb-4 h-24 w-24 object-contain" src="/realistic_logo.png" alt="DawnDesk logo" width={96} height={96} />
+      <Image className="-mt-24 mb-4  h-44 w-64 object-cover" src="/realistic_logo.png" alt="DawnDesk logo" width={174} height={174} />
       <h3 className="text-3xl font-black text-[#ffc400]">DawnDesk</h3>
       <p className="mt-4 max-w-xs leading-7 text-white/75">{copy}</p>
     </div>
@@ -671,6 +709,57 @@ function LaptopMockup() {
       <div className="mx-auto h-8 w-[86%] rounded-b-2xl bg-gradient-to-b from-zinc-700 to-zinc-950" />
     </div>
   );
+}
+
+function SocialIcon({ name }: { name: string }) {
+  const common = {
+    "aria-hidden": true,
+    className: "h-4 w-4",
+    fill: "currentColor",
+    viewBox: "0 0 24 24",
+  };
+
+  if (name === "f") {
+    return (
+      <svg {...common}>
+        <path d="M14.5 8.2V6.9c0-.7.5-.9.9-.9h2.1V2.4L14.6 2c-3.3 0-5 2-5 5.5v.7H6.5V12h3.1v10h4.1V12h3.1l.5-3.8h-3.8Z" />
+      </svg>
+    );
+  }
+
+  if (name === "x") {
+    return (
+      <svg {...common}>
+        <path d="M17.7 3h3.1l-6.8 7.8L22 21h-6.3l-4.9-6.4L5.2 21H2.1l7.3-8.4L1.7 3h6.5l4.4 5.8L17.7 3Zm-1.1 16.2h1.7L7.3 4.7H5.4l11.2 14.5Z" />
+      </svg>
+    );
+  }
+
+  if (name === "ig") {
+    return (
+      <svg {...common}>
+        <path d="M7.8 2h8.4A5.8 5.8 0 0 1 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8A5.8 5.8 0 0 1 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2Zm0 2A3.8 3.8 0 0 0 4 7.8v8.4A3.8 3.8 0 0 0 7.8 20h8.4a3.8 3.8 0 0 0 3.8-3.8V7.8A3.8 3.8 0 0 0 16.2 4H7.8Zm8.8 2.2a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4ZM12 7.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8Zm0 2a2.9 2.9 0 1 0 0 5.8 2.9 2.9 0 0 0 0-5.8Z" />
+      </svg>
+    );
+  }
+
+  if (name === "in") {
+    return (
+      <svg {...common}>
+        <path d="M6.7 8.8H3V21h3.7V8.8ZM4.9 3A2.1 2.1 0 1 0 4.8 7.2 2.1 2.1 0 0 0 4.9 3ZM21 14.3c0-3.7-2-5.8-5-5.8-2.3 0-3.3 1.3-3.9 2.2V8.8H8.6V21h3.7v-6c0-.3 0-.6.1-.9.3-.6.9-1.3 2-1.3 1.4 0 2 1 2 2.6V21H20v-6.7h1Z" />
+      </svg>
+    );
+  }
+
+  if (name === "yt") {
+    return (
+      <svg {...common}>
+        <path d="M21.6 7.2a3 3 0 0 0-2.1-2.1C17.7 4.6 12 4.6 12 4.6s-5.7 0-7.5.5a3 3 0 0 0-2.1 2.1A31 31 0 0 0 2 12a31 31 0 0 0 .4 4.8 3 3 0 0 0 2.1 2.1c1.8.5 7.5.5 7.5.5s5.7 0 7.5-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 22 12a31 31 0 0 0-.4-4.8ZM10 15.4V8.6l5.9 3.4-5.9 3.4Z" />
+      </svg>
+    );
+  }
+
+  return <span>{name}</span>;
 }
 
 function Glow() {

@@ -69,13 +69,13 @@ function getIcon(icon: string): ElementType {
 
 export function mapSubApps(content: SubAppContent[]): SubApp[] {
   return content.map((app) => ({
-  ...app,
-  icon: getIcon(app.icon),
-  features: app.features.map((feature) => ({
-    ...feature,
-    icon: getIcon(feature.icon),
-  })),
-}));
+    ...app,
+    icon: getIcon(app.icon),
+    features: app.features.map((feature) => ({
+      ...feature,
+      icon: getIcon(feature.icon),
+    })),
+  }));
 }
 
 export async function getSubApps() {

@@ -54,11 +54,115 @@ input {
   font: inherit;
 }
 
+:where(a, button) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, label, select, summary, [role="button"], [type="button"], [type="submit"], [type="reset"]) {
+  cursor: pointer;
+}
+
+:where(button:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+}
+
+:where(a, button):focus-visible,
+:where(input, textarea, select):focus-visible {
+  outline: 2px solid #ffc400;
+  outline-offset: 3px;
+}
+
+:where(a[class*="rounded"], button[class*="rounded"]) {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease,
+    opacity 180ms ease;
+}
+
+:where(a[class*="rounded"], button[class*="rounded"]):hover {
+  transform: translateY(-2px);
+}
+
+:where(a[class*="rounded"], button[class*="rounded"]):active {
+  transform: translateY(0) scale(0.98);
+}
+
+:where(a[class*="bg-[#ffc400]"], button[class*="bg-[#ffc400]"]) {
+  box-shadow: 0 10px 30px rgba(255, 196, 0, 0.18);
+}
+
+:where(a[class*="bg-[#ffc400]"], button[class*="bg-[#ffc400]"]):hover {
+  box-shadow: 0 16px 42px rgba(255, 196, 0, 0.28);
+}
+
+.btn-animated {
+  position: relative;
+  overflow: hidden;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    background-color 180ms ease,
+    color 180ms ease;
+  will-change: transform;
+}
+
+.btn-animated::after {
+  content: "";
+  position: absolute;
+  inset: -35% auto -35% -75%;
+  width: 45%;
+  transform: skewX(-20deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-animated:hover {
+  transform: translateY(-4px) scale(1.015) !important;
+  box-shadow: 0 18px 42px rgba(255, 196, 0, 0.24);
+}
+
+.btn-animated:hover::after {
+  opacity: 1;
+  animation: button-shine 720ms ease;
+}
+
+.btn-animated:active {
+  transform: translateY(-1px) scale(0.985) !important;
+}
+
+.btn-animated-dark:hover {
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
+}
+
+:where(article[class*="border"], div[class*="shadow-"]) {
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+:where(article[class*="border"]):hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 196, 0, 0.38);
+  box-shadow: 0 18px 55px rgba(15, 12, 4, 0.09);
+}
+
 .section {
   background:
     radial-gradient(circle at 15% 12%, rgba(255, 196, 0, 0.08), transparent 28%),
     linear-gradient(135deg, #fffefd 0%, #fbfaf7 52%, #f5f1eb 100%);
   padding: 96px 0;
+}
+
+.section > * {
+  animation: rise-in 560ms ease both;
 }
 
 .eyebrow {
@@ -69,9 +173,52 @@ input {
   color: rgba(0, 0, 0, 0.64);
 }
 
+:where(.bg-black, [class*="bg-black"]) .eyebrow {
+  color: #ffc400;
+}
+
+.markdown-content pre code {
+  color: inherit;
+}
+
 ::selection {
   background: #ffc400;
   color: #000;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes button-shine {
+  from {
+    left: -75%;
+  }
+  to {
+    left: 130%;
+  }
+}
+
+[class*="radial-gradient"] {
+  animation: glow-pulse 7s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

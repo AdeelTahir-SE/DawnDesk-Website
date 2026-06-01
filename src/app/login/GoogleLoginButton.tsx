@@ -82,7 +82,7 @@ export function GoogleLoginButton() {
         <p className="mt-1 text-xl font-black text-white">{displayName}</p>
         {user.email && <p className="mt-2 text-sm text-white/58">{user.email}</p>}
         <button
-          className="mt-6 rounded-md border border-white/15 px-5 py-3 text-sm font-extrabold text-white transition hover:border-[#ffc400] hover:text-[#ffc400]"
+          className="btn-animated mt-6 rounded-md border border-white/15 px-5 py-3 text-sm font-extrabold text-white transition hover:border-[#ffc400] hover:text-[#ffc400]"
           onClick={signOut}
           type="button"
         >
@@ -95,7 +95,7 @@ export function GoogleLoginButton() {
   return (
     <div>
       <button
-        className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-6 py-4 text-sm font-extrabold text-black shadow-sm transition hover:bg-[#ffc400]"
+        className="btn-animated flex w-full items-center justify-center gap-3 rounded-md bg-white px-6 py-4 text-sm font-extrabold text-black shadow-sm transition hover:bg-[#ffc400]"
         disabled={loading}
         onClick={signInWithGoogle}
         type="button"

@@ -4,7 +4,7 @@
     "title": "Designing a calmer command center",
     "category": "Product",
     "summary": "How DawnDesk keeps projects, notes, prompts, and creative tools close without overwhelming the workspace.",
-    "content": "DawnDesk is built around a command center that keeps active work visible without turning every screen into noise. The dashboard highlights connected workspaces, saved prompts, recent operations, and useful shortcuts so users can move into the right tool quickly.",
+    "content": "## A calmer starting point\n\nDawnDesk is built around a command center that keeps active work visible without turning every screen into noise. The dashboard highlights connected workspaces, saved prompts, recent operations, and useful shortcuts so users can move into the right tool quickly.\n\n### What stays visible\n\n- Active workspaces\n- Saved prompts and templates\n- Recent operations\n- Shortcuts into the tools you use most\n\n```mermaid\ngraph LR\n  Dashboard --> Projects\n  Dashboard --> Notes\n  Dashboard --> Prompts\n  Dashboard --> CreativeTools[Photo and Video]\n```\n\nThe goal is simple: fewer disconnected windows, more visible context.",
     "publishedAt": "2026-06-01"
   },
   {
@@ -12,7 +12,7 @@
     "title": "A practical workflow for creative assets",
     "category": "Workflow",
     "summary": "Use the photo and video workspaces to prepare assets, then keep the outputs connected to active work.",
-    "content": "Creative work often lives beside planning work. DawnDesk keeps photo and video editing close to notes, project context, and prompt workflows so assets can be prepared and reused without jumping between disconnected tools.",
+    "content": "## Keep assets close to planning\n\nCreative work often lives beside planning work. DawnDesk keeps photo and video editing close to notes, project context, and prompt workflows so assets can be prepared and reused without jumping between disconnected tools.\n\n### A practical flow\n\n1. Import the source asset.\n2. Edit it in the right DawnDesk workspace.\n3. Save the output beside the project or note that needs it.\n\n```js\nconst output = {\n  workspace: \"photo-editor\",\n  status: \"ready\",\n  linkedProject: \"launch-assets\"\n};\n```\n\nThat structure makes the final asset easier to find later.",
     "publishedAt": "2026-06-01"
   },
   {
@@ -20,7 +20,7 @@
     "title": "What is coming next for DawnDesk",
     "category": "Updates",
     "summary": "A quick look at workspace sync, collaboration improvements, and refinements planned for upcoming releases.",
-    "content": "Upcoming DawnDesk work focuses on stronger sync, better workspace handoffs, practical collaboration features, and smoother documentation around each sub-app. The goal is to make the suite easier to trust in daily work.",
+    "content": "## What we are improving next\n\nUpcoming DawnDesk work focuses on stronger sync, better workspace handoffs, practical collaboration features, and smoother documentation around each sub-app. The goal is to make the suite easier to trust in daily work.\n\n### Focus areas\n\n- Clearer connected workspace status\n- Better handoffs between sub apps\n- More useful documentation pages\n- Smoother content management from the admin panel\n\n```mermaid\nflowchart TD\n  Plan[Plan work] --> Create[Create assets]\n  Create --> Organize[Organize outputs]\n  Organize --> Reuse[Reuse in future work]\n```\n\nEach release should make the product feel more coherent, not just larger.",
     "publishedAt": "2026-06-01"
   }
 ]

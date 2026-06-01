@@ -103,7 +103,7 @@ Top-level format:
   "footer": {
     "copy": "Footer brand copy.",
     "copyright": "Copyright text.",
-    "socials": ["f", "x"],
+    "socials": ["x", "yt"],
     "groups": [
       { "title": "Product", "items": ["Features", "Download"] }
     ],

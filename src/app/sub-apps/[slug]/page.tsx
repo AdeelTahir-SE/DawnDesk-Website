@@ -72,11 +72,11 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             <p className="mt-6 text-2xl font-extrabold text-[#ffc400]">{app.accent}</p>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{app.detail}</p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <Link className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+              <Link className="btn-animated inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
                 <Download size={18} />
                 Download DawnDesk
               </Link>
-              <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/sub-apps">View All Sub Apps</Link>
+              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/sub-apps">View All Sub Apps</Link>
             </div>
           </div>
 
@@ -151,7 +151,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
                   ))}
                 </ul>
               </div>
-              <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+              <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
                 <Download size={18} />
                 Download DawnDesk
               </Link>

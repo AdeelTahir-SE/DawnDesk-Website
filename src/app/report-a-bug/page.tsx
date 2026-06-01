@@ -39,7 +39,7 @@ export default function ReportBugPage({ searchParams }: { searchParams?: { sent?
               Attach screenshot or image
               <input className="sr-only" name="attachment" type="file" accept="image/*" />
             </label>
-            <button className="mt-5 rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white" type="submit">Submit bug report</button>
+            <button className="btn-animated btn-animated-dark mt-5 rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white" type="submit">Submit bug report</button>
           </form>
         </div>
       </section>

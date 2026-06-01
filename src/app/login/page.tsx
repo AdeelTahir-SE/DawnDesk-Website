@@ -14,12 +14,12 @@ export default function LoginPage() {
   return (
     <main className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <SiteHeader />
-      <section className="relative overflow-hidden bg-black px-5 py-24 text-white lg:px-8">
+      <section className="relative overflow-hidden bg-black px-5 py-20 text-white lg:px-8">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_12%,rgba(255,196,0,0.26),transparent_34%)]" />
         <div className="relative mx-auto flex max-w-md flex-col items-center text-center">
-          <Image src="/realistic_logo.png" alt="DawnDesk logo" width={120} height={120} className="h-32 w-32 object-contain" priority />
-          <p className="eyebrow mt-4 text-[#ffc400]">DawnDesk login</p>
-          <h1 className="mt-4 text-4xl font-black leading-tight">Sign in with Google</h1>
+          <Image src="/realistic_logo.png" alt="DawnDesk logo" width={132} height={132} className="h-36 w-36 object-contain" priority />
+          <p className="mt-5 text-xs font-black uppercase tracking-[0.18em] text-[#ffc400]">DawnDesk login</p>
+          <h1 className="mt-5 text-4xl font-black leading-tight md:text-5xl">Sign in with Google</h1>
           <p className="mt-5 leading-7 text-white/68">
             DawnDesk uses Google as the only sign-in option for website accounts.
           </p>

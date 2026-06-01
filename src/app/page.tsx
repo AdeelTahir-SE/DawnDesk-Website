@@ -226,8 +226,8 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-md text-lg leading-8 text-white/78">{hero.copy}</p>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</a>
-            <a className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</a>
+            <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</a>
+            <a className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</a>
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
             <span className="font-semibold italic">Available for</span>
@@ -256,7 +256,7 @@ function SubAppsOverview() {
               DawnDesk is a suite of focused workspaces. Open a tool when you need it, then bring the output back into your daily workflow.
             </p>
             <Link
-              className="mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black"
+              className="btn-animated btn-animated-dark mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black"
               href="/sub-apps"
             >
               View all sub apps
@@ -320,8 +320,8 @@ function DownloadSection() {
               <p className="mt-2 text-sm text-black/60">{windows.version} <span className="mx-3">|</span> {windows.size}</p>
               <p className="mt-2 text-sm text-black/60">{windows.compatibility}</p>
               <div className="mt-7 flex flex-wrap gap-4">
-                <a className="rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href="/api/download/windows">{windows.primaryCta}</a>
-                <a className="rounded-md border border-black/15 px-7 py-3 text-sm font-bold" href={windows.url}>{windows.secondaryCta}</a>
+                <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href="/api/download/windows">{windows.primaryCta}</a>
+                <a className="btn-animated rounded-md border border-black/15 px-7 py-3 text-sm font-bold" href={windows.url}>{windows.secondaryCta}</a>
               </div>
             </div>
           </div>
@@ -384,7 +384,7 @@ function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
             {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
           </div>
           <div className="mt-8 flex items-center gap-6">
-            <button className="rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">{content.button}</button>
+            <button className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">{content.button}</button>
             <span className="text-sm font-semibold text-black/55">Built into DawnDesk</span>
           </div>
         </div>
@@ -401,8 +401,8 @@ function ToolGrid({ kicker, title, features, notice }: { kicker: string; title: 
         <p className="eyebrow">{kicker}</p>
         <h2 className="mt-4 max-w-2xl text-4xl font-black leading-tight md:text-5xl">{title}</h2>
         <div className="mt-8 flex gap-3">
-          <button className="rounded-md border border-[#ffc400] bg-[#fff8d6] px-5 py-3 text-sm font-extrabold text-[#d99500]">Current Features</button>
-          <button className="rounded-md px-5 py-3 text-sm font-bold text-black/70">Coming Soon</button>
+          <button className="btn-animated rounded-md border border-[#ffc400] bg-[#fff8d6] px-5 py-3 text-sm font-extrabold text-[#d99500]">Current Features</button>
+          <button className="btn-animated rounded-md px-5 py-3 text-sm font-bold text-black/70">Coming Soon</button>
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
@@ -494,8 +494,8 @@ function DownloadCta() {
             {["Core tools included", "Regular updates", "Works on Windows, macOS & Linux", "Focused workspaces"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
           </ul>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</a>
-            <button className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold">View Other Platforms</button>
+            <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</a>
+            <button className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold">View Other Platforms</button>
           </div>
         </div>
         <LaptopMockup />
@@ -506,6 +506,15 @@ function DownloadCta() {
 
 function Footer() {
   const footer = siteContent.footer;
+  const allowedSocials = new Set(["x", "yt"]);
+  const hiddenFooterItems = new Set(["Careers", "Changelog", "Roadmap"]);
+  const footerGroups = footer.groups
+    .map((group) => ({
+      ...group,
+      items: group.items.filter((item) => !hiddenFooterItems.has(item)),
+    }))
+    .filter((group) => group.items.length > 0);
+  const footerSocials = footer.socials.filter((item) => allowedSocials.has(item));
   const footerHref = (item: string) => {
     if (item === "Sub Apps") return "/sub-apps";
     if (item === "Documentation") return "/documentation";
@@ -529,10 +538,10 @@ function Footer() {
           <h2 className="text-3xl font-black text-[#ffc400]">DawnDesk</h2>
           <p className="mt-5 max-w-xs leading-8 text-white/68">{footer.copy}</p>
           <div className="mt-8 flex gap-4 text-white/70">
-            {footer.socials.map((item) => (
+            {footerSocials.map((item) => (
               <a
                 aria-label={`DawnDesk ${item}`}
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-xs font-bold transition hover:bg-[#ffc400] hover:text-black"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-xs font-bold transition hover:bg-[#ffc400] hover:text-black"
                 href={socialHref(item)}
                 key={item}
               >
@@ -543,7 +552,7 @@ function Footer() {
           <p className="mt-16 text-sm text-white/45">{footer.copyright}</p>
         </div>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {footer.groups.map(({ title, items }) => (
+          {footerGroups.map(({ title, items }) => (
             <div key={title}>
               <h3 className="mb-5 font-black">{title}</h3>
               <ul className="space-y-4 text-white/62">
@@ -558,7 +567,7 @@ function Footer() {
             <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
             <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
               <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={footer.newsletter.placeholder} required />
-              <button className="bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
+              <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
             </form>
           </div>
         </div>

@@ -113,7 +113,7 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
                   </li>
                 ))}
               </ol>
-              <Link className="mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href="/api/download/windows">
+              <Link className="btn-animated btn-animated-dark mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href="/api/download/windows">
                 <Download size={18} />
                 Download DawnDesk
               </Link>

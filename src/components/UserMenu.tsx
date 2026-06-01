@@ -43,7 +43,7 @@ export function UserMenu() {
   return (
     <Link
       aria-label={`Signed in as ${displayName}`}
-      className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-2 py-1 text-xs font-bold text-white/85 transition hover:border-[#ffc400] hover:text-[#ffc400]"
+      className="btn-animated flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-2 py-1 text-xs font-bold text-white/85 transition hover:border-[#ffc400] hover:text-[#ffc400]"
       href="/login"
       title={`Signed in as ${displayName}`}
     >

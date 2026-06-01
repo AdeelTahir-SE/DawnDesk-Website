@@ -70,10 +70,10 @@ export default function SolutionsPage() {
               The solution is not one isolated tool. DawnDesk brings command-center visibility, focused sub-apps, reusable prompts, documentation, and feedback channels into one practical workflow.
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <Link className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/sub-apps">
+              <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/sub-apps">
                 Explore sub apps
               </Link>
-              <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/documentation">
+              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/documentation">
                 Read documentation
               </Link>
             </div>
@@ -141,7 +141,7 @@ export default function SolutionsPage() {
               ))}
             </ul>
           </div>
-          <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
             Download DawnDesk
             <ArrowRight size={18} />
           </Link>

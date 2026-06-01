@@ -46,8 +46,8 @@ export default async function SubAppsPage() {
               Explore the complete DawnDesk toolkit. Each sub app has its own workspace, feature set, and detail page.
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <a className="rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="#sub-app-list">Explore Sub Apps</a>
-              <Link className="rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/api/download/windows">Download DawnDesk</Link>
+              <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="#sub-app-list">Explore Sub Apps</a>
+              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/api/download/windows">Download DawnDesk</Link>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -80,10 +80,10 @@ export default async function SubAppsPage() {
                   <p className="mt-4 text-2xl font-extrabold text-[#d29300]">{app.accent}</p>
                   <p className="mt-5 max-w-xl text-lg leading-8 text-black/65">{app.summary}</p>
                   <div className="mt-8 flex flex-wrap gap-4">
-                    <Link className="inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/sub-apps/${app.slug}`}>
+                    <Link className="btn-animated btn-animated-dark inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/sub-apps/${app.slug}`}>
                       More Detail <ArrowRight size={17} />
                     </Link>
-                    <Link className="rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/api/download/windows">Download DawnDesk</Link>
+                    <Link className="btn-animated rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/api/download/windows">Download DawnDesk</Link>
                   </div>
                 </div>
                 <div className="rounded-xl border border-black/10 bg-white p-6 shadow-xl">
@@ -122,7 +122,7 @@ export default async function SubAppsPage() {
             <h2 className="mt-4 text-4xl font-black">All sub apps are built into one workspace.</h2>
             <p className="mt-4 max-w-xl leading-7 text-white/65">Install DawnDesk once and use the full toolkit for creative, project, and productivity workflows.</p>
           </div>
-          <Link className="inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
             <Download size={18} />
             Download DawnDesk
           </Link>

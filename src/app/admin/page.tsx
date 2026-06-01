@@ -1,7 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { Database, FileText, LayoutDashboard, LogOut, Newspaper } from "lucide-react";
+import { Database, FileText, LayoutDashboard, LogOut, Newspaper, PlusCircle } from "lucide-react";
 import { getBlogPostsContent, getSiteContent, getSubAppsContent } from "@/lib/content";
 import { createAdminSupabaseClient } from "@/lib/supabase";
 
@@ -127,6 +127,85 @@ async function saveSubAppContent(formData: FormData) {
   redirect(`/admin?saved=${slug}`);
 }
 
+function slugify(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+async function createSubAppContent(formData: FormData) {
+  "use server";
+  await requireAdmin();
+
+  const name = String(formData.get("name") ?? "").trim();
+  const requestedSlug = String(formData.get("slug") ?? "");
+  const summary = String(formData.get("summary") ?? "").trim();
+  const detail = String(formData.get("detail") ?? "").trim();
+  const icon = String(formData.get("icon") ?? "Sparkles");
+  const slug = slugify(requestedSlug || name);
+
+  if (!name || !slug || !summary) {
+    throw new Error("Name, slug, and summary are required.");
+  }
+
+  const content = {
+    slug,
+    name,
+    eyebrow: String(formData.get("eyebrow") ?? "Focused workspace").trim() || "Focused workspace",
+    headline: String(formData.get("headline") ?? `${name} for focused DawnDesk workflows.`).trim() || `${name} for focused DawnDesk workflows.`,
+    accent: String(formData.get("accent") ?? "Built into the DawnDesk toolkit.").trim() || "Built into the DawnDesk toolkit.",
+    summary,
+    detail: detail || summary,
+    icon,
+    features: [
+      { title: "Focused Workspace", copy: `Use ${name} inside its own clear DawnDesk workspace.`, icon },
+      { title: "Connected Context", copy: "Keep outputs close to projects, notes, and day-to-day work.", icon: "Share2" },
+      { title: "Quick Search", copy: "Find related work, references, and saved outputs faster.", icon: "Search" },
+      { title: "Export Ready", copy: "Move completed work into the places that need it next.", icon: "Upload" },
+    ],
+    workflow: [
+      `Open ${name}`,
+      "Add or prepare your source material",
+      "Save the result back to DawnDesk",
+    ],
+  };
+
+  const supabase = createAdminSupabaseClient();
+  if (!supabase) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const { data: lastApp } = await supabase
+    .from("sub_apps")
+    .select("sort_order")
+    .order("sort_order", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const sortOrder = Number(lastApp?.sort_order ?? 0) + 10;
+  const { error } = await supabase
+    .from("sub_apps")
+    .insert({
+      slug,
+      name,
+      content,
+      sort_order: sortOrder,
+    });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/sub-apps");
+  revalidatePath(`/sub-apps/${slug}`);
+  revalidatePath(`/documentation/${slug}`);
+  revalidateTag("sub-apps-content", "max");
+  redirect(`/admin?saved=${slug}`);
+}
+
 async function saveBlogPostsContent(formData: FormData) {
   "use server";
   await requireAdmin();
@@ -188,7 +267,7 @@ function AdminLogin({ error }: { error?: string }) {
         <form action={signInAdmin} className="mt-7 space-y-4">
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="username" placeholder="Username" />
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="password" placeholder="Password" type="password" />
-          <button className="w-full rounded-md bg-[#ffc400] px-6 py-4 text-sm font-extrabold text-black" type="submit">Open admin</button>
+          <button className="btn-animated w-full rounded-md bg-[#ffc400] px-6 py-4 text-sm font-extrabold text-black" type="submit">Open admin</button>
         </form>
       </div>
     </main>
@@ -222,8 +301,41 @@ function JsonEditor({
           defaultValue={JSON.stringify(content, null, 2)}
           spellCheck={false}
         />
-        <button className="rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
+        <button className="btn-animated btn-animated-dark rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
           {button}
+        </button>
+      </form>
+    </section>
+  );
+}
+
+function NewSubAppForm() {
+  const iconOptions = ["Sparkles", "LayoutGrid", "ImageIcon", "Film", "PenTool", "FolderKanban", "FileText", "Code2", "Settings2"];
+
+  return (
+    <section className="rounded-xl border border-black/10 bg-white p-6 shadow-sm">
+      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+        <div>
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#c47800]">New sub app</p>
+          <h2 className="mt-2 text-2xl font-black">Create a fixed-layout sub app</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/58">Add the core fields once. DawnDesk will generate the feature cards, workflow, listing page, detail page, and documentation layout from the same structured content.</p>
+        </div>
+        <span className="rounded-full bg-[#fff3bf] px-4 py-2 text-xs font-black text-black/72">Supabase row</span>
+      </div>
+      <form action={createSubAppContent} className="mt-6 grid gap-4 md:grid-cols-2">
+        <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="name" placeholder="Sub app name" required />
+        <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="slug" placeholder="custom-slug or leave name-based" />
+        <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="eyebrow" placeholder="Eyebrow, e.g. Organize faster" />
+        <select className="rounded-md border border-black/15 px-4 py-3 text-sm" name="icon" defaultValue="Sparkles">
+          {iconOptions.map((icon) => <option key={icon} value={icon}>{icon}</option>)}
+        </select>
+        <input className="rounded-md border border-black/15 px-4 py-3 text-sm md:col-span-2" name="headline" placeholder="Headline" />
+        <input className="rounded-md border border-black/15 px-4 py-3 text-sm md:col-span-2" name="accent" placeholder="Accent line" />
+        <textarea className="min-h-28 rounded-md border border-black/15 px-4 py-3 text-sm md:col-span-2" name="summary" placeholder="Short summary used on cards and listing pages" required />
+        <textarea className="min-h-32 rounded-md border border-black/15 px-4 py-3 text-sm md:col-span-2" name="detail" placeholder="Longer detail used on the sub-app and documentation hero" />
+        <button className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black md:col-span-2" type="submit">
+          <PlusCircle size={18} />
+          Add sub app
         </button>
       </form>
     </section>
@@ -248,7 +360,7 @@ export default async function AdminPage(props: AdminPageProps) {
             <h1 className="mt-2 text-4xl font-black">Website content</h1>
           </div>
           <form action={signOutAdmin}>
-            <button className="inline-flex items-center gap-2 rounded-md border border-black/15 px-5 py-3 text-sm font-extrabold text-black transition hover:border-[#ffc400]" type="submit">
+            <button className="btn-animated inline-flex items-center gap-2 rounded-md border border-black/15 px-5 py-3 text-sm font-extrabold text-black transition hover:border-[#ffc400]" type="submit">
               <LogOut size={17} />
               Sign out
             </button>
@@ -281,6 +393,7 @@ export default async function AdminPage(props: AdminPageProps) {
               <FileText className="text-[#d29300]" size={28} />
               <h2 className="text-2xl font-black">Sub app content</h2>
             </div>
+            <NewSubAppForm />
             {subApps.map((app) => (
               <article className="rounded-md border border-black/10 bg-white p-6 shadow-sm" key={app.slug}>
                 <div className="mb-5 flex items-center justify-between gap-4">
@@ -296,7 +409,7 @@ export default async function AdminPage(props: AdminPageProps) {
                     defaultValue={JSON.stringify(app, null, 2)}
                     spellCheck={false}
                   />
-                  <button className="rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
+                  <button className="btn-animated btn-animated-dark rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
                     Save {app.name}
                   </button>
                 </form>
@@ -304,7 +417,7 @@ export default async function AdminPage(props: AdminPageProps) {
             ))}
           </section>
 
-          <JsonEditor action={saveBlogPostsContent} button="Save blog posts" content={blogPosts} rows={24} title="Blog posts" />
+          <JsonEditor action={saveBlogPostsContent} button="Save blog posts" content={blogPosts} rows={24} title="Blog posts (markdown supported)" />
         </div>
       </div>
     </main>

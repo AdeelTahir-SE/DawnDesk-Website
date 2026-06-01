@@ -37,7 +37,7 @@ export default function RequestFeaturePage({ searchParams }: { searchParams?: { 
               <option>Critical</option>
             </select>
             <textarea className="mt-4 min-h-44 w-full rounded-md border border-black/15 px-4 py-3 text-sm" name="description" placeholder="Describe the feature and the workflow it improves" required />
-            <button className="mt-5 rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white" type="submit">Submit request</button>
+            <button className="btn-animated btn-animated-dark mt-5 rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white" type="submit">Submit request</button>
           </form>
         </div>
       </section>

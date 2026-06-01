@@ -1,11 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import { createBrowserSupabaseClient } from "@/lib/supabase-browser";
 
 export function GoogleLoginButton() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const supabase = createBrowserSupabaseClient();
+    if (!supabase) {
+      return;
+    }
+
+    supabase.auth.getSession().then(({ data }) => {
+      setUser(data.session?.user ?? null);
+      if (data.session && window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (session && window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   async function signInWithGoogle() {
     setError(null);
@@ -29,6 +56,40 @@ export function GoogleLoginButton() {
       setLoading(false);
       setError(error.message);
     }
+  }
+
+  async function signOut() {
+    const supabase = createBrowserSupabaseClient();
+    if (!supabase) {
+      return;
+    }
+
+    await supabase.auth.signOut();
+    setUser(null);
+  }
+
+  if (user) {
+    const displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email;
+    const avatarUrl = user.user_metadata?.avatar_url;
+
+    return (
+      <div className="text-center">
+        {avatarUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="mx-auto h-16 w-16 rounded-full border border-white/15 object-cover" src={avatarUrl} alt="" />
+        )}
+        <p className="mt-4 text-sm font-bold text-white/58">Signed in as</p>
+        <p className="mt-1 text-xl font-black text-white">{displayName}</p>
+        {user.email && <p className="mt-2 text-sm text-white/58">{user.email}</p>}
+        <button
+          className="mt-6 rounded-md border border-white/15 px-5 py-3 text-sm font-extrabold text-white transition hover:border-[#ffc400] hover:text-[#ffc400]"
+          onClick={signOut}
+          type="button"
+        >
+          Sign out
+        </button>
+      </div>
+    );
   }
 
   return (

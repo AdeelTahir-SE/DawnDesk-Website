@@ -37,6 +37,7 @@ import {
   Video,
   Wand2,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
 import siteContent from "@/content/site.json";
@@ -108,9 +109,6 @@ function mapToolHero(hero: (typeof siteContent.toolHeroes)[ToolType]): ToolHeroC
 }
 
 const navItems = siteContent.navigation.mainItems;
-const dashboardItems = siteContent.dashboard.items;
-const dashboardStats = siteContent.dashboard.stats;
-const productivityHeights = siteContent.dashboard.productivityHeights;
 const platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 const featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 const suiteTools = siteContent.suiteTools;
@@ -538,47 +536,64 @@ function MiniFeature({ title, copy, icon: Icon }: { title: string; copy: string;
 
 function DashboardMockup({ large = false }: { large?: boolean }) {
   return (
-    <div className={`relative rounded-xl border border-white/12 bg-[#090909] p-3 shadow-[0_0_70px_rgba(255,196,0,0.16)] ${large ? "rotate-[-3deg]" : ""}`}>
-      <div className="overflow-hidden rounded-lg border border-white/10 bg-[#0d0d0f]">
-        <div className="flex h-10 items-center justify-between border-b border-white/10 px-4 text-xs text-white/55">
-          <span className="font-black text-[#ffc400]">DawnDesk</span>
-          <span>Dashboard</span>
-        </div>
-        <div className="grid min-h-[360px] grid-cols-[140px_1fr] md:grid-cols-[180px_1fr]">
-          <aside className="border-r border-white/10 bg-black/30 p-4">
-            <ul className="space-y-3">
-              {dashboardItems.map((item, index) => <li className={`rounded px-3 py-2 text-xs font-bold ${index === 0 ? "bg-[#ffc400]/15 text-[#ffc400]" : "text-white/55"}`} key={item}>{item}</li>)}
-            </ul>
-          </aside>
-          <main className="p-5">
-            <h3 className="text-xl font-black text-white">Welcome back to DawnDesk</h3>
-            <p className="mt-2 text-xs text-white/45">Monitor your workflow, jump into tasks quickly, and keep track of current projects.</p>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {dashboardStats.map((item) => <div className="rounded-md border border-white/10 bg-white/[0.04] p-4" key={item.label}><p className="text-xs text-white/45">{item.label}</p><p className="mt-2 text-2xl font-black text-white">{item.value}</p><p className="text-xs font-bold text-[#ffc400]">{item.detail}</p></div>)}
-            </div>
-            <div className="mt-6 rounded-md border border-white/10 bg-white/[0.04] p-5">
-              <h4 className="text-sm font-black text-white">Latest Pending Tasks</h4>
-              <div className="mt-4 h-12 rounded bg-black/40 text-center text-xs leading-[3rem] text-white/35">No pending tasks right now. Create one from the tasks page.</div>
-            </div>
-            <div className="mt-6 rounded-md border border-white/10 bg-white/[0.04] p-5">
-              <h4 className="text-sm font-black text-white">Productivity (7 Days)</h4>
-              <div className="mt-4 flex h-20 items-end gap-2">
-                {productivityHeights.map((height, index) => <span className="flex-1 rounded-t bg-[#ffc400]" style={{ height: `${height}%` }} key={index} />)}
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
+    <ScreenshotFrame
+      alt="DawnDesk dashboard command center"
+      className={large ? "rotate-[-2deg]" : ""}
+      height={689}
+      priority={large}
+      src="/screenshots/dawndesk-dashboard.png"
+      width={1348}
+    />
+  );
+}
+
+function ScreenshotFrame({
+  alt,
+  className = "",
+  height,
+  priority = false,
+  src,
+  width,
+}: {
+  alt: string;
+  className?: string;
+  height: number;
+  priority?: boolean;
+  src: string;
+  width: number;
+}) {
+  return (
+    <div className={`relative overflow-hidden rounded-xl border border-white/12 bg-[#090909] p-3 shadow-[0_0_70px_rgba(255,196,0,0.16)] ${className}`}>
+      <Image
+        alt={alt}
+        className="h-auto w-full rounded-lg border border-white/10 object-cover"
+        height={height}
+        priority={priority}
+        src={src}
+        width={width}
+      />
     </div>
   );
 }
 
 function EditorMockup({ type }: { type: "photo" | "video" | "prompt" }) {
   const isPrompt = type === "prompt";
+
+  if (type === "photo") {
+    return (
+      <ScreenshotFrame
+        alt="DawnDesk photo editor with marquee selection tools"
+        height={667}
+        src="/screenshots/dawndesk-photo-editor.png"
+        width={1186}
+      />
+    );
+  }
+
   return (
     <div className="rounded-xl border border-black/15 bg-[#101012] p-4 shadow-2xl">
       <div className="mb-4 flex items-center justify-between text-xs text-white/70">
-        <span>{type === "photo" ? "Photo Editor" : type === "video" ? "Video Editor" : "Prompt Manager"}</span>
+        <span>{type === "video" ? "Video Editor" : "Prompt Manager"}</span>
         <span>＋ ○ ×</span>
       </div>
       {isPrompt ? (

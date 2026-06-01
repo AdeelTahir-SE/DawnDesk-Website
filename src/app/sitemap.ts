@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/sub-apps",
     "/documentation",
     "/blog",
+    "/login",
     "/request-a-feature",
     "/report-a-bug",
   ];

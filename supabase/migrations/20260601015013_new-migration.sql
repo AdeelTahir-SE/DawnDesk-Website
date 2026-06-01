@@ -539,9 +539,7 @@ values ('homepage', $json${
         "items": [
           "Features",
           "Download",
-          "Sub Apps",
-          "Changelog",
-          "Roadmap"
+          "Sub Apps"
         ]
       },
       {

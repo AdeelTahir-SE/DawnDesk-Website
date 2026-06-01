@@ -6,7 +6,6 @@ import {
   CalendarDays,
   Check,
   ChevronRight,
-  CircleUserRound,
   Cloud,
   Code2,
   Download,
@@ -42,6 +41,7 @@ import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
 import { getSiteContent } from "@/lib/content";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
+import { UserMenu } from "@/components/UserMenu";
 
 type ToolFeature = readonly [string, string, ElementType];
 type ToolHeroContent = {
@@ -204,9 +204,7 @@ function Header({ dark = false }: { dark?: boolean }) {
         </nav>
         <div className="flex items-center gap-4">
           <SearchOverlayButton tone={dark ? "dark" : "light"} />
-          <Link aria-label="Login with Google" className="transition hover:text-[#ffc400]" href="/login">
-            <CircleUserRound size={18} />
-          </Link>
+          <UserMenu />
         </div>
       </div>
     </header>

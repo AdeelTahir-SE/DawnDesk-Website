@@ -55,6 +55,20 @@ export const appReleaseSchema = z.object({
 
 export const appReleasesSchema = z.array(appReleaseSchema).min(1, "Add at least one app release");
 
+export const featureHistoryItemSchema = z.object({
+  version: z.string().trim().min(1, "Version is required"),
+  date: z.string().trim().min(3, "Date is required"),
+  title: z.string().trim().min(5, "Title is required"),
+  summary: z.string().trim().min(20, "Summary must be at least 20 characters"),
+  status: z.string().trim().min(2, "Status is required"),
+  branches: z.array(z.object({
+    label: z.string().trim().min(2, "Branch label is required"),
+    detail: z.string().trim().min(10, "Branch detail is too short"),
+  })).min(1, "Add at least one branch"),
+});
+
+export const featureHistorySchema = z.array(featureHistoryItemSchema).min(1, "Add at least one feature history item");
+
 export function formatZodError(error: z.ZodError) {
   return error.issues.map((issue) => `${issue.path.join(".") || "value"}: ${issue.message}`).join("; ");
 }

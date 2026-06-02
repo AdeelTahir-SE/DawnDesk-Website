@@ -156,6 +156,71 @@
       "color": "bg-violet-400"
     }
   ],
+  "updateTimeline": [
+    {
+      "version": "v0.3.0",
+      "date": "June 2026",
+      "title": "Creative workspaces become connected",
+      "summary": "This update grows DawnDesk into a clearer creative suite, keeping photo, video, prompt, and project work connected from the main dashboard.",
+      "status": "Latest branch",
+      "branches": [
+        {
+          "label": "Photo Editor",
+          "detail": "Improved editor preview, faster tool discovery, and clearer feature grouping for daily edits."
+        },
+        {
+          "label": "Video Editor",
+          "detail": "Timeline-focused workspace with stronger export messaging and creator-friendly editing paths."
+        },
+        {
+          "label": "Prompt Manager",
+          "detail": "Better prompt categories, search flow, and reuse patterns for AI-assisted writing and planning."
+        }
+      ]
+    },
+    {
+      "version": "v0.2.0",
+      "date": "May 2026",
+      "title": "Sub apps branch from the core suite",
+      "summary": "DawnDesk starts presenting each tool as its own focused workspace while keeping the install and navigation unified.",
+      "status": "Shipped",
+      "branches": [
+        {
+          "label": "Sub App Pages",
+          "detail": "Dedicated detail pages explain each workspace, its workflow, and where it fits in DawnDesk."
+        },
+        {
+          "label": "Documentation",
+          "detail": "Docs pages mirror the app structure so users can learn the exact tool they opened."
+        },
+        {
+          "label": "Search",
+          "detail": "Site search helps users jump across features, docs, blog posts, and support flows."
+        }
+      ]
+    },
+    {
+      "version": "v0.1.0",
+      "date": "April 2026",
+      "title": "Foundation for the DawnDesk workflow",
+      "summary": "The first public structure introduces the main productivity promise: one place for projects, notes, downloads, and focused tools.",
+      "status": "Foundation",
+      "branches": [
+        {
+          "label": "Dashboard",
+          "detail": "A central command view shows the product direction and organizes the core app experience."
+        },
+        {
+          "label": "Download Flow",
+          "detail": "Windows installer path, platform cards, and release content establish the shipping pipeline."
+        },
+        {
+          "label": "Support",
+          "detail": "Bug reporting, feature requests, and content management routes prepare the feedback loop."
+        }
+      ]
+    }
+  ],
   "audiences": [
     {
       "title": "Freelancers",

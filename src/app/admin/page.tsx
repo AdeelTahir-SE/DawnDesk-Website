@@ -8,6 +8,7 @@ import {
   Download,
   Database,
   FileText,
+  GitBranch,
   Home,
   ImageUp,
   LayoutDashboard,
@@ -22,13 +23,14 @@ import {
 } from "lucide-react";
 import { AdminSectionNav, type AdminNavIcon, type AdminNavItem } from "@/components/AdminSectionNav";
 import { JsonTextarea } from "@/components/JsonTextarea";
-import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getSiteContent, getSubAppsContent } from "@/lib/content";
+import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getSubAppsContent } from "@/lib/content";
 import { createAdminSupabaseClient } from "@/lib/supabase";
 import {
   appReleasesSchema,
   blogPostSchema,
   blogPostsSchema,
   documentationPagesSchema,
+  featureHistorySchema,
   formatZodError,
   subAppSchema,
 } from "@/lib/content-validation";
@@ -408,6 +410,46 @@ async function saveReleasesContent(formData: FormData) {
   redirect("/admin?saved=releases");
 }
 
+async function saveFeatureHistoryContent(formData: FormData) {
+  "use server";
+  await requireAdmin();
+
+  const content = String(formData.get("content") ?? "");
+  const supabase = createAdminSupabaseClient();
+  if (!supabase) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const parsed = parseJsonOrRedirect(content);
+  const validation = featureHistorySchema.safeParse(parsed);
+  if (!validation.success) {
+    redirect(`/admin?error=${encodeURIComponent(formatZodError(validation.error))}`);
+  }
+
+  const rows = validation.data.map((item, index) => ({
+    version: item.version,
+    title: item.title,
+    content: item,
+    sort_order: (validation.data.length - index) * 10,
+  }));
+
+  const { error } = await supabase
+    .from("feature_history")
+    .upsert(rows, { onConflict: "version" });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const versions = validation.data.map((item) => item.version);
+  await supabase.from("feature_history").delete().not("version", "in", `(${versions.map((version) => `"${version}"`).join(",")})`);
+
+  revalidatePath("/");
+  revalidatePath("/updates");
+  revalidateTag("feature-history-content", "max");
+  redirect("/admin?saved=feature-history");
+}
+
 async function uploadMedia(formData: FormData) {
   "use server";
   await requireAdmin();
@@ -779,7 +821,7 @@ function AdminOverview({
         <AdminStatCard copy="Content areas" label="Total sections" value={sections.length} />
         <AdminStatCard copy="Across admin" label="Total items" value={totalItems} />
         <AdminStatCard copy="Ready to edit" label="Live sections" tone="green" value={sections.length} />
-        <AdminStatCard copy="JSON backed" label="Structured editors" tone="yellow" value={5} />
+        <AdminStatCard copy="JSON backed" label="Structured editors" tone="yellow" value={6} />
       </div>
 
       <div className="mt-6 overflow-hidden rounded-lg border border-black/10">
@@ -1149,6 +1191,38 @@ const releasesFormat = {
   ],
 };
 
+const featureHistoryFormat = {
+  title: "Feature history array format",
+  notes: [
+    "This editor powers the homepage preview and the complete /updates page.",
+    "Each item is one linear release node; branches describe feature groups added in that update.",
+    "Put the newest update first. Saving replaces the public feature-history list.",
+  ],
+  prompt: {
+    title: "AI feature history prompt",
+    body: "You are preparing DawnDesk feature history JSON. Return exactly one valid JSON array and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Use double quotes for all keys and strings.\n- Put newest updates first.\n- Each item is one release node on the linear trunk.\n- branches must explain the feature groups added in that release.\n- Keep summaries concise and user-facing.\n\nRequired schema:\n[{\n  \"version\": \"v0.3.0\",\n  \"date\": \"June 2026\",\n  \"title\": \"Release title\",\n  \"summary\": \"At least 20 characters explaining the update.\",\n  \"status\": \"Latest branch\",\n  \"branches\": [\n    { \"label\": \"Feature group\", \"detail\": \"What changed in this branch.\" }\n  ]\n}]\n\nRelease notes/context: [PASTE UPDATE DETAILS].",
+  },
+  example: [
+    {
+      version: "v0.3.0",
+      date: "June 2026",
+      title: "Creative workspaces become connected",
+      summary: "This update grows DawnDesk into a clearer creative suite with connected workspaces.",
+      status: "Latest branch",
+      branches: [
+        {
+          label: "Photo Editor",
+          detail: "Improved editor preview and clearer feature grouping for daily edits.",
+        },
+        {
+          label: "Prompt Manager",
+          detail: "Better prompt categories, search flow, and reuse patterns.",
+        },
+      ],
+    },
+  ],
+};
+
 function NewSubAppForm() {
   const subAppPrompt = `You are creating a DawnDesk sub app record. Return exactly one valid JSON object and nothing else.
 
@@ -1272,12 +1346,13 @@ export default async function AdminPage(props: AdminPageProps) {
     return <AdminLogin error={searchParams?.error} />;
   }
 
-  const [siteContent, subApps, blogPosts, documentationPages, releases, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
+  const [siteContent, subApps, blogPosts, documentationPages, releases, featureHistory, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
     getSiteContent(),
     getSubAppsContent(),
     getBlogPostsContent(),
     getDocumentationContent(),
     getAppReleasesContent(),
+    getFeatureHistoryContent(),
     getMediaUploads(),
     getBugReports(),
     getFeatureRequests(),
@@ -1329,6 +1404,15 @@ export default async function AdminPage(props: AdminPageProps) {
       items: releases.length,
       status: "Published",
       title: "Releases",
+    },
+    {
+      description: "Update the public linear feature history tree and release branches.",
+      href: "#admin-feature-history",
+      icon: GitBranch,
+      iconName: "sparkles",
+      items: featureHistory.length,
+      status: "Published",
+      title: "Feature history",
     },
     {
       description: "Upload public assets and copy URLs into markdown content.",
@@ -1417,6 +1501,7 @@ export default async function AdminPage(props: AdminPageProps) {
             ["Blog", "#admin-blog", Newspaper],
             ["Documentation", "#admin-docs", FileText],
             ["Releases", "#admin-releases", LinkIcon],
+            ["Feature history", "#admin-feature-history", GitBranch],
             ["Media", "#admin-media", ImageUp],
             ["Bugs", "#admin-bugs", Bug],
             ["Features", "#admin-features", Sparkles],
@@ -1515,6 +1600,10 @@ export default async function AdminPage(props: AdminPageProps) {
 
             <div id="admin-releases" className="scroll-mt-24">
               <JsonEditor action={saveReleasesContent} button="Save app releases" content={releases} format={releasesFormat} rows={18} title="Download releases" />
+            </div>
+
+            <div id="admin-feature-history" className="scroll-mt-24">
+              <JsonEditor action={saveFeatureHistoryContent} button="Save feature history" content={featureHistory} format={featureHistoryFormat} rows={24} title="Complete features history" />
             </div>
 
             <section id="admin-media" className="scroll-mt-24 rounded-xl border border-black/10 bg-white p-6 shadow-sm">

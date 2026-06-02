@@ -40,9 +40,10 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
-import { getAppReleasesContent, getSiteContent, type AppReleaseContent } from "@/lib/content";
+import { getAppReleasesContent, getFeatureHistoryContent, getSiteContent, type AppReleaseContent } from "@/lib/content";
 import { DownloadChooser } from "@/components/DownloadChooser";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
+import { UpdateTree } from "@/components/UpdateTree";
 import { UserMenu } from "@/components/UserMenu";
 
 type ToolFeature = readonly [string, string, ElementType];
@@ -117,6 +118,7 @@ let platformItems = siteContent.download.platforms.map((item) => ({ ...item, ico
 let featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let suiteTools = siteContent.suiteTools;
 let upcoming = siteContent.upcoming;
+let updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
 let audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let testimonials = siteContent.testimonials;
 let subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
@@ -141,6 +143,7 @@ function setSiteContent(content: typeof siteFallback) {
   featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   suiteTools = siteContent.suiteTools;
   upcoming = siteContent.upcoming;
+  updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
   audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   testimonials = siteContent.testimonials;
   subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
@@ -160,8 +163,9 @@ function setSiteContent(content: typeof siteFallback) {
 }
 
 export default async function Home() {
-  const [content, releases] = await Promise.all([getSiteContent(), getAppReleasesContent()]);
+  const [content, releases, featureHistory] = await Promise.all([getSiteContent(), getAppReleasesContent(), getFeatureHistoryContent()]);
   setSiteContent(content);
+  updateTimeline = featureHistory;
 
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
@@ -178,6 +182,7 @@ export default async function Home() {
       <ToolHero type="prompt" />
       <ToolGrid kicker={siteContent.toolGrids.prompt.kicker} title={siteContent.toolGrids.prompt.title} features={promptFeatures} notice={siteContent.toolGrids.prompt.notice} />
       <UpcomingSection />
+      <UpdateTreeSection />
       <AudienceSection />
       <Testimonials />
       <DownloadCta />
@@ -414,6 +419,23 @@ function UpcomingSection() {
           </div>
         </div>
         <BrandPanel copy="Brighten your workflow. Stay tuned for more updates!" />
+      </div>
+    </section>
+  );
+}
+
+function UpdateTreeSection() {
+  return (
+    <section id="updates" className="section">
+      <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[0.72fr_1.28fr] lg:px-8">
+        <div>
+          <p className="eyebrow text-[#c47800]">Growing update tree</p>
+          <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">A linear history with feature branches.</h2>
+          <p className="mt-5 max-w-md leading-7 text-black/65">
+            Follow DawnDesk as each release grows from the main trunk, then branches into the exact features added for that update.
+          </p>
+        </div>
+        <UpdateTree updates={updateTimeline} preview />
       </div>
     </section>
   );

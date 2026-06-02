@@ -7,6 +7,7 @@ import { createPublicSupabaseClient } from "./supabase";
 export type SiteContent = typeof siteFallback;
 export type SubAppContent = (typeof subAppsFallback)[number];
 export type BlogPostContent = (typeof blogPostsFallback)[number];
+export type FeatureHistoryContent = SiteContent["updateTimeline"][number];
 export type DocumentationPageContent = {
   slug: string;
   title: string;
@@ -173,6 +174,25 @@ async function readAppReleasesContent(): Promise<AppReleaseContent[]> {
   })) as AppReleaseContent[];
 }
 
+async function readFeatureHistoryContent(): Promise<FeatureHistoryContent[]> {
+  const supabase = createPublicSupabaseClient();
+
+  if (!supabase) {
+    return siteFallback.updateTimeline;
+  }
+
+  const { data, error } = await supabase
+    .from("feature_history")
+    .select("content")
+    .order("sort_order", { ascending: false });
+
+  if (error || !data?.length) {
+    return siteFallback.updateTimeline;
+  }
+
+  return data.map((row) => row.content as FeatureHistoryContent);
+}
+
 export const getSiteContent = unstable_cache(readSiteContent, ["site-content-homepage"], {
   revalidate: 3600,
   tags: ["site-content"],
@@ -196,6 +216,11 @@ export const getDocumentationContent = unstable_cache(readDocumentationContent, 
 export const getAppReleasesContent = unstable_cache(readAppReleasesContent, ["app-releases-content"], {
   revalidate: 3600,
   tags: ["app-releases-content"],
+});
+
+export const getFeatureHistoryContent = unstable_cache(readFeatureHistoryContent, ["feature-history-content"], {
+  revalidate: 3600,
+  tags: ["feature-history-content"],
 });
 
 export async function getSubAppContent(slug: string): Promise<SubAppContent | undefined> {

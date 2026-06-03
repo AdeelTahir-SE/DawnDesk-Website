@@ -40,11 +40,12 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
-import { getAppReleasesContent, getFeatureHistoryContent, getSiteContent, type AppReleaseContent } from "@/lib/content";
+import { getAppReleasesContent, getFeatureHistoryContent, getSiteContent, getUpcomingFeaturesContent, type AppReleaseContent } from "@/lib/content";
 import { DownloadChooser } from "@/components/DownloadChooser";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 import { UpdateTree } from "@/components/UpdateTree";
 import { UserMenu } from "@/components/UserMenu";
+import { PromptManagerMockup } from "@/components/PromptManagerMockup";
 
 type ToolFeature = readonly [string, string, ElementType];
 type ToolHeroContent = {
@@ -163,9 +164,10 @@ function setSiteContent(content: typeof siteFallback) {
 }
 
 export default async function Home() {
-  const [content, releases, featureHistory] = await Promise.all([getSiteContent(), getAppReleasesContent(), getFeatureHistoryContent()]);
+  const [content, releases, featureHistory, upcomingFeatures] = await Promise.all([getSiteContent(), getAppReleasesContent(), getFeatureHistoryContent(), getUpcomingFeaturesContent()]);
   setSiteContent(content);
   updateTimeline = featureHistory;
+  upcoming = upcomingFeatures;
 
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
@@ -204,7 +206,7 @@ function Header({ dark = false }: { dark?: boolean }) {
             <a
               key={item}
               className="opacity-85 transition hover:text-[#ffc400] hover:opacity-100"
-              href={item === "Sub Apps" ? "/sub-apps" : item === "Solutions" ? "/solutions" : `#${item.toLowerCase()}`}
+              href={item === "Sub Apps" ? "/sub-apps" : item === "Documentation" ? "/documentation" : item === "Releases" ? "/releases" : `#${item.toLowerCase()}`}
             >
               {item}
             </a>
@@ -233,8 +235,8 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-md text-lg leading-8 text-white/78">{hero.copy}</p>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</a>
-            <a className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</a>
+            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</Link>
+            <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</Link>
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
             <span className="font-semibold italic">Available for</span>
@@ -380,13 +382,13 @@ function ToolGrid({ kicker, title, features, notice }: { kicker: string; title: 
     <section className="section">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <p className="eyebrow">{kicker}</p>
-        <h2 className="mt-4 max-w-2xl text-4xl font-black leading-tight md:text-5xl">{title}</h2>
-        <div className="mt-8 flex gap-3">
-          <button className="btn-animated rounded-md border border-[#ffc400] bg-[#fff8d6] px-5 py-3 text-sm font-extrabold text-[#d99500]">Current Features</button>
-          <button className="btn-animated rounded-md px-5 py-3 text-sm font-bold text-black/70">Coming Soon</button>
-        </div>
+        <h2 className="mt-4 max-w-2xl text-4xl font-black leading-tight md:text-5xl ">{title}</h2>
+        <h3 className="mt-10 text-2xl font-black text-[#ffb400]">Current Features</h3>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
+        </div>
+        <div className="mt-8">
+          <Link href="/upcoming" className="btn-animated inline-flex items-center justify-center rounded-md bg-black/5 px-6 py-3 text-sm font-bold text-black/70 transition hover:bg-black/10 hover:text-black">Coming Soon</Link>
         </div>
         <div className="mt-8 flex items-center gap-4 rounded-md border border-black/10 bg-white px-5 py-5 text-sm text-black/65">
           <Lightbulb className="rounded bg-[#fff2c2] p-2 text-[#e09a00]" size={38} />
@@ -416,6 +418,11 @@ function UpcomingSection() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-8">
+            <Link href="/upcoming" className="btn-animated inline-flex items-center justify-center rounded-md bg-black/5 px-6 py-3 text-sm font-bold text-black/70 transition hover:bg-black/10 hover:text-black">
+              See full list
+            </Link>
           </div>
         </div>
         <BrandPanel copy="Brighten your workflow. Stay tuned for more updates!" />
@@ -667,36 +674,7 @@ function EditorMockup({ type }: { type: "photo" | "video" | "prompt" }) {
     );
   }
 
-  return (
-    <div className="rounded-xl border border-black/15 bg-[#101012] p-4 shadow-2xl">
-      <div className="mb-4 flex items-center justify-between text-xs text-white/70">
-        <span>Prompt Manager</span>
-        <span>＋ ○ ×</span>
-      </div>
-      {isPrompt ? (
-        <div className="grid min-h-[380px] grid-cols-[130px_1fr] gap-4">
-          <div className="space-y-3 rounded-md bg-black/35 p-3">
-            {["All Prompts", "Favorites", "Work", "Marketing", "Writing", "Development"].map((item) => <div className="rounded bg-white/[0.05] px-3 py-3 text-xs text-white/62" key={item}>{item}</div>)}
-          </div>
-          <div className="space-y-3">
-            {["Blog Post Idea Generator", "Social Media Post Creator", "Product Description Writer", "Email Template Generator", "Content Outline Builder", "Code Explanation Helper"].map((item, index) => <div className="flex items-center justify-between rounded-md border border-white/10 bg-white/[0.05] p-4 text-sm text-white" key={item}><span>{item}</span><span className="rounded bg-white/10 px-3 py-1 text-xs text-white/50">{["Marketing", "Writing", "Development"][index % 3]}</span></div>)}
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="relative h-[300px] overflow-hidden rounded-md bg-gradient-to-br from-sky-200 via-emerald-100 to-stone-300">
-            <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-emerald-900/55" />
-            <div className="absolute left-1/2 top-14 h-24 w-56 -translate-x-1/2 rounded-full bg-white/40 blur-2xl" />
-            <div className="absolute bottom-16 left-[18%] h-28 w-48 skew-x-[-18deg] bg-slate-700/45" />
-            <div className="absolute bottom-20 right-[12%] h-36 w-56 skew-x-[18deg] bg-slate-800/50" />
-          </div>
-          <div className="mt-4 grid grid-cols-7 gap-2">
-            {Array.from({ length: 7 }).map((_, index) => <div className="h-14 rounded bg-gradient-to-br from-sky-300 to-stone-500" key={index} />)}
-          </div>
-        </>
-      )}
-    </div>
-  );
+  return <PromptManagerMockup />;
 }
 
 function BrandPanel({ copy }: { copy: string }) {

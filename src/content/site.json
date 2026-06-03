@@ -2,9 +2,9 @@
   "navigation": {
     "mainItems": [
       "Features",
-      "Solutions",
       "Sub Apps",
-      "Download"
+      "Documentation",
+      "Releases"
     ]
   },
   "dashboard": {

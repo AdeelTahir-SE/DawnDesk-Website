@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { AdminSectionNav, type AdminNavIcon, type AdminNavItem } from "@/components/AdminSectionNav";
 import { JsonTextarea } from "@/components/JsonTextarea";
-import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getSubAppsContent } from "@/lib/content";
+import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getSubAppsContent, getUpcomingFeaturesContent } from "@/lib/content";
 import { createAdminSupabaseClient } from "@/lib/supabase";
 import {
   appReleasesSchema,
@@ -33,6 +33,7 @@ import {
   featureHistorySchema,
   formatZodError,
   subAppSchema,
+  upcomingFeatureSchema,
 } from "@/lib/content-validation";
 
 const ADMIN_USERNAME = "admin";
@@ -448,6 +449,46 @@ async function saveFeatureHistoryContent(formData: FormData) {
   revalidatePath("/updates");
   revalidateTag("feature-history-content", "max");
   redirect("/admin?saved=feature-history");
+}
+
+async function saveUpcomingFeaturesContent(formData: FormData) {
+  "use server";
+  await requireAdmin();
+
+  const content = String(formData.get("content") ?? "");
+  const supabase = createAdminSupabaseClient();
+  if (!supabase) {
+    throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY.");
+  }
+
+  const parsed = parseJsonOrRedirect(content);
+  const validation = upcomingFeatureSchema.safeParse(parsed);
+  if (!validation.success) {
+    redirect(`/admin?error=${encodeURIComponent(formatZodError(validation.error))}`);
+  }
+
+  const rows = validation.data.map((item, index) => ({
+    version: item.version,
+    title: item.title,
+    content: item,
+    sort_order: (validation.data.length - index) * 10,
+  }));
+
+  const { error } = await supabase
+    .from("upcoming_features")
+    .upsert(rows, { onConflict: "version" });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  const versions = validation.data.map((item) => item.version);
+  await supabase.from("upcoming_features").delete().not("version", "in", `(${versions.map((version) => `"${version}"`).join(",")})`);
+
+  revalidatePath("/");
+  revalidatePath("/upcoming");
+  revalidateTag("upcoming-features-content", "max");
+  redirect("/admin?saved=upcoming-features");
 }
 
 async function uploadMedia(formData: FormData) {
@@ -1223,6 +1264,28 @@ const featureHistoryFormat = {
   ],
 };
 
+const upcomingFeaturesFormat = {
+  title: "Upcoming features array format",
+  notes: [
+    "This list populates the roadmap features.",
+    "state should be a short tag like 'In Progress' or 'Planned'.",
+    "color is a Tailwind background class like 'bg-amber-400'.",
+  ],
+  prompt: {
+    title: "AI upcoming features prompt",
+    body: "You are preparing DawnDesk upcoming features JSON. Return exactly one valid JSON array and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Use double quotes for all keys and strings.\n- Each item is one upcoming feature.\n- color must be a valid tailwind bg class like 'bg-amber-400' or 'bg-sky-400'.\n\nRequired schema:\n[{\n  \"version\": \"v2.1\",\n  \"title\": \"Feature Title\",\n  \"copy\": \"Short description\",\n  \"state\": \"In Progress\",\n  \"color\": \"bg-amber-400\"\n}]\n\nDetails: [PASTE UPCOMING DETAILS].",
+  },
+  example: [
+    {
+      version: "v2.1",
+      title: "Team Collaboration",
+      copy: "Real-time collaboration and comments",
+      state: "Coming Soon",
+      color: "bg-amber-400",
+    },
+  ],
+};
+
 function NewSubAppForm() {
   const subAppPrompt = `You are creating a DawnDesk sub app record. Return exactly one valid JSON object and nothing else.
 
@@ -1346,13 +1409,14 @@ export default async function AdminPage(props: AdminPageProps) {
     return <AdminLogin error={searchParams?.error} />;
   }
 
-  const [siteContent, subApps, blogPosts, documentationPages, releases, featureHistory, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
+  const [siteContent, subApps, blogPosts, documentationPages, releases, featureHistory, upcomingFeatures, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
     getSiteContent(),
     getSubAppsContent(),
     getBlogPostsContent(),
     getDocumentationContent(),
     getAppReleasesContent(),
     getFeatureHistoryContent(),
+    getUpcomingFeaturesContent(),
     getMediaUploads(),
     getBugReports(),
     getFeatureRequests(),
@@ -1413,6 +1477,15 @@ export default async function AdminPage(props: AdminPageProps) {
       items: featureHistory.length,
       status: "Published",
       title: "Feature history",
+    },
+    {
+      description: "Manage upcoming features and roadmap items.",
+      href: "#admin-upcoming",
+      icon: Sparkles,
+      iconName: "sparkles",
+      items: upcomingFeatures.length,
+      status: "Published",
+      title: "Upcoming features",
     },
     {
       description: "Upload public assets and copy URLs into markdown content.",
@@ -1502,6 +1575,7 @@ export default async function AdminPage(props: AdminPageProps) {
             ["Documentation", "#admin-docs", FileText],
             ["Releases", "#admin-releases", LinkIcon],
             ["Feature history", "#admin-feature-history", GitBranch],
+            ["Upcoming", "#admin-upcoming", Sparkles],
             ["Media", "#admin-media", ImageUp],
             ["Bugs", "#admin-bugs", Bug],
             ["Features", "#admin-features", Sparkles],
@@ -1604,6 +1678,10 @@ export default async function AdminPage(props: AdminPageProps) {
 
             <div id="admin-feature-history" className="scroll-mt-24">
               <JsonEditor action={saveFeatureHistoryContent} button="Save feature history" content={featureHistory} format={featureHistoryFormat} rows={24} title="Complete features history" />
+            </div>
+
+            <div id="admin-upcoming" className="scroll-mt-24">
+              <JsonEditor action={saveUpcomingFeaturesContent} button="Save upcoming features" content={upcomingFeatures} format={upcomingFeaturesFormat} rows={24} title="Upcoming features roadmap" />
             </div>
 
             <section id="admin-media" className="scroll-mt-24 rounded-xl border border-black/10 bg-white p-6 shadow-sm">

@@ -39,10 +39,10 @@ export function SearchOverlayButton({ tone = "dark" }: { tone?: "dark" | "light"
               <Search className="shrink-0 text-[#ffc400]" size={19} />
               <input
                 ref={inputRef}
-                className="min-w-0 flex-1 bg-transparent text-base text-white outline-none placeholder:text-white/38"
+                className="min-w-0 flex-1 bg-transparent text-base text-white outline-none focus-visible:outline-none placeholder:text-white/38"
                 name="q"
                 placeholder="Search pages, docs, blogs, downloads..."
-                type="search"
+                type="text"
               />
             </label>
             <button className="btn-animated rounded-xl bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" type="submit">

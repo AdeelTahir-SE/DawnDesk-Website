@@ -5,9 +5,9 @@ import { UserMenu } from "./UserMenu";
 
 const navItems = [
   ["Features", "/#features"],
-  ["Solutions", "/solutions"],
   ["Sub Apps", "/sub-apps"],
-  ["Download", "/#download"],
+  ["Documentation", "/documentation"],
+  ["Releases", "/releases"],
 ] as const;
 
 export function SiteHeader() {

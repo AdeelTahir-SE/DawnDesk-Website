@@ -69,6 +69,16 @@ export const featureHistoryItemSchema = z.object({
 
 export const featureHistorySchema = z.array(featureHistoryItemSchema).min(1, "Add at least one feature history item");
 
+export const upcomingFeatureItemSchema = z.object({
+  version: z.string().trim().min(1, "Version is required"),
+  title: z.string().trim().min(2, "Title is required"),
+  copy: z.string().trim().min(5, "Copy is required"),
+  state: z.string().trim().min(2, "State is required"),
+  color: z.string().trim().min(3, "Color is required"),
+});
+
+export const upcomingFeatureSchema = z.array(upcomingFeatureItemSchema).min(1, "Add at least one upcoming feature");
+
 export function formatZodError(error: z.ZodError) {
   return error.issues.map((issue) => `${issue.path.join(".") || "value"}: ${issue.message}`).join("; ");
 }

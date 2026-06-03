@@ -1,2 +1,4 @@
+delete from public.documentation_pages;
+
 alter table if exists public.documentation_pages
-drop constraint if exists documentation_pages_slug_fkey;
+add constraint documentation_pages_slug_fkey foreign key (slug) references public.sub_apps(slug) on delete cascade;

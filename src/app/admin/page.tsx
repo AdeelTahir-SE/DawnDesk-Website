@@ -1147,13 +1147,13 @@ const blogArrayFormat = {
 const docsFormat = {
   title: "Documentation array format",
   notes: [
-    "Each documentation slug must match a sub-app slug.",
+    "Documentation slugs can be standalone or match a sub-app slug for linked branding.",
     "content is markdown and headings automatically become section links.",
     "Use image markdown like ![Caption](https://example.com/image.png).",
   ],
   prompt: {
     title: "AI documentation prompt",
-    body: "You are writing DawnDesk documentation for a sub app. Return exactly one valid JSON object and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Escape every newline in string values as \\n.\n- Use double quotes for all keys and strings.\n- Include every required key shown below.\n- slug must exactly match the sub-app slug.\n- content must be markdown and should include ## Overview, ## Key features, and ## Workflow.\n- Include Mermaid only inside the content string when it is useful.\n\nRequired schema:\n{\n  \"slug\": \"matches-sub-app-slug\",\n  \"title\": \"Sub App Documentation\",\n  \"summary\": \"Short summary\",\n  \"content\": \"## Overview\\n\\n...\\n\\n## Key features\\n\\n- ...\\n\\n## Workflow\\n\\n1. ...\"\n}\n\nSub app name: [NAME]\nSub app slug: [SLUG]\nSub app summary: [SUMMARY]\nKey features: [BULLETS]\nWorkflow steps: [1..N]",
+    body: "You are writing DawnDesk documentation. Return exactly one valid JSON object and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Escape every newline in string values as \\n.\n- Use double quotes for all keys and strings.\n- Include every required key shown below.\n- Keep slug lowercase kebab-case. It can match a sub-app slug when the page documents a sub-app.\n- content must be markdown and should include ## Overview, ## Key features, and ## Workflow when useful.\n- Include Mermaid only inside the content string when it is useful.\n\nRequired schema:\n{\n  \"slug\": \"documentation-page-slug\",\n  \"title\": \"Documentation title\",\n  \"summary\": \"Short summary\",\n  \"content\": \"## Overview\\n\\n...\\n\\n## Key features\\n\\n- ...\\n\\n## Workflow\\n\\n1. ...\"\n}\n\nTopic/context: [PASTE YOUR NOTES]",
   },
   example: [
     {

@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download } from "lucide-react";
-import subAppsFallback from "@/content/sub-apps.json";
+import { ArrowLeft, Download, FileText } from "lucide-react";
 import { getSubApp } from "@/app/sub-apps/sub-app-data";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
-import { getDocumentationPageContent } from "@/lib/content";
+import { getDocumentationContent, getDocumentationPageContent } from "@/lib/content";
 import { getMarkdownHeadings, MarkdownContent } from "@/components/MarkdownContent";
 
 type DocumentationPageProps = {
@@ -14,8 +13,9 @@ type DocumentationPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return subAppsFallback.map((app) => ({ "sub-app": app.slug }));
+export async function generateStaticParams() {
+  const documentationPages = await getDocumentationContent();
+  return documentationPages.map((page) => ({ "sub-app": page.slug }));
 }
 
 export async function generateMetadata(props: DocumentationPageProps) {
@@ -23,7 +23,7 @@ export async function generateMetadata(props: DocumentationPageProps) {
   const app = await getSubApp(params["sub-app"]);
   const docs = await getDocumentationPageContent(params["sub-app"]);
 
-  if (!app) {
+  if (!docs) {
     return {
       title: "Documentation - DawnDesk",
     };
@@ -31,9 +31,9 @@ export async function generateMetadata(props: DocumentationPageProps) {
 
   return {
     ...createPageMetadata({
-      title: `${app.name} Documentation`,
-      description: docs?.summary ?? app.detail,
-      path: `/documentation/${app.slug}`,
+      title: docs.title,
+      description: docs.summary,
+      path: `/documentation/${docs.slug}`,
     }),
   };
 }
@@ -45,11 +45,11 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
     getDocumentationPageContent(params["sub-app"]),
   ]);
 
-  if (!app || !docs) {
+  if (!docs) {
     notFound();
   }
 
-  const Icon = app.icon;
+  const Icon = app?.icon ?? FileText;
   const headings = getMarkdownHeadings(docs.content);
 
   return (
@@ -58,9 +58,9 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
 
       <section className="bg-black px-5 py-20 text-white lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <Link className="inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href={`/sub-apps/${app.slug}`}>
+          <Link className="inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href={app ? `/sub-apps/${app.slug}` : "/documentation"}>
             <ArrowLeft size={16} />
-            Back to {app.name}
+            Back to {app ? app.name : "documentation"}
           </Link>
           <div className="mt-10 flex items-center gap-4">
             <Icon className="text-[#ffc400]" size={34} />

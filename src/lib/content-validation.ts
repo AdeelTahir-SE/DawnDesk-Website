@@ -33,7 +33,7 @@ export const blogPostSchema = z.object({
 export const blogPostsSchema = z.array(blogPostSchema).min(1, "Add at least one blog post");
 
 export const documentationPageSchema = z.object({
-  slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Documentation slug must match the sub-app slug"),
+  slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Documentation slug must be lowercase words separated by hyphens"),
   title: z.string().trim().min(5, "Documentation title is required"),
   summary: z.string().trim().min(20, "Documentation summary must be at least 20 characters"),
   content: z.string().trim().min(40, "Documentation markdown content is required"),

@@ -358,7 +358,7 @@ function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
     <section className="section">
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 lg:grid-cols-[0.92fr_1.08fr] lg:px-8">
         <div>
-          <div className="mb-6 flex items-center gap-2 text-sm font-extrabold"><Icon className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
+          <div className="mb-6 flex items-center gap-2 text-sm font-black"><Icon className="rounded bg-black p-1 text-white" size={21} /> {content.label}</div>
           <h2 className="text-4xl font-black leading-tight md:text-6xl">
             {content.title} {content.accent && <span className="block text-[#ffb400]">{content.accent}</span>}
           </h2>
@@ -367,7 +367,7 @@ function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
             {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
           </div>
           <div className="mt-8 flex items-center gap-6">
-            <button className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">{content.button}</button>
+            <button className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm text-black font-black">{content.button}</button>
             <span className="text-sm font-semibold text-black/55">Built into DawnDesk</span>
           </div>
         </div>
@@ -420,7 +420,7 @@ function UpcomingSection() {
             ))}
           </div>
           <div className="mt-8">
-            <Link href="/upcoming" className="btn-animated inline-flex items-center justify-center rounded-md bg-black/5 px-6 py-3 text-sm font-bold text-black/70 transition hover:bg-black/10 hover:text-black">
+            <Link href="/upcoming" className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black">
               See full list
             </Link>
           </div>
@@ -499,7 +499,7 @@ function DownloadCta() {
             {["Core tools included", "Regular updates", "Works on Windows, macOS & Linux", "Focused workspaces"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
           </ul>
           <div className="mt-9 flex flex-wrap gap-4">
-            <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</a>
+            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</Link>
             <button className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold">View Other Platforms</button>
           </div>
         </div>

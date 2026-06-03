@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import Image from "next/image";
 import { MessageCircleQuestion, HelpCircle } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
@@ -76,7 +75,7 @@ export default function FAQPage() {
 
           <div className="mt-16 rounded-xl border border-black/10 bg-[#fffdf5] p-8 text-center shadow-inner">
             <h3 className="text-2xl font-black">Still have questions?</h3>
-            <p className="mt-4 text-black/65">If you couldn't find what you were looking for, our support team is ready to help.</p>
+            <p className="mt-4 text-black/65">If you couldn&apos;t find what you were looking for, our support team is ready to help.</p>
             <div className="mt-8 flex justify-center gap-4">
               <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/report-a-bug">Report a Bug</Link>
               <Link className="btn-animated rounded-md border border-black/15 bg-white px-7 py-4 text-sm font-bold text-black" href="/request-a-feature">Request Feature</Link>

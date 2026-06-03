@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Apple, PackageOpen, TerminalSquare } from "lucide-react";
 import type { AppReleaseContent } from "@/lib/content";
 
@@ -35,6 +35,8 @@ function OsIcon({
 }
 
 function detectPlatform(): AppReleaseContent["platform"] {
+  if (typeof navigator === "undefined") return "windows";
+
   const platform = navigator.platform.toLowerCase();
   const userAgent = navigator.userAgent.toLowerCase();
 
@@ -48,14 +50,10 @@ export function DownloadChooser({ releases }: { releases: AppReleaseContent[] })
     () => Array.from(new Set(releases.map((release) => release.platform))) as AppReleaseContent["platform"][],
     [releases],
   );
-  const [platform, setPlatform] = useState<AppReleaseContent["platform"]>(availablePlatforms[0] ?? "windows");
-
-  useEffect(() => {
+  const [platform, setPlatform] = useState<AppReleaseContent["platform"]>(() => {
     const detected = detectPlatform();
-    if (availablePlatforms.includes(detected)) {
-      setPlatform(detected);
-    }
-  }, [availablePlatforms]);
+    return availablePlatforms.includes(detected) ? detected : availablePlatforms[0] ?? "windows";
+  });
 
   const platformReleases = releases.filter((release) => release.platform === platform);
   const selected = platformReleases.find((release) => release.isRecommended) ?? platformReleases[0];

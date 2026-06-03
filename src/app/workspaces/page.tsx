@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Check, Download, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Download } from "lucide-react";
 import { getWorkspaces } from "./workspace-data";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 import { createPageMetadata } from "@/lib/seo";

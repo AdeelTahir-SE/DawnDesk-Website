@@ -11,6 +11,15 @@ type Platform = keyof typeof platformFallbacks;
 
 export const dynamic = "force-dynamic";
 
+function isSafeDownloadUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 export async function GET(request: NextRequest, props: { params: Promise<{ platform: string }> }) {
   const { platform: rawPlatform } = await props.params;
   const platform = rawPlatform as Platform;
@@ -38,7 +47,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ platf
     if (arch) query = query.eq("arch", arch);
 
     const { data } = await query.maybeSingle();
-    if (data?.url) {
+    if (data?.url && isSafeDownloadUrl(data.url)) {
       downloadUrl = data.url;
     }
 

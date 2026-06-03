@@ -20,7 +20,6 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: DocumentationPageProps) {
   const params = await props.params;
-  const app = await getWorkspace(params["workspace"]);
   const docs = await getDocumentationPageContent(params["workspace"]);
 
   if (!docs) {

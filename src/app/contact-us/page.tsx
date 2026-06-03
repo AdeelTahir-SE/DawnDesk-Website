@@ -1,4 +1,4 @@
-import { Mail, MessageSquare, MapPin } from "lucide-react";
+import { Mail } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
 import siteFallback from "@/content/site.json";

@@ -85,7 +85,7 @@ async function readSiteContent(): Promise<SiteContent> {
     return siteFallback;
   }
 
-  const content = data.content as any;
+  const content = data.content as Record<string, unknown>;
   if (content.subAppsPreview) {
     content.workspacesPreview = content.subAppsPreview;
     delete content.subAppsPreview;

@@ -1,3 +1,4 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -36,10 +37,11 @@ import {
   upcomingFeatureSchema,
 } from "@/lib/content-validation";
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "DawnDesk@2026";
+const ADMIN_USERNAME = process.env.ADMIN_CONTENT_USERNAME ?? "admin";
+const ADMIN_PASSWORD = process.env.ADMIN_CONTENT_PASSWORD ?? "";
+const ADMIN_SESSION_SECRET = process.env.ADMIN_SESSION_SECRET ?? "";
 const ADMIN_COOKIE = "dawndesk_admin";
-const ADMIN_COOKIE_VALUE = "dawndesk-admin-session-v1";
+const ADMIN_SESSION_SECONDS = 60 * 60 * 8;
 
 type AdminPageProps = {
   searchParams?: Promise<{
@@ -59,9 +61,44 @@ export const metadata = {
   },
 };
 
+function hasAdminConfig() {
+  return Boolean(ADMIN_USERNAME && ADMIN_PASSWORD && ADMIN_SESSION_SECRET);
+}
+
+function safeEqual(left: string, right: string) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+
+  return leftBuffer.length === rightBuffer.length && timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+function signAdminSession(expiresAt: number) {
+  const payload = String(expiresAt);
+  const signature = createHmac("sha256", ADMIN_SESSION_SECRET).update(payload).digest("hex");
+
+  return `${payload}.${signature}`;
+}
+
+function isValidAdminSession(token?: string) {
+  if (!token || !hasAdminConfig()) return false;
+
+  const [expiresAtValue, signature] = token.split(".");
+  const expiresAt = Number(expiresAtValue);
+
+  if (!Number.isFinite(expiresAt) || Date.now() > expiresAt || !signature) {
+    return false;
+  }
+
+  const expectedSignature = createHmac("sha256", ADMIN_SESSION_SECRET)
+    .update(expiresAtValue)
+    .digest("hex");
+
+  return safeEqual(signature, expectedSignature);
+}
+
 async function isAdminAuthenticated() {
   const cookieStore = await cookies();
-  return cookieStore.get(ADMIN_COOKIE)?.value === ADMIN_COOKIE_VALUE;
+  return isValidAdminSession(cookieStore.get(ADMIN_COOKIE)?.value);
 }
 
 async function requireAdmin() {
@@ -76,14 +113,19 @@ async function signInAdmin(formData: FormData) {
   const username = String(formData.get("username") ?? "");
   const password = String(formData.get("password") ?? "");
 
-  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+  if (!hasAdminConfig()) {
+    redirect("/admin?error=config");
+  }
+
+  if (!safeEqual(username, ADMIN_USERNAME) || !safeEqual(password, ADMIN_PASSWORD)) {
     redirect("/admin?error=invalid");
   }
 
   const cookieStore = await cookies();
-  cookieStore.set(ADMIN_COOKIE, ADMIN_COOKIE_VALUE, {
+  const expiresAt = Date.now() + ADMIN_SESSION_SECONDS * 1000;
+  cookieStore.set(ADMIN_COOKIE, signAdminSession(expiresAt), {
     httpOnly: true,
-    maxAge: 60 * 60 * 8,
+    maxAge: ADMIN_SESSION_SECONDS,
     path: "/",
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
@@ -170,14 +212,6 @@ async function saveWorkspaceContent(formData: FormData) {
   revalidateTag("workspaces-content", "max");
   revalidateTag("documentation-content", "max");
   redirect(`/admin?saved=${slug}`);
-}
-
-function slugify(value: string) {
-  return value
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
 }
 
 async function createWorkspaceContent(formData: FormData) {
@@ -505,7 +539,6 @@ async function uploadMedia(formData: FormData) {
     throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY.");
   }
 
-  const extension = file.name.split(".").pop() || "bin";
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]+/g, "-");
   const storagePath = `${Date.now()}-${crypto.randomUUID()}-${safeName}`;
   const { error } = await supabase.storage
@@ -648,6 +681,7 @@ function AdminLogin({ error }: { error?: string }) {
         <p className="mt-4 leading-7 text-white/62">Use the server-side admin credentials to edit website content stored in Supabase.</p>
         {error === "invalid" && <p className="mt-5 rounded-md border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100">Invalid username or password.</p>}
         {error === "session" && <p className="mt-5 rounded-md border border-[#ffc400]/30 bg-[#ffc400]/10 px-4 py-3 text-sm font-bold text-[#ffe28a]">Please sign in to continue.</p>}
+        {error === "config" && <p className="mt-5 rounded-md border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100">Admin is disabled until credentials and a session secret are configured.</p>}
         <form action={signInAdmin} className="mt-7 space-y-4">
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="username" placeholder="Username" />
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="password" placeholder="Password" type="password" />
@@ -1711,6 +1745,7 @@ export default async function AdminPage(props: AdminPageProps) {
                           <div className="flex min-w-0 gap-4">
                             {media.content_type?.startsWith("image/") ? (
                               <a className="block h-20 w-28 shrink-0 overflow-hidden rounded-md border border-black/10 bg-white" href={media.public_url} target="_blank" rel="noreferrer">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img className="h-full w-full object-cover" src={media.public_url} alt={media.file_name} />
                               </a>
                             ) : (

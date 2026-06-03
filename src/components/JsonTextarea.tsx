@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 type JsonTextareaProps = {
   className?: string;
@@ -58,10 +58,6 @@ export function JsonTextarea({
 }: JsonTextareaProps) {
   const [value, setValue] = useState(defaultValue);
   const previewRef = useRef<HTMLPreElement>(null);
-
-  useEffect(() => {
-    setValue(defaultValue);
-  }, [defaultValue]);
 
   return (
     <div className={`relative overflow-hidden rounded-md border border-black/15 bg-[#101012] shadow-inner ${minHeight} ${className}`}>

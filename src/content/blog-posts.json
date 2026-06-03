@@ -20,7 +20,7 @@
     "title": "What is coming next for DawnDesk",
     "category": "Updates",
     "summary": "A quick look at workspace sync, collaboration improvements, and refinements planned for upcoming releases.",
-    "content": "## What we are improving next\n\nUpcoming DawnDesk work focuses on stronger sync, better workspace handoffs, practical collaboration features, and smoother documentation around each sub-app. The goal is to make the suite easier to trust in daily work.\n\n### Focus areas\n\n- Clearer connected workspace status\n- Better handoffs between sub apps\n- More useful documentation pages\n- Smoother content management from the admin panel\n\n```mermaid\nflowchart TD\n  Plan[Plan work] --> Create[Create assets]\n  Create --> Organize[Organize outputs]\n  Organize --> Reuse[Reuse in future work]\n```\n\nEach release should make the product feel more coherent, not just larger.",
+    "content": "## What we are improving next\n\nUpcoming DawnDesk work focuses on stronger sync, better workspace handoffs, practical collaboration features, and smoother documentation around each workspace. The goal is to make the suite easier to trust in daily work.\n\n### Focus areas\n\n- Clearer connected workspace status\n- Better handoffs between workspaces\n- More useful documentation pages\n- Smoother content management from the admin panel\n\n```mermaid\nflowchart TD\n  Plan[Plan work] --> Create[Create assets]\n  Create --> Organize[Organize outputs]\n  Organize --> Reuse[Reuse in future work]\n```\n\nEach release should make the product feel more coherent, not just larger.",
     "publishedAt": "2026-06-01"
   }
 ]

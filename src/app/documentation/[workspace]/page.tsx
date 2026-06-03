@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Download, FileText } from "lucide-react";
-import { getSubApp } from "@/app/sub-apps/sub-app-data";
+import { getWorkspace } from "@/app/workspaces/workspace-data";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
 import { getDocumentationContent, getDocumentationPageContent } from "@/lib/content";
@@ -9,19 +9,19 @@ import { getMarkdownHeadings, MarkdownContent } from "@/components/MarkdownConte
 
 type DocumentationPageProps = {
   params: Promise<{
-    "sub-app": string;
+    "workspace": string;
   }>;
 };
 
 export async function generateStaticParams() {
   const documentationPages = await getDocumentationContent();
-  return documentationPages.map((page) => ({ "sub-app": page.slug }));
+  return documentationPages.map((page) => ({ "workspace": page.slug }));
 }
 
 export async function generateMetadata(props: DocumentationPageProps) {
   const params = await props.params;
-  const app = await getSubApp(params["sub-app"]);
-  const docs = await getDocumentationPageContent(params["sub-app"]);
+  const app = await getWorkspace(params["workspace"]);
+  const docs = await getDocumentationPageContent(params["workspace"]);
 
   if (!docs) {
     return {
@@ -41,8 +41,8 @@ export async function generateMetadata(props: DocumentationPageProps) {
 export default async function DocumentationPage(props: DocumentationPageProps) {
   const params = await props.params;
   const [app, docs] = await Promise.all([
-    getSubApp(params["sub-app"]),
-    getDocumentationPageContent(params["sub-app"]),
+    getWorkspace(params["workspace"]),
+    getDocumentationPageContent(params["workspace"]),
   ]);
 
   if (!docs) {
@@ -58,7 +58,7 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
 
       <section className="bg-black px-5 py-20 text-white lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <Link className="inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href={app ? `/sub-apps/${app.slug}` : "/documentation"}>
+          <Link className="inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href={app ? `/workspaces/${app.slug}` : "/documentation"}>
             <ArrowLeft size={16} />
             Back to {app ? app.name : "documentation"}
           </Link>
@@ -89,7 +89,7 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
           <div className="space-y-8">
             <article className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
               <MarkdownContent content={docs.content} />
-              <Link className="btn-animated btn-animated-dark mt-10 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href="/api/download/windows">
+              <Link className="btn-animated btn-animated-dark mt-10 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href="/#download">
                 <Download size={18} />
                 Download DawnDesk
               </Link>

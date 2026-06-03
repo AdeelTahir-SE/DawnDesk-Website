@@ -2,7 +2,7 @@
   "navigation": {
     "mainItems": [
       "Features",
-      "Sub Apps",
+      "Workspaces",
       "Documentation",
       "Releases"
     ]
@@ -181,12 +181,12 @@
     {
       "version": "v0.2.0",
       "date": "May 2026",
-      "title": "Sub apps branch from the core suite",
+      "title": "workspaces branch from the core suite",
       "summary": "DawnDesk starts presenting each tool as its own focused workspace while keeping the install and navigation unified.",
       "status": "Shipped",
       "branches": [
         {
-          "label": "Sub App Pages",
+          "label": "Workspace Pages",
           "detail": "Dedicated detail pages explain each workspace, its workflow, and where it fits in DawnDesk."
         },
         {
@@ -276,7 +276,7 @@
       "role": "Developer"
     }
   ],
-  "subAppsPreview": {
+  "workspacesPreview": {
     "included": [
       "Focused workspaces",
       "One install for every tool",
@@ -286,37 +286,37 @@
       {
         "title": "Photo Editor",
         "icon": "ImageIcon",
-        "href": "/sub-apps/photo-editor",
+        "href": "/workspaces/photo-editor",
         "copy": "Open the photo editor workspace and keep your work connected."
       },
       {
         "title": "Video Editor",
         "icon": "Video",
-        "href": "/sub-apps/video-editor",
+        "href": "/workspaces/video-editor",
         "copy": "Open the video editor workspace and keep your work connected."
       },
       {
         "title": "Prompt Manager",
         "icon": "PenTool",
-        "href": "/sub-apps/prompt-manager",
+        "href": "/workspaces/prompt-manager",
         "copy": "Open the prompt manager workspace and keep your work connected."
       },
       {
         "title": "Project Tracker",
         "icon": "FolderKanban",
-        "href": "/sub-apps/project-tracker",
+        "href": "/workspaces/project-tracker",
         "copy": "Open the project tracker workspace and keep your work connected."
       },
       {
         "title": "Notes & Docs",
         "icon": "FileText",
-        "href": "/sub-apps/notes-docs",
+        "href": "/workspaces/notes-docs",
         "copy": "Open the notes & docs workspace and keep your work connected."
       },
       {
         "title": "View All",
         "icon": "Menu",
-        "href": "/sub-apps",
+        "href": "/workspaces",
         "copy": "Browse the complete DawnDesk toolkit and open each detail page."
       }
     ]
@@ -508,7 +508,7 @@
         "items": [
           "Features",
           "Download",
-          "Sub Apps"
+          "Workspaces"
         ]
       },
       {
@@ -546,5 +546,38 @@
       "placeholder": "Enter your email",
       "button": "Subscribe"
     }
-  }
+  },
+  "groups": [
+    {
+      "title": "Product",
+      "items": [
+        "Features",
+        "Download",
+        "Workspaces"
+      ]
+    },
+    {
+      "title": "Learn",
+      "items": [
+        "Documentation",
+        "Blog"
+      ]
+    },
+    {
+      "title": "Company",
+      "items": [
+        "Contact Us",
+        "Privacy Policy",
+        "Terms of Service"
+      ]
+    },
+    {
+      "title": "Support",
+      "items": [
+        "FAQ",
+        "Report a Bug",
+        "Request a Feature"
+      ]
+    }
+  ]
 }

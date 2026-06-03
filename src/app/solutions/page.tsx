@@ -67,11 +67,11 @@ export default function SolutionsPage() {
               DawnDesk connects the work around your work.
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-white/70">
-              The solution is not one isolated tool. DawnDesk brings command-center visibility, focused sub-apps, reusable prompts, documentation, and feedback channels into one practical workflow.
+              The solution is not one isolated tool. DawnDesk brings command-center visibility, focused workspaces, reusable prompts, documentation, and feedback channels into one practical workflow.
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/sub-apps">
-                Explore sub apps
+              <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/workspaces">
+                Explore workspaces
               </Link>
               <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/documentation">
                 Read documentation
@@ -141,7 +141,7 @@ export default function SolutionsPage() {
               ))}
             </ul>
           </div>
-          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
             Download DawnDesk
             <ArrowRight size={18} />
           </Link>

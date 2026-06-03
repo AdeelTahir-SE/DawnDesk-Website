@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { AdminSectionNav, type AdminNavIcon, type AdminNavItem } from "@/components/AdminSectionNav";
 import { JsonTextarea } from "@/components/JsonTextarea";
-import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getSubAppsContent, getUpcomingFeaturesContent } from "@/lib/content";
+import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getWorkspacesContent, getUpcomingFeaturesContent } from "@/lib/content";
 import { createAdminSupabaseClient } from "@/lib/supabase";
 import {
   appReleasesSchema,
@@ -32,7 +32,7 @@ import {
   documentationPagesSchema,
   featureHistorySchema,
   formatZodError,
-  subAppSchema,
+  workspaceSchema,
   upcomingFeatureSchema,
 } from "@/lib/content-validation";
 
@@ -132,7 +132,7 @@ async function saveHomepageContent(formData: FormData) {
   redirect("/admin?saved=homepage");
 }
 
-async function saveSubAppContent(formData: FormData) {
+async function saveWorkspaceContent(formData: FormData) {
   "use server";
   await requireAdmin();
 
@@ -144,7 +144,7 @@ async function saveSubAppContent(formData: FormData) {
   }
 
   const parsed = parseJsonOrRedirect(content);
-  const validation = subAppSchema.safeParse(parsed);
+  const validation = workspaceSchema.safeParse(parsed);
   if (!validation.success) {
     redirect(`/admin?error=${encodeURIComponent(formatZodError(validation.error))}`);
   }
@@ -164,10 +164,10 @@ async function saveSubAppContent(formData: FormData) {
   }
 
   revalidatePath("/");
-  revalidatePath("/sub-apps");
-  revalidatePath(`/sub-apps/${slug}`);
+  revalidatePath("/workspaces");
+  revalidatePath(`/workspaces/${slug}`);
   revalidatePath(`/documentation/${slug}`);
-  revalidateTag("sub-apps-content", "max");
+  revalidateTag("workspaces-content", "max");
   revalidateTag("documentation-content", "max");
   redirect(`/admin?saved=${slug}`);
 }
@@ -180,13 +180,13 @@ function slugify(value: string) {
     .replace(/^-+|-+$/g, "");
 }
 
-async function createSubAppContent(formData: FormData) {
+async function createWorkspaceContent(formData: FormData) {
   "use server";
   await requireAdmin();
 
   const content = String(formData.get("content") ?? "");
   const parsed = parseJsonOrRedirect(content);
-  const validation = subAppSchema.safeParse(parsed);
+  const validation = workspaceSchema.safeParse(parsed);
   if (!validation.success) {
     redirect(`/admin?error=${encodeURIComponent(formatZodError(validation.error))}`);
   }
@@ -246,10 +246,10 @@ flowchart TD
     }, { onConflict: "slug" });
 
   revalidatePath("/");
-  revalidatePath("/sub-apps");
-  revalidatePath(`/sub-apps/${slug}`);
+  revalidatePath("/workspaces");
+  revalidatePath(`/workspaces/${slug}`);
   revalidatePath(`/documentation/${slug}`);
-  revalidateTag("sub-apps-content", "max");
+  revalidateTag("workspaces-content", "max");
   revalidateTag("documentation-content", "max");
   redirect(`/admin?saved=${slug}`);
 }
@@ -851,7 +851,7 @@ function AdminOverview({
             <Settings size={16} />
             Configure homepage
           </a>
-          <a className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-4 py-2.5 text-sm font-black text-black shadow-[0_12px_32px_rgba(255,196,0,0.2)] transition hover:bg-[#e7b000]" href="#admin-sub-apps">
+          <a className="inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-4 py-2.5 text-sm font-black text-black shadow-[0_12px_32px_rgba(255,196,0,0.2)] transition hover:bg-[#e7b000]" href="#admin-workspaces">
             <PlusCircle size={16} />
             New content
           </a>
@@ -1188,13 +1188,13 @@ const blogArrayFormat = {
 const docsFormat = {
   title: "Documentation array format",
   notes: [
-    "Documentation slugs can be standalone or match a sub-app slug for linked branding.",
+    "Documentation slugs can be standalone or match a workspace slug for linked branding.",
     "content is markdown and headings automatically become section links.",
     "Use image markdown like ![Caption](https://example.com/image.png).",
   ],
   prompt: {
     title: "AI documentation prompt",
-    body: "You are writing DawnDesk documentation. Return exactly one valid JSON object and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Escape every newline in string values as \\n.\n- Use double quotes for all keys and strings.\n- Include every required key shown below.\n- Keep slug lowercase kebab-case. It can match a sub-app slug when the page documents a sub-app.\n- content must be markdown and should include ## Overview, ## Key features, and ## Workflow when useful.\n- Include Mermaid only inside the content string when it is useful.\n\nRequired schema:\n{\n  \"slug\": \"documentation-page-slug\",\n  \"title\": \"Documentation title\",\n  \"summary\": \"Short summary\",\n  \"content\": \"## Overview\\n\\n...\\n\\n## Key features\\n\\n- ...\\n\\n## Workflow\\n\\n1. ...\"\n}\n\nTopic/context: [PASTE YOUR NOTES]",
+    body: "You are writing DawnDesk documentation. Return exactly one valid JSON object and nothing else.\n\nRules:\n- No markdown fences around the JSON.\n- No comments, notes, or explanations outside the JSON.\n- Escape every newline in string values as \\n.\n- Use double quotes for all keys and strings.\n- Include every required key shown below.\n- Keep slug lowercase kebab-case. It can match a workspace slug when the page documents a workspace.\n- content must be markdown and should include ## Overview, ## Key features, and ## Workflow when useful.\n- Include Mermaid only inside the content string when it is useful.\n\nRequired schema:\n{\n  \"slug\": \"documentation-page-slug\",\n  \"title\": \"Documentation title\",\n  \"summary\": \"Short summary\",\n  \"content\": \"## Overview\\n\\n...\\n\\n## Key features\\n\\n- ...\\n\\n## Workflow\\n\\n1. ...\"\n}\n\nTopic/context: [PASTE YOUR NOTES]",
   },
   example: [
     {
@@ -1286,8 +1286,8 @@ const upcomingFeaturesFormat = {
   ],
 };
 
-function NewSubAppForm() {
-  const subAppPrompt = `You are creating a DawnDesk sub app record. Return exactly one valid JSON object and nothing else.
+function NewWorkspaceForm() {
+  const workspacePrompt = `You are creating a DawnDesk workspace record. Return exactly one valid JSON object and nothing else.
 
 Rules:
 - No markdown fences around the JSON.
@@ -1303,7 +1303,7 @@ Required schema:
 
 {
   "slug": "kebab-case-id",
-  "name": "Sub App Name",
+  "name": "Workspace Name",
   "eyebrow": "Short eyebrow",
   "headline": "One-line headline",
   "accent": "Short accent phrase",
@@ -1337,18 +1337,18 @@ Topic/context: [PASTE YOUR NOTES]. Ensure slug is lowercase and unique.`;
     <section className="overflow-hidden rounded-xl border border-black/10 bg-white shadow-sm">
       <div className="flex flex-col gap-3 border-b border-black/10 px-6 py-5 md:flex-row md:items-start md:justify-between">
         <div>
-          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#c47800]">New sub app</p>
-          <h2 className="mt-2 text-2xl font-black">Create sub app from JSON</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/58">Paste one JSON object in this exact shape. The same record powers the sub-app listing, detail page, and starter documentation page.</p>
+          <p className="text-xs font-black uppercase tracking-[0.16em] text-[#c47800]">New workspace</p>
+          <h2 className="mt-2 text-2xl font-black">Create workspace from JSON</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-black/58">Paste one JSON object in this exact shape. The same record powers the workspace listing, detail page, and starter documentation page.</p>
         </div>
         <span className="rounded-full bg-[#fff3bf] px-4 py-2 text-xs font-black text-black/72">Supabase row</span>
       </div>
       <div className="grid gap-5 p-6 lg:grid-cols-[1fr_0.85fr]">
-        <form action={createSubAppContent} className="space-y-4">
+        <form action={createWorkspaceContent} className="space-y-4">
           <JsonTextarea defaultValue={stringifyJson(example)} minHeight="min-h-[520px]" name="content" required />
           <button className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" type="submit">
             <PlusCircle size={18} />
-            Add sub app JSON
+            Add workspace JSON
           </button>
         </form>
         <div className="rounded-md border border-black/10 bg-[#fbfaf7] p-5">
@@ -1361,8 +1361,8 @@ Topic/context: [PASTE YOUR NOTES]. Ensure slug is lowercase and unique.`;
             <li><code>workflow</code>: array of short workflow steps</li>
           </ul>
           <div className="mt-5 rounded-md border border-black/10 bg-white p-4">
-            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#c47800]">AI sub app prompt</p>
-            <JsonTextarea className="mt-3" defaultValue={subAppPrompt} minHeight="min-h-[340px]" readOnly rows={11} />
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#c47800]">AI workspace prompt</p>
+            <JsonTextarea className="mt-3" defaultValue={workspacePrompt} minHeight="min-h-[340px]" readOnly rows={11} />
           </div>
           <p className="mt-5 rounded-md bg-white px-4 py-3 text-sm font-bold text-black/62">Saving this also creates a starter markdown documentation page for the same slug.</p>
         </div>
@@ -1409,9 +1409,9 @@ export default async function AdminPage(props: AdminPageProps) {
     return <AdminLogin error={searchParams?.error} />;
   }
 
-  const [siteContent, subApps, blogPosts, documentationPages, releases, featureHistory, upcomingFeatures, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
+  const [siteContent, workspaces, blogPosts, documentationPages, releases, featureHistory, upcomingFeatures, mediaUploads, bugReports, featureRequests, downloadEvents] = await Promise.all([
     getSiteContent(),
-    getSubAppsContent(),
+    getWorkspacesContent(),
     getBlogPostsContent(),
     getDocumentationContent(),
     getAppReleasesContent(),
@@ -1434,13 +1434,13 @@ export default async function AdminPage(props: AdminPageProps) {
       title: "Homepage",
     },
     {
-      description: "Create and update workspace records used by sub-app pages.",
-      href: "#admin-sub-apps",
+      description: "Create and update workspace records used by workspace pages.",
+      href: "#admin-workspaces",
       icon: Database,
       iconName: "database",
-      items: subApps.length,
+      items: workspaces.length,
       status: "Published",
-      title: "Sub apps",
+      title: "workspaces",
     },
     {
       description: "Add one post or replace the markdown-backed blog collection.",
@@ -1570,7 +1570,7 @@ export default async function AdminPage(props: AdminPageProps) {
           {[
             ["Website", "#admin-overview", LayoutDashboard],
             ["Homepage", "#admin-homepage", Home],
-            ["Sub apps", "#admin-sub-apps", Database],
+            ["workspaces", "#admin-workspaces", Database],
             ["Blog", "#admin-blog", Newspaper],
             ["Documentation", "#admin-docs", FileText],
             ["Releases", "#admin-releases", LinkIcon],
@@ -1628,21 +1628,21 @@ export default async function AdminPage(props: AdminPageProps) {
               <JsonEditor action={saveHomepageContent} button="Save homepage content" content={siteContent} format={homepageFormat} rows={26} title="Homepage" />
             </div>
 
-            <section id="admin-sub-apps" className="scroll-mt-24 space-y-6">
+            <section id="admin-workspaces" className="scroll-mt-24 space-y-6">
               <div className="flex items-center gap-3">
                 <FileText className="text-[#d29300]" size={28} />
-                <h2 className="text-2xl font-black">Sub app content</h2>
+                <h2 className="text-2xl font-black">workspace content</h2>
               </div>
               <div className="space-y-5">
-                <NewSubAppForm />
+                <NewWorkspaceForm />
                 <div className="grid gap-4 xl:grid-cols-2">
-                  {subApps.map((app) => (
+                  {workspaces.map((app) => (
                     <article className="rounded-md border border-black/10 bg-[#fbfaf7] p-4" key={app.slug}>
                       <div className="mb-4 flex items-center justify-between gap-4">
                         <h3 className="truncate text-lg font-black">{app.name}</h3>
                         <span className="shrink-0 rounded bg-black/5 px-3 py-1 text-xs font-black text-black/55">{app.slug}</span>
                       </div>
-                      <form action={saveSubAppContent} className="space-y-4">
+                      <form action={saveWorkspaceContent} className="space-y-4">
                         <input name="slug" type="hidden" value={app.slug} />
                         <JsonTextarea
                           className="max-h-[420px]"

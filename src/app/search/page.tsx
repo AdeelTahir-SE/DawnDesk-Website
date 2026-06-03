@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
-import { getBlogPostsContent, getSiteContent, getSubAppsContent } from "@/lib/content";
+import { getBlogPostsContent, getSiteContent, getWorkspacesContent } from "@/lib/content";
 import { SiteHeader } from "@/components/SiteHeader";
 
 type SearchPageProps = {
@@ -31,7 +31,7 @@ function scoreResult(result: SearchResult, query: string) {
 
 export const metadata = {
   title: "Search - DawnDesk",
-  description: "Search DawnDesk pages, sub-apps, and documentation.",
+  description: "Search DawnDesk pages, workspaces, and documentation.",
   robots: {
     index: false,
     follow: true,
@@ -41,7 +41,7 @@ export const metadata = {
 export default async function SearchPage(props: SearchPageProps) {
   const searchParams = await props.searchParams;
   const query = (searchParams?.q ?? "").trim();
-  const [siteContent, subApps, blogPosts] = await Promise.all([getSiteContent(), getSubAppsContent(), getBlogPostsContent()]);
+  const [siteContent, workspaces, blogPosts] = await Promise.all([getSiteContent(), getWorkspacesContent(), getBlogPostsContent()]);
 
   const results: SearchResult[] = [
     {
@@ -59,18 +59,18 @@ export default async function SearchPage(props: SearchPageProps) {
       haystack: JSON.stringify(siteContent.featureCards),
     },
     {
-      title: "Sub Apps",
+      title: "Workspaces",
       category: "Website",
-      href: "/sub-apps",
+      href: "/workspaces",
       summary: "Browse the complete DawnDesk toolkit and open each detail page.",
-      haystack: JSON.stringify(siteContent.subAppsPreview),
+      haystack: JSON.stringify(siteContent.workspacesPreview),
     },
     {
       title: "Documentation",
       category: "Docs",
       href: "/documentation",
       summary: "Browse DawnDesk documentation for each built-in workspace.",
-      haystack: "documentation guides help docs workspace sub apps",
+      haystack: "documentation guides help docs workspace workspaces",
     },
     {
       title: "Blog",
@@ -100,11 +100,11 @@ export default async function SearchPage(props: SearchPageProps) {
       summary: "Report a DawnDesk issue with an optional screenshot attachment.",
       haystack: "bug report issue problem screenshot attachment support",
     },
-    ...subApps.flatMap((app) => [
+    ...workspaces.flatMap((app) => [
       {
         title: app.name,
-        category: "Sub App",
-        href: `/sub-apps/${app.slug}`,
+        category: "Workspace",
+        href: `/workspaces/${app.slug}`,
         summary: app.summary,
         haystack: JSON.stringify(app),
       },
@@ -140,7 +140,7 @@ export default async function SearchPage(props: SearchPageProps) {
               className="min-w-0 flex-1 px-5 py-4 text-base outline-none"
               defaultValue={query}
               name="q"
-              placeholder="Search features, docs, sub-apps..."
+              placeholder="Search features, docs, workspaces..."
               type="search"
             />
             <button className="flex items-center gap-2 bg-[#ffc400] px-6 text-sm font-extrabold text-black" type="submit">
@@ -180,7 +180,7 @@ export default async function SearchPage(props: SearchPageProps) {
           {query && matches.length === 0 && (
             <div className="rounded-md border border-black/10 bg-white p-8 text-center shadow-sm">
               <h3 className="text-2xl font-black">No results found</h3>
-              <p className="mt-3 text-black/60">Try searching for a sub-app name, feature, bug report, documentation, or download.</p>
+              <p className="mt-3 text-black/60">Try searching for a workspace name, feature, bug report, documentation, or download.</p>
             </div>
           )}
         </div>

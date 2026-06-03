@@ -19,7 +19,7 @@ import {
   Wand2,
 } from "lucide-react";
 import type { ElementType } from "react";
-import { getSubAppsContent, type SubAppContent } from "@/lib/content";
+import { getWorkspacesContent, type WorkspaceContent } from "@/lib/content";
 
 const iconMap = {
   Bell,
@@ -44,13 +44,13 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
-export type SubAppFeature = {
+export type WorkspaceFeature = {
   title: string;
   copy: string;
   icon: ElementType;
 };
 
-export type SubApp = {
+export type Workspace = {
   slug: string;
   name: string;
   eyebrow: string;
@@ -59,7 +59,7 @@ export type SubApp = {
   summary: string;
   detail: string;
   icon: ElementType;
-  features: SubAppFeature[];
+  features: WorkspaceFeature[];
   workflow: string[];
 };
 
@@ -67,7 +67,7 @@ function getIcon(icon: string): ElementType {
   return iconMap[icon as IconName] ?? Sparkles;
 }
 
-export function mapSubApps(content: SubAppContent[]): SubApp[] {
+export function mapWorkspaces(content: WorkspaceContent[]): Workspace[] {
   return content.map((app) => ({
     ...app,
     icon: getIcon(app.icon),
@@ -78,11 +78,11 @@ export function mapSubApps(content: SubAppContent[]): SubApp[] {
   }));
 }
 
-export async function getSubApps() {
-  return mapSubApps(await getSubAppsContent());
+export async function getWorkspaces() {
+  return mapWorkspaces(await getWorkspacesContent());
 }
 
-export async function getSubApp(slug: string) {
-  const subApps = await getSubApps();
-  return subApps.find((app) => app.slug === slug);
+export async function getWorkspace(slug: string) {
+  const workspaces = await getWorkspaces();
+  return workspaces.find((app) => app.slug === slug);
 }

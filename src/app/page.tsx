@@ -122,7 +122,7 @@ let upcoming = siteContent.upcoming;
 let updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
 let audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let testimonials = siteContent.testimonials;
-let subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+let workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
 let videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
 let promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
@@ -147,7 +147,7 @@ function setSiteContent(content: typeof siteFallback) {
   updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
   audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   testimonials = siteContent.testimonials;
-  subApps = siteContent.subAppsPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
+  workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
   videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
   promptFeatures = siteContent.toolFeatureSets.prompt.map(mapFeature);
@@ -173,7 +173,7 @@ export default async function Home() {
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
       <Header dark />
       <Hero />
-      <SubAppsOverview />
+      <WorkspacesOverview />
       <DownloadSection releases={releases} />
       <FeatureSection />
       <SuiteShowcase />
@@ -186,7 +186,7 @@ export default async function Home() {
       <UpcomingSection />
       <UpdateTreeSection />
       <AudienceSection />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <DownloadCta />
       <Footer />
     </div>
@@ -206,7 +206,7 @@ function Header({ dark = false }: { dark?: boolean }) {
             <a
               key={item}
               className="opacity-85 transition hover:text-[#ffc400] hover:opacity-100"
-              href={item === "Sub Apps" ? "/sub-apps" : item === "Documentation" ? "/documentation" : item === "Releases" ? "/releases" : `#${item.toLowerCase()}`}
+              href={item === "Workspaces" ? "/workspaces" : item === "Documentation" ? "/documentation" : item === "Releases" ? "/releases" : `#${item.toLowerCase()}`}
             >
               {item}
             </a>
@@ -235,14 +235,18 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-md text-lg leading-8 text-white/78">{hero.copy}</p>
           <div className="mt-9 flex flex-wrap gap-4">
-            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="/api/download/windows">{hero.primaryCta}</Link>
+            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black shadow-[0_0_38px_rgba(255,196,0,0.25)]" href="#download">{hero.primaryCta}</Link>
             <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white hover:border-[#ffc400]" href="#features">{hero.secondaryCta}</Link>
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
             <span className="font-semibold italic">Available for</span>
-            <Monitor size={20} />
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M2 3l6.8-1 0 9.2-6.8 0 0-8.2zm7.5-1.1L21 0l0 11.2-11.5 0 0-10.1zm-7.5 10.4 6.8 0 0 9-6.8-1 0-8zm7.5 0 11.5 0 0 11.3-11.5-1.7 0-9.6z"/>
+            </svg>
             <Apple size={20} />
-            <Cloud size={20} />
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M12 0c-4.3 0-7.8 2.2-7.8 7.3 0 2.2 1 4.1 2.2 5.5-.3 1-.7 2.1-1.3 3-.9 1.4-2.8 2.3-2.8 4 0 .9.8 1.6 2 2.3 2 1.2 5.4 1.9 7.7 1.9 2.3 0 5.7-.7 7.7-1.9 1.2-.7 2-1.4 2-2.3 0-1.7-1.9-2.6-2.8-4-.6-.9-1-2-1.3-3 1.2-1.4 2.2-3.3 2.2-5.5C19.8 2.2 16.3 0 12 0zm0 1c3.8 0 6.8 2 6.8 6.3 0 3-1.6 5.3-3 7.1-1.2-1.3-2.2-2.4-3.8-2.4-1.6 0-2.6 1.1-3.8 2.4-1.4-1.8-3-4.1-3-7.1C5.2 3 8.2 1 12 1zm0 3c-1.3 0-2.3.9-2.3 2.5s1 2.5 2.3 2.5 2.3-.9 2.3-2.5-1-2.5-2.3-2.5zm0 1c.7 0 1.3.6 1.3 1.5s-.6 1.5-1.3 1.5-1.3-.6-1.3-1.5.6-1.5 1.3-1.5zM6.5 18c1.3.9 3.2 1.5 5.5 1.5s4.2-.6 5.5-1.5c.6.4 1 .8 1 1.2 0 1.4-4 2.8-6.5 2.8s-6.5-1.4-6.5-2.8c0-.4.4-.8 1-1.2z"/>
+            </svg>
           </div>
         </div>
         <div className="relative z-10 lg:translate-x-8">
@@ -253,28 +257,28 @@ function Hero() {
   );
 }
 
-function SubAppsOverview() {
+function WorkspacesOverview() {
   return (
-    <section id="sub-apps-preview" className="section">
+    <section id="workspaces-preview" className="section">
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
           <div className="lg:sticky lg:top-24">
-            <p className="eyebrow text-[#c47800]">Powerful sub apps</p>
+            <p className="eyebrow text-[#c47800]">Powerful workspaces</p>
             <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">Choose the right tool for the moment.</h2>
             <p className="mt-5 max-w-md text-base leading-7 text-black/65">
               DawnDesk is a suite of focused workspaces. Open a tool when you need it, then bring the output back into your daily workflow.
             </p>
             <Link
               className="btn-animated btn-animated-dark mt-8 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black"
-              href="/sub-apps"
+              href="/workspaces"
             >
-              View all sub apps
+              View all workspaces
               <ChevronRight size={18} />
             </Link>
             <div className="mt-8 rounded-md border border-black/10 bg-white p-6 shadow-sm">
               <h3 className="text-lg font-black">Included tools</h3>
               <ul className="mt-5 space-y-3 text-sm font-bold text-black/65">
-                {siteContent.subAppsPreview.included.map((item) => (
+                {siteContent.workspacesPreview.included.map((item) => (
                   <li className="flex items-center gap-3" key={item}>
                     <Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} />
                     {item}
@@ -284,8 +288,8 @@ function SubAppsOverview() {
             </div>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
-            {subApps.map(({ title, icon: Icon, href, copy }) => (
-              <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400] hover:shadow-xl" href={href} key={title}>
+            {workspaces.map(({ title, icon: Icon, href, copy }) => (
+              <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400] hover:shadow-xl" href="/workspaces" key={title}>
                 <div className="flex items-start justify-between gap-5">
                   <Icon className="rounded-md bg-[#fff3bf] p-2 text-[#d29300]" size={42} />
                   <ChevronRight className="mt-2 text-black/25 transition group-hover:translate-x-1 group-hover:text-[#d29300]" size={20} />
@@ -367,7 +371,9 @@ function ToolHero({ type }: { type: "photo" | "video" | "prompt" }) {
             {features.map(([title, copy, Icon]) => <MiniFeature key={title} title={title} copy={copy} icon={Icon} />)}
           </div>
           <div className="mt-8 flex items-center gap-6">
-            <button className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm text-black font-black">{content.button}</button>
+            <Link className="btn-animated inline-flex items-center justify-center rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" href={`/workspaces/${type === "photo" ? "photo-editor" : type === "video" ? "video-editor" : "prompt-manager"}`}>
+              {content.button}
+            </Link>
             <span className="text-sm font-semibold text-black/55">Built into DawnDesk</span>
           </div>
         </div>
@@ -521,14 +527,20 @@ function Footer() {
     .filter((group) => group.items.length > 0);
   const footerSocials = footer.socials.filter((item) => allowedSocials.has(item));
   const footerHref = (item: string) => {
-    if (item === "Sub Apps") return "/sub-apps";
-    if (item === "Documentation") return "/documentation";
-    if (item === "Blog") return "/blog";
-    if (item === "Report a Bug") return "/report-a-bug";
-    if (item === "Request a Feature") return "/request-a-feature";
-    if (item === "Download") return "#download";
-    if (item === "Features") return "#features";
-    return "#";
+    const map: Record<string, string> = {
+      'Workspaces': '/workspaces',
+      'Documentation': '/documentation',
+      'Blog': '/blog',
+      'Report a Bug': '/report-a-bug',
+      'Request a Feature': '/request-a-feature',
+      'Download': '/#download',
+      'Features': '/#features',
+      'Contact Us': '/contact-us',
+      'Privacy Policy': '/privacy-policy',
+      'Terms of Service': '/terms-of-service',
+      'FAQ': '/faq'
+    };
+    return map[item] || '#';
   };
   const socialHref = (item: string) => {
     if (item === "x") return "https://x.com/DawnDesk";

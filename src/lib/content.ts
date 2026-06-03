@@ -1,11 +1,11 @@
 import siteFallback from "@/content/site.json";
-import subAppsFallback from "@/content/sub-apps.json";
+import workspacesFallback from "@/content/workspaces.json";
 import blogPostsFallback from "@/content/blog-posts.json";
 import { unstable_cache } from "next/cache";
 import { createPublicSupabaseClient } from "./supabase";
 
 export type SiteContent = typeof siteFallback;
-export type SubAppContent = (typeof subAppsFallback)[number];
+export type WorkspaceContent = (typeof workspacesFallback)[number];
 export type BlogPostContent = (typeof blogPostsFallback)[number];
 export type FeatureHistoryContent = SiteContent["updateTimeline"][number];
 export type UpcomingFeatureContent = SiteContent["upcoming"][number];
@@ -27,7 +27,7 @@ export type AppReleaseContent = {
   sortOrder: number;
 };
 
-function buildDocumentationFallback(apps: SubAppContent[]): DocumentationPageContent[] {
+function buildDocumentationFallback(apps: WorkspaceContent[]): DocumentationPageContent[] {
   return apps.map((app) => ({
     slug: app.slug,
     title: `${app.name} Documentation`,
@@ -85,14 +85,29 @@ async function readSiteContent(): Promise<SiteContent> {
     return siteFallback;
   }
 
-  return data.content as SiteContent;
+  const content = data.content as any;
+  if (content.subAppsPreview) {
+    content.workspacesPreview = content.subAppsPreview;
+    delete content.subAppsPreview;
+  }
+
+  const jsonStr = JSON.stringify(content);
+  const updatedStr = jsonStr
+    .replace(/Sub Apps/g, "Workspaces")
+    .replace(/sub apps/gi, "workspaces")
+    .replace(/Sub App/g, "Workspace")
+    .replace(/sub app/gi, "workspace")
+    .replace(/sub-apps/g, "workspaces")
+    .replace(/sub-app/g, "workspace");
+
+  return JSON.parse(updatedStr) as SiteContent;
 }
 
-async function readSubAppsContent(): Promise<SubAppContent[]> {
+async function readWorkspacesContent(): Promise<WorkspaceContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return subAppsFallback;
+    return workspacesFallback;
   }
 
   const { data, error } = await supabase
@@ -101,10 +116,10 @@ async function readSubAppsContent(): Promise<SubAppContent[]> {
     .order("sort_order", { ascending: true });
 
   if (error || !data?.length) {
-    return subAppsFallback;
+    return workspacesFallback;
   }
 
-  return data.map((row) => row.content as SubAppContent);
+  return data.map((row) => row.content as WorkspaceContent);
 }
 
 async function readBlogPostsContent(): Promise<BlogPostContent[]> {
@@ -130,7 +145,7 @@ async function readDocumentationContent(): Promise<DocumentationPageContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return buildDocumentationFallback(subAppsFallback);
+    return buildDocumentationFallback(workspacesFallback);
   }
 
   const { data, error } = await supabase
@@ -139,7 +154,7 @@ async function readDocumentationContent(): Promise<DocumentationPageContent[]> {
     .order("slug", { ascending: true });
 
   if (error || !data?.length) {
-    return buildDocumentationFallback(subAppsFallback);
+    return buildDocumentationFallback(workspacesFallback);
   }
 
   return data as DocumentationPageContent[];
@@ -218,9 +233,9 @@ export const getSiteContent = unstable_cache(readSiteContent, ["site-content-hom
   tags: ["site-content"],
 });
 
-export const getSubAppsContent = unstable_cache(readSubAppsContent, ["sub-apps-content"], {
+export const getWorkspacesContent = unstable_cache(readWorkspacesContent, ["workspaces-content"], {
   revalidate: 3600,
-  tags: ["sub-apps-content"],
+  tags: ["workspaces-content"],
 });
 
 export const getBlogPostsContent = unstable_cache(readBlogPostsContent, ["blog-posts-content"], {
@@ -248,8 +263,8 @@ export const getUpcomingFeaturesContent = unstable_cache(readUpcomingFeaturesCon
   tags: ["upcoming-features-content"],
 });
 
-export async function getSubAppContent(slug: string): Promise<SubAppContent | undefined> {
-  const apps = await getSubAppsContent();
+export async function getWorkspaceContent(slug: string): Promise<WorkspaceContent | undefined> {
+  const apps = await getWorkspacesContent();
   return apps.find((app) => app.slug === slug);
 }
 

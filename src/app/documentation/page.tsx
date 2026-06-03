@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
-import { getSubApps } from "@/app/sub-apps/sub-app-data";
+import { getWorkspaces } from "@/app/workspaces/workspace-data";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getDocumentationContent } from "@/lib/content";
 import { createPageMetadata } from "@/lib/seo";
@@ -12,8 +12,8 @@ export const metadata = createPageMetadata({
 });
 
 export default async function DocumentationIndexPage() {
-  const [subApps, documentationPages] = await Promise.all([
-    getSubApps(),
+  const [workspaces, documentationPages] = await Promise.all([
+    getWorkspaces(),
     getDocumentationContent(),
   ]);
 
@@ -32,7 +32,7 @@ export default async function DocumentationIndexPage() {
       <section className="section">
         <div className="mx-auto grid max-w-7xl gap-5 px-5 sm:grid-cols-2 lg:grid-cols-3 lg:px-8">
           {documentationPages.map((page) => {
-            const app = subApps.find((subApp) => subApp.slug === page.slug);
+            const app = workspaces.find((workspace) => workspace.slug === page.slug);
             const Icon = app?.icon ?? FileText;
             return (
               <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400]" href={`/documentation/${page.slug}`} key={page.slug}>

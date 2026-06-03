@@ -2,21 +2,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Download, Sparkles } from "lucide-react";
-import subAppsFallback from "@/content/sub-apps.json";
-import { getSubApp } from "../sub-app-data";
+import workspacesFallback from "@/content/workspaces.json";
+import { getWorkspace } from "../workspace-data";
 import { createPageMetadata } from "@/lib/seo";
 
 export function generateStaticParams() {
-  return subAppsFallback.map((app) => ({ slug: app.slug }));
+  return workspacesFallback.map((app) => ({ slug: app.slug }));
 }
 
-export async function generateMetadata(props: PageProps<"/sub-apps/[slug]">) {
+export async function generateMetadata(props: PageProps<"/workspaces/[slug]">) {
   const { slug } = await props.params;
-  const app = await getSubApp(slug);
+  const app = await getWorkspace(slug);
 
   if (!app) {
     return {
-      title: "Sub App - DawnDesk",
+      title: "Workspace - DawnDesk",
     };
   }
 
@@ -24,14 +24,14 @@ export async function generateMetadata(props: PageProps<"/sub-apps/[slug]">) {
     ...createPageMetadata({
       title: app.name,
       description: app.summary,
-      path: `/sub-apps/${app.slug}`,
+      path: `/workspaces/${app.slug}`,
     }),
   };
 }
 
-export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug]">) {
+export default async function WorkspaceDetailPage(props: PageProps<"/workspaces/[slug]">) {
   const { slug } = await props.params;
-  const app = await getSubApp(slug);
+  const app = await getWorkspace(slug);
 
   if (!app) {
     notFound();
@@ -48,11 +48,10 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             DawnDesk
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <Link className="text-white/80 hover:text-[#ffc400]" href="/sub-apps">Sub Apps</Link>
+            <Link className="text-white/80 hover:text-[#ffc400]" href="/workspaces">Workspaces</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#features">Features</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#download">Download</Link>
           </nav>
-          <Sparkles className="text-[#ffc400]" size={20} />
         </div>
       </header>
 
@@ -60,9 +59,9 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(255,196,0,0.24),transparent_32%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-24 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
           <div>
-            <Link className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href="/sub-apps">
+            <Link className="mb-9 inline-flex items-center gap-2 text-sm font-bold text-white/65 hover:text-[#ffc400]" href="/workspaces">
               <ArrowLeft size={16} />
-              Back to Sub Apps
+              Back to Workspaces
             </Link>
             <div className="flex items-center gap-3 text-sm font-extrabold text-[#ffc400]">
               <Icon size={28} />
@@ -72,11 +71,11 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
             <p className="mt-6 text-2xl font-extrabold text-[#ffc400]">{app.accent}</p>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">{app.detail}</p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <Link className="btn-animated inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+              <Link className="btn-animated inline-flex items-center gap-2 rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/#download">
                 <Download size={18} />
                 Download DawnDesk
               </Link>
-              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/sub-apps">View All Sub Apps</Link>
+              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/workspaces">View All Workspaces</Link>
             </div>
           </div>
 
@@ -86,14 +85,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
                 <span className="font-black text-[#ffc400]">{app.name}</span>
                 <span>Included Tool</span>
               </div>
-              <div className="grid min-h-[340px] gap-4 sm:grid-cols-[150px_1fr]">
-                <aside className="rounded-md bg-black/35 p-3">
-                  {app.workflow.map((step, index) => (
-                    <div className={`mb-3 rounded px-3 py-3 text-xs font-bold ${index === 0 ? "bg-[#ffc400]/15 text-[#ffc400]" : "bg-white/[0.04] text-white/55"}`} key={step}>
-                      Step {index + 1}
-                    </div>
-                  ))}
-                </aside>
+              <div className="grid min-h-[340px] gap-4">
                 <main className="space-y-4">
                   {app.features.map((feature) => {
                     const FeatureIcon = feature.icon;
@@ -151,7 +143,7 @@ export default async function SubAppDetailPage(props: PageProps<"/sub-apps/[slug
                   ))}
                 </ul>
               </div>
-              <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+              <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
                 <Download size={18} />
                 Download DawnDesk
               </Link>

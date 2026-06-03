@@ -8,7 +8,7 @@ export const featureSchema = z.object({
   icon: iconName,
 });
 
-export const subAppSchema = z.object({
+export const workspaceSchema = z.object({
   slug: z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be lowercase words separated by hyphens"),
   name: z.string().trim().min(2, "Name is required"),
   eyebrow: z.string().trim().min(2, "Eyebrow is required"),

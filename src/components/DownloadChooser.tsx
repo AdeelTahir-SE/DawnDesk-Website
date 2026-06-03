@@ -98,7 +98,7 @@ export function DownloadChooser({ releases }: { releases: AppReleaseContent[] })
                 Download {platformLabels[selected.platform].label}
               </a>
             )}
-            {selected && <a className="btn-animated rounded-md border border-black/15 px-7 py-3 text-sm font-bold" href={selected.url}>Direct link</a>}
+
           </div>
           {platformReleases.length > 1 && (
             <div className="mt-8 grid gap-3">

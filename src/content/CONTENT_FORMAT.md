@@ -4,14 +4,14 @@ Edit the JSON files in this folder when website copy, feature lists, app cards, 
 
 ## Files
 
-- `site.json` controls the homepage content, navigation labels, download platforms, general feature cards, audience cards, testimonials, footer links, and homepage sub-app preview cards.
-- `sub-apps.json` controls the `/sub-apps` listing page and each `/sub-apps/[slug]` detail page.
+- `site.json` controls the homepage content, navigation labels, download platforms, general feature cards, audience cards, testimonials, footer links, and homepage workspace preview cards.
+- `workspaces.json` controls the `/workspaces` listing page and each `/workspaces/[slug]` detail page.
 
 ## Shared Rules
 
 - Keep every JSON file valid: double quotes only, no comments, no trailing commas.
 - Keep `slug` values lowercase with hyphens. Example: `photo-editor`.
-- Keep `href` values as site paths. Example: `/sub-apps/photo-editor`.
+- Keep `href` values as site paths. Example: `/workspaces/photo-editor`.
 - Keep `icon` values as supported icon keys listed below. Icons are mapped in TypeScript so JSON stays simple.
 - Keep `tone` values as Tailwind class strings only when a card needs a specific icon color/background.
 
@@ -28,7 +28,7 @@ Top-level format:
 ```json
 {
   "navigation": {
-    "mainItems": ["Features", "Solutions", "Sub Apps", "Download"]
+    "mainItems": ["Features", "Solutions", "Workspaces", "Download"]
   },
   "dashboard": {
     "items": ["Dashboard", "Projects"],
@@ -71,10 +71,10 @@ Top-level format:
   "testimonials": [
     { "quote": "Quote text.", "name": "Person Name", "role": "Role" }
   ],
-  "subAppsPreview": {
+  "workspacesPreview": {
     "included": ["Focused workspaces"],
     "items": [
-      { "title": "Photo Editor", "icon": "ImageIcon", "href": "/sub-apps/photo-editor", "copy": "Preview card copy." }
+      { "title": "Photo Editor", "icon": "ImageIcon", "href": "/workspaces/photo-editor", "copy": "Preview card copy." }
     ]
   },
   "toolFeatureSets": {
@@ -117,7 +117,7 @@ Top-level format:
 }
 ```
 
-## `sub-apps.json`
+## `workspaces.json`
 
 Top-level format:
 

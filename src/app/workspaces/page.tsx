@@ -1,18 +1,18 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Check, Download, Sparkles } from "lucide-react";
-import { getSubApps } from "./sub-app-data";
+import { getWorkspaces } from "./workspace-data";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
-  title: "Sub Apps",
-  description: "Explore DawnDesk's built-in sub apps for editing, prompts, projects, notes, and developer workflows.",
-  path: "/sub-apps",
+  title: "Workspaces",
+  description: "Explore DawnDesk's built-in workspaces for editing, prompts, projects, notes, and developer workflows.",
+  path: "/workspaces",
 });
 
-export default async function SubAppsPage() {
-  const subApps = await getSubApps();
+export default async function WorkspacesPage() {
+  const workspaces = await getWorkspaces();
 
   return (
     <div className="min-h-screen bg-[#fbfaf7] text-[#171717]">
@@ -23,13 +23,12 @@ export default async function SubAppsPage() {
             DawnDesk
           </Link>
           <nav className="hidden items-center gap-8 text-sm font-semibold md:flex">
-            <Link className="text-[#ffc400]" href="/sub-apps">Sub Apps</Link>
+            <Link className="text-[#ffc400]" href="/workspaces">Workspaces</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#features">Features</Link>
             <Link className="text-white/80 hover:text-[#ffc400]" href="/#download">Download</Link>
           </nav>
           <div className="flex items-center gap-4 text-white/85">
             <SearchOverlayButton />
-            <Sparkles size={18} />
           </div>
         </div>
       </header>
@@ -38,23 +37,23 @@ export default async function SubAppsPage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(255,196,0,0.24),transparent_32%)]" />
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-24 lg:grid-cols-[0.88fr_1.12fr] lg:px-8">
           <div>
-            <p className="eyebrow text-[#ffc400]">DawnDesk sub apps</p>
+            <p className="eyebrow text-[#ffc400]">DawnDesk workspaces</p>
             <h1 className="mt-5 max-w-3xl text-5xl font-black leading-[1.05] md:text-7xl">
-              Every tool is focused and built into one workflow.
+              Focused tools built for a connected workflow.
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-white/70">
-              Explore the complete DawnDesk toolkit. Each sub app has its own workspace, feature set, and detail page.
+              Explore the complete DawnDesk toolkit. Each workspace features a dedicated layout, specific toolsets, and in-depth documentation.
             </p>
             <div className="mt-9 flex flex-wrap gap-4">
-              <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="#sub-app-list">Explore Sub Apps</a>
-              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/api/download/windows">Download DawnDesk</Link>
+              <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="#workspace-list">Explore Workspaces</a>
+              <Link className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold text-white" href="/#download">Download DawnDesk</Link>
             </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            {subApps.slice(0, 4).map((app) => {
+            {workspaces.slice(0, 4).map((app) => {
               const Icon = app.icon;
               return (
-                <Link className="rounded-md border border-white/12 bg-white/[0.06] p-6 transition hover:border-[#ffc400]" href={`/sub-apps/${app.slug}`} key={app.slug}>
+                <Link className="rounded-md border border-white/12 bg-white/[0.06] p-6 transition hover:border-[#ffc400]" href={`/workspaces/${app.slug}`} key={app.slug}>
                   <Icon className="text-[#ffc400]" size={32} />
                   <h2 className="mt-5 text-xl font-black">{app.name}</h2>
                   <p className="mt-3 text-sm leading-6 text-white/60">{app.summary}</p>
@@ -65,8 +64,8 @@ export default async function SubAppsPage() {
         </div>
       </section>
 
-      <main id="sub-app-list">
-        {subApps.map((app, index) => {
+      <main id="workspace-list">
+        {workspaces.map((app, index) => {
           const Icon = app.icon;
           return (
             <section className="section" key={app.slug}>
@@ -80,10 +79,10 @@ export default async function SubAppsPage() {
                   <p className="mt-4 text-2xl font-extrabold text-[#d29300]">{app.accent}</p>
                   <p className="mt-5 max-w-xl text-lg leading-8 text-black/65">{app.summary}</p>
                   <div className="mt-8 flex flex-wrap gap-4">
-                    <Link className="btn-animated btn-animated-dark inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/sub-apps/${app.slug}`}>
+                    <Link className="btn-animated btn-animated-dark inline-flex items-center gap-2 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href={`/workspaces/${app.slug}`}>
                       More Detail <ArrowRight size={17} />
                     </Link>
-                    <Link className="btn-animated rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/api/download/windows">Download DawnDesk</Link>
+                    <Link className="btn-animated rounded-md border border-black/15 px-6 py-4 text-sm font-bold" href="/#download">Download DawnDesk</Link>
                   </div>
                 </div>
                 <div className="rounded-xl border border-black/10 bg-white p-6 shadow-xl">
@@ -119,10 +118,10 @@ export default async function SubAppsPage() {
         <div className="mx-auto flex max-w-7xl flex-col gap-8 md:flex-row md:items-center md:justify-between">
           <div>
             <p className="eyebrow text-[#ffc400]">DawnDesk toolkit</p>
-            <h2 className="mt-4 text-4xl font-black">All sub apps are built into one workspace.</h2>
+            <h2 className="mt-4 text-4xl font-black">All workspaces are built into one workspace.</h2>
             <p className="mt-4 max-w-xl leading-7 text-white/65">Install DawnDesk once and use the full toolkit for creative, project, and productivity workflows.</p>
           </div>
-          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/api/download/windows">
+          <Link className="btn-animated inline-flex items-center justify-center gap-3 rounded-md bg-[#ffc400] px-8 py-4 text-sm font-extrabold text-black" href="/#download">
             <Download size={18} />
             Download DawnDesk
           </Link>

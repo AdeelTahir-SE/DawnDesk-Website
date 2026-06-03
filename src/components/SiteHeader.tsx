@@ -5,7 +5,7 @@ import { UserMenu } from "./UserMenu";
 
 const navItems = [
   ["Features", "/#features"],
-  ["Sub Apps", "/sub-apps"],
+  ["Workspaces", "/workspaces"],
   ["Documentation", "/documentation"],
   ["Releases", "/releases"],
 ] as const;

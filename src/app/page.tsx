@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import type { ElementType } from "react";
 import siteFallback from "@/content/site.json";
 import { getAppReleasesContent, getFeatureHistoryContent, getSiteContent, getUpcomingFeaturesContent, type AppReleaseContent } from "@/lib/content";
@@ -505,8 +506,9 @@ function DownloadCta() {
             {["Core tools included", "Regular updates", "Works on Windows, macOS & Linux", "Focused workspaces"].map((item) => <li className="flex items-center gap-3" key={item}><Check className="rounded-full bg-[#ffc400] p-1 text-black" size={20} /> {item}</li>)}
           </ul>
           <div className="mt-9 flex flex-wrap gap-4">
-            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/api/download/windows"><Download className="mr-2 inline" size={17} />Download for Windows</Link>
-            <button className="btn-animated rounded-md border border-white/25 px-7 py-4 text-sm font-bold">View Other Platforms</button>
+            <Link className="btn-animated rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black" href="/#download">
+              Download
+            </Link>
           </div>
         </div>
         <LaptopMockup />
@@ -582,10 +584,7 @@ function Footer() {
           <div className="rounded-md border border-white/15 bg-white/[0.06] p-7">
             <h3 className="text-xl font-black">{footer.newsletter.title}</h3>
             <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
-            <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
-              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={footer.newsletter.placeholder} required />
-              <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
-            </form>
+            <NewsletterForm placeholder={footer.newsletter.placeholder} buttonText={footer.newsletter.button} />
           </div>
         </div>
       </div>

@@ -3,7 +3,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
 import siteFallback from "@/content/site.json";
 import Link from "next/link";
-
+import { NewsletterForm } from "@/components/NewsletterForm";
+import { ContactForm } from "@/components/ContactForm";
 export const metadata = createPageMetadata({
   title: "Contact Us",
   description: "Get in touch with the DawnDesk team for support, sales, or general inquiries.",
@@ -42,32 +43,7 @@ export default function ContactUsPage() {
           </div>
 
           <div className="rounded-xl border border-black/10 bg-white p-8 shadow-sm sm:p-10">
-            <form action="#" className="space-y-6">
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <label htmlFor="first-name" className="text-sm font-bold text-black/80">First name</label>
-                  <input type="text" id="first-name" className="w-full rounded-md border border-black/15 bg-transparent px-4 py-3 text-sm outline-none focus:border-[#ffc400]" placeholder="Jane" required />
-                </div>
-                <div className="space-y-2">
-                  <label htmlFor="last-name" className="text-sm font-bold text-black/80">Last name</label>
-                  <input type="text" id="last-name" className="w-full rounded-md border border-black/15 bg-transparent px-4 py-3 text-sm outline-none focus:border-[#ffc400]" placeholder="Doe" required />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-bold text-black/80">Email</label>
-                <input type="email" id="email" className="w-full rounded-md border border-black/15 bg-transparent px-4 py-3 text-sm outline-none focus:border-[#ffc400]" placeholder="jane@example.com" required />
-              </div>
-
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-bold text-black/80">Message</label>
-                <textarea id="message" rows={5} className="w-full resize-y rounded-md border border-black/15 bg-transparent px-4 py-3 text-sm outline-none focus:border-[#ffc400]" placeholder="How can we help you?" required></textarea>
-              </div>
-
-              <button type="submit" className="btn-animated w-full rounded-md bg-[#ffc400] px-7 py-4 text-sm font-extrabold text-black">
-                Send Message
-              </button>
-            </form>
+            <ContactForm />
           </div>
 
         </div>
@@ -146,10 +122,7 @@ function Footer() {
           <div className="rounded-md border border-white/15 bg-white/[0.06] p-7">
             <h3 className="text-xl font-black">{footer.newsletter.title}</h3>
             <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
-            <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
-              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={footer.newsletter.placeholder} required />
-              <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
-            </form>
+            <NewsletterForm placeholder={footer.newsletter.placeholder} buttonText={footer.newsletter.button} />
           </div>
         </div>
       </div>

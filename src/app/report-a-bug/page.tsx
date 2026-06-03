@@ -1,5 +1,6 @@
-import { Bug, Upload } from "lucide-react";
+import { Bug } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { FileInput } from "@/components/FileInput";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata = createPageMetadata({
@@ -25,7 +26,7 @@ export default function ReportBugPage({ searchParams }: { searchParams?: { sent?
           </div>
 
           <form action="/api/report-bug" method="post" encType="multipart/form-data" className="rounded-md border border-black/10 bg-white p-7 shadow-sm">
-            {sent && <p className="mb-5 rounded-md bg-[#fff3bf] px-4 py-3 text-sm font-bold text-black">Thanks. Your bug report was saved.</p>}
+            {sent && <p className="mb-5 rounded-md bg-[#fff3bf] px-4 py-3 text-sm font-bold text-black">Response submitted! Your bug report was saved.</p>}
             <div className="grid gap-4 sm:grid-cols-2">
               <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="name" placeholder="Your name" />
               <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="email" type="email" placeholder="Email" />
@@ -34,11 +35,7 @@ export default function ReportBugPage({ searchParams }: { searchParams?: { sent?
             <textarea className="mt-4 min-h-32 w-full rounded-md border border-black/15 px-4 py-3 text-sm" name="steps" placeholder="Steps to reproduce" required />
             <textarea className="mt-4 min-h-24 w-full rounded-md border border-black/15 px-4 py-3 text-sm" name="expected" placeholder="Expected result" />
             <textarea className="mt-4 min-h-24 w-full rounded-md border border-black/15 px-4 py-3 text-sm" name="actual" placeholder="Actual result" />
-            <label className="mt-4 flex cursor-pointer items-center gap-3 rounded-md border border-dashed border-black/20 bg-[#fbfaf7] px-4 py-5 text-sm font-bold text-black/65">
-              <Upload size={20} />
-              Attach screenshot or image
-              <input className="sr-only" name="attachment" type="file" accept="image/*" />
-            </label>
+            <FileInput />
             <button className="btn-animated btn-animated-dark mt-5 rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white" type="submit">Submit bug report</button>
           </form>
         </div>

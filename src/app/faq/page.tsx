@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import Image from "next/image";
 import { MessageCircleQuestion, HelpCircle } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -157,10 +158,7 @@ function Footer() {
           <div className="rounded-md border border-white/15 bg-white/[0.06] p-7">
             <h3 className="text-xl font-black">{footer.newsletter.title}</h3>
             <p className="mt-4 leading-7 text-white/62">{footer.newsletter.copy}</p>
-            <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
-              <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={footer.newsletter.placeholder} required />
-              <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black">{footer.newsletter.button}</button>
-            </form>
+            <NewsletterForm placeholder={footer.newsletter.placeholder} buttonText={footer.newsletter.button} />
           </div>
         </div>
       </div>

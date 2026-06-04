@@ -114,13 +114,11 @@ function mapToolHero(hero: SiteContent["toolHeroes"][ToolType]): ToolHeroContent
 
 let siteContent = emptySiteContent;
 let navItems = siteContent.navigation.mainItems;
-let platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let suiteTools = siteContent.suiteTools;
 let upcoming = siteContent.upcoming;
 let updateTimeline = siteContent.updateTimeline;
 let audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-let testimonials = siteContent.testimonials;
 let workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
 let videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
@@ -139,13 +137,11 @@ let toolHeroes: Record<ToolType, ToolHeroContent> = {
 function setSiteContent(content: SiteContent) {
   siteContent = content;
   navItems = siteContent.navigation.mainItems;
-  platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   suiteTools = siteContent.suiteTools;
   upcoming = siteContent.upcoming;
   updateTimeline = siteContent.updateTimeline;
   audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
-  testimonials = siteContent.testimonials;
   workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   photoFeatures = siteContent.toolFeatureSets.photo.map(mapFeature);
   videoFeatures = siteContent.toolFeatureSets.video.map(mapFeature);
@@ -183,7 +179,6 @@ export default async function Home() {
       <UpcomingSection items={upcomingFeatures} />
       <UpdateTreeSection updates={featureHistory} />
       <AudienceSection />
-      {/* <Testimonials /> */}
       <DownloadCta />
       <Footer />
     </div>
@@ -286,7 +281,7 @@ function WorkspacesOverview() {
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             {workspaces.map(({ title, icon: Icon, href, copy }) => (
-              <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400] hover:shadow-xl" href="/workspaces" key={title}>
+              <Link className="group rounded-md border border-black/10 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-[#ffc400] hover:shadow-xl" href={href} key={title}>
                 <div className="flex items-start justify-between gap-5">
                   <Icon className="rounded-md bg-[#fff3bf] p-2 text-[#d29300]" size={42} />
                   <ChevronRight className="mt-2 text-black/25 transition group-hover:translate-x-1 group-hover:text-[#d29300]" size={20} />
@@ -466,30 +461,6 @@ function AudienceSection() {
   );
 }
 
-function Testimonials() {
-  return (
-    <section className="section">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
-        <p className="eyebrow text-[#c47800]">Trusted by users</p>
-        <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">What our users say</h2>
-        <p className="mt-4 max-w-md leading-7 text-black/65">Join thousands of productive users who love DawnDesk.</p>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {testimonials.map((item, index) => (
-            <article className="rounded-md border border-black/10 bg-white p-8" key={item.name}>
-              <p className="min-h-28 text-lg font-semibold leading-8 text-black/80">&quot;{item.quote}&quot;</p>
-              <div className="mt-7 flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black text-[#ffc400]">{item.name.charAt(0)}</div>
-                <div><h3 className="font-black">{item.name}</h3><p className="text-sm text-black/55">{item.role}</p></div>
-              </div>
-              <div className="mt-5 flex gap-1 text-[#ffc400]">{Array.from({ length: 5 }).map((_, star) => <Star fill="currentColor" size={18} key={`${index}-${star}`} />)}</div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function DownloadCta() {
   return (
     <section className="relative overflow-hidden bg-black text-white">
@@ -658,8 +629,6 @@ function ScreenshotFrame({
 }
 
 function EditorMockup({ type }: { type: "photo" | "video" | "prompt" }) {
-  const isPrompt = type === "prompt";
-
   if (type === "photo") {
     return (
       <ScreenshotFrame

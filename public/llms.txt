@@ -1,0 +1,30 @@
+# DawnDesk
+
+> DawnDesk is a desktop productivity suite for projects, notes, prompts, creative editing, documentation, and support workflows.
+
+Official site: https://dawndesk.app
+
+## Main Pages
+
+- Home: https://dawndesk.app/
+- Workspaces: https://dawndesk.app/workspaces
+- Documentation: https://dawndesk.app/documentation
+- Releases: https://dawndesk.app/releases
+- Blog: https://dawndesk.app/blog
+- FAQ: https://dawndesk.app/faq
+- Contact: https://dawndesk.app/contact-us
+
+## Product Areas
+
+- Project and task workflow management
+- Notes and documentation
+- AI prompt management
+- Photo and video editing workspaces
+- Developer and support workflows
+
+## Support
+
+- Report a bug: https://dawndesk.app/report-a-bug
+- Request a feature: https://dawndesk.app/request-a-feature
+- Privacy policy: https://dawndesk.app/privacy-policy
+- Terms of service: https://dawndesk.app/terms-of-service

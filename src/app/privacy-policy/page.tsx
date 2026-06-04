@@ -3,7 +3,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { createPageMetadata } from "@/lib/seo";
 import siteFallback from "@/content/site.json";
-import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
 
 export const metadata = createPageMetadata({

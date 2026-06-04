@@ -62,7 +62,14 @@ export const metadata = {
 };
 
 function hasAdminConfig() {
-  return Boolean(ADMIN_USERNAME && ADMIN_PASSWORD && ADMIN_SESSION_SECRET);
+  return Boolean(
+    ADMIN_USERNAME &&
+      ADMIN_PASSWORD &&
+      ADMIN_SESSION_SECRET &&
+      !ADMIN_PASSWORD.startsWith("replace-with-") &&
+      !ADMIN_SESSION_SECRET.startsWith("replace-with-") &&
+      ADMIN_SESSION_SECRET.length >= 32,
+  );
 }
 
 function safeEqual(left: string, right: string) {

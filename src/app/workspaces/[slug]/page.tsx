@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Check, Download, Sparkles } from "lucide-react";
+import { ArrowLeft, Check, Download } from "lucide-react";
 import workspacesFallback from "@/content/workspaces.json";
 import { getWorkspace } from "../workspace-data";
 import { createPageMetadata } from "@/lib/seo";

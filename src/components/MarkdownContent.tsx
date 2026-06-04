@@ -164,6 +164,7 @@ export function MarkdownContent({ content }: { content: string }) {
         if (block.type === "image") {
           return (
             <figure className="mt-8 overflow-hidden rounded-xl border border-black/10 bg-[#fbfaf7] shadow-sm" key={index}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img className="h-auto w-full object-cover" src={block.src} alt={block.alt} loading="lazy" decoding="async" />
               {block.alt && <figcaption className="border-t border-black/10 px-5 py-3 text-sm font-bold text-black/52">{block.alt}</figcaption>}
             </figure>

@@ -2,9 +2,9 @@ import { Scale } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { createPageMetadata } from "@/lib/seo";
-import siteFallback from "@/content/site.json";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { getSiteContent } from "@/lib/content";
 
 export const metadata = createPageMetadata({
   title: "Terms of Service",
@@ -80,8 +80,8 @@ export default function TermsOfServicePage() {
   );
 }
 
-function Footer() {
-  const footer = siteFallback.footer;
+async function Footer() {
+  const footer = (await getSiteContent()).footer;
   const allowedSocials = new Set(["x", "yt"]);
   const hiddenFooterItems = new Set(["Careers", "Changelog", "Roadmap"]);
   const footerGroups = footer.groups

@@ -39,8 +39,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import type { ElementType } from "react";
-import siteFallback from "@/content/site.json";
-import { getAppReleasesContent, getFeatureHistoryContent, getSiteContent, getUpcomingFeaturesContent, type AppReleaseContent } from "@/lib/content";
+import { emptySiteContent, getAppReleasesContent, getFeatureHistoryContent, getSiteContent, getUpcomingFeaturesContent, type AppReleaseContent, type SiteContent } from "@/lib/content";
 import { DownloadChooser } from "@/components/DownloadChooser";
 import { SearchOverlayButton } from "@/components/SearchOverlayButton";
 import { UpdateTree } from "@/components/UpdateTree";
@@ -105,7 +104,7 @@ function mapFeature(feature: { title: string; copy: string; icon: string }): Too
   return [feature.title, feature.copy, getIcon(feature.icon)];
 }
 
-function mapToolHero(hero: (typeof siteFallback.toolHeroes)[ToolType]): ToolHeroContent {
+function mapToolHero(hero: SiteContent["toolHeroes"][ToolType]): ToolHeroContent {
   return {
     ...hero,
     featureSet: hero.featureSet as ToolType,
@@ -113,13 +112,13 @@ function mapToolHero(hero: (typeof siteFallback.toolHeroes)[ToolType]): ToolHero
   };
 }
 
-let siteContent = siteFallback;
+let siteContent = emptySiteContent;
 let navItems = siteContent.navigation.mainItems;
 let platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let suiteTools = siteContent.suiteTools;
 let upcoming = siteContent.upcoming;
-let updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
+let updateTimeline = siteContent.updateTimeline;
 let audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
 let testimonials = siteContent.testimonials;
 let workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));
@@ -137,14 +136,14 @@ let toolHeroes: Record<ToolType, ToolHeroContent> = {
   prompt: mapToolHero(siteContent.toolHeroes.prompt),
 };
 
-function setSiteContent(content: typeof siteFallback) {
+function setSiteContent(content: SiteContent) {
   siteContent = content;
   navItems = siteContent.navigation.mainItems;
   platformItems = siteContent.download.platforms.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   featureCards = siteContent.featureCards.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   suiteTools = siteContent.suiteTools;
   upcoming = siteContent.upcoming;
-  updateTimeline = siteContent.updateTimeline ?? siteFallback.updateTimeline;
+  updateTimeline = siteContent.updateTimeline;
   audiences = siteContent.audiences.map((item) => ({ ...item, icon: getIcon(item.icon) }));
   testimonials = siteContent.testimonials;
   workspaces = siteContent.workspacesPreview.items.map((item) => ({ ...item, icon: getIcon(item.icon) }));

@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import blogPostsFallback from "@/content/blog-posts.json";
 import { SiteHeader } from "@/components/SiteHeader";
-import { getBlogPostContent } from "@/lib/content";
+import { getBlogPostContent, getBlogPostsContent } from "@/lib/content";
 import { createPageMetadata } from "@/lib/seo";
 import { MarkdownContent } from "@/components/MarkdownContent";
 
@@ -13,8 +12,9 @@ type BlogPostPageProps = {
   }>;
 };
 
-export function generateStaticParams() {
-  return blogPostsFallback.map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  const posts = await getBlogPostsContent();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata(props: BlogPostPageProps) {

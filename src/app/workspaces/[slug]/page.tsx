@@ -2,12 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Check, Download } from "lucide-react";
-import workspacesFallback from "@/content/workspaces.json";
-import { getWorkspace } from "../workspace-data";
+import { getWorkspace, getWorkspaces } from "../workspace-data";
 import { createPageMetadata } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return workspacesFallback.map((app) => ({ slug: app.slug }));
+export async function generateStaticParams() {
+  const workspaces = await getWorkspaces();
+  return workspaces.map((app) => ({ slug: app.slug }));
 }
 
 export async function generateMetadata(props: PageProps<"/workspaces/[slug]">) {

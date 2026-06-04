@@ -1,11 +1,11 @@
 import type { MetadataRoute } from "next";
-import workspacesFallback from "@/content/workspaces.json";
-import blogPostsFallback from "@/content/blog-posts.json";
+import { getBlogPostsContent, getWorkspacesContent } from "@/lib/content";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://dawndesk.app";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const [workspaces, blogPosts] = await Promise.all([getWorkspacesContent(), getBlogPostsContent()]);
   const staticRoutes = [
     "",
     "/solutions",
@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly" as const,
       priority: route === "" ? 1 : 0.8,
     })),
-    ...workspacesFallback.flatMap((app) => [
+    ...workspaces.flatMap((app) => [
       {
         url: `${siteUrl}/workspaces/${app.slug}`,
         lastModified: now,
@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: 0.7,
       },
     ]),
-    ...blogPostsFallback.map((post) => ({
+    ...blogPosts.map((post) => ({
       url: `${siteUrl}/blog/${post.slug}`,
       lastModified: new Date(post.publishedAt),
       changeFrequency: "monthly" as const,

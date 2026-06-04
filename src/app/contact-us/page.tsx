@@ -1,10 +1,10 @@
 import { Mail } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { createPageMetadata } from "@/lib/seo";
-import siteFallback from "@/content/site.json";
 import Link from "next/link";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { ContactForm } from "@/components/ContactForm";
+import { getSiteContent } from "@/lib/content";
 export const metadata = createPageMetadata({
   title: "Contact Us",
   description: "Get in touch with the DawnDesk team for support, sales, or general inquiries.",
@@ -55,8 +55,8 @@ export default function ContactUsPage() {
 }
 
 // Including Footer since it's only in page.tsx right now
-function Footer() {
-  const footer = siteFallback.footer;
+async function Footer() {
+  const footer = (await getSiteContent()).footer;
   const allowedSocials = new Set(["x", "yt"]);
   const hiddenFooterItems = new Set(["Careers", "Changelog", "Roadmap"]);
   const footerGroups = footer.groups

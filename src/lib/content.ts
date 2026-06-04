@@ -1,12 +1,31 @@
-import siteFallback from "@/content/site.json";
-import workspacesFallback from "@/content/workspaces.json";
-import blogPostsFallback from "@/content/blog-posts.json";
 import { unstable_cache } from "next/cache";
 import { createPublicSupabaseClient } from "./supabase";
 
-export type SiteContent = typeof siteFallback;
-export type WorkspaceContent = (typeof workspacesFallback)[number];
-export type BlogPostContent = (typeof blogPostsFallback)[number];
+export type SiteContent = typeof emptySiteContent;
+export type WorkspaceContent = {
+  slug: string;
+  name: string;
+  eyebrow: string;
+  headline: string;
+  accent: string;
+  summary: string;
+  detail: string;
+  icon: string;
+  features: {
+    title: string;
+    copy: string;
+    icon: string;
+  }[];
+  workflow: string[];
+};
+export type BlogPostContent = {
+  slug: string;
+  title: string;
+  category: string;
+  summary: string;
+  content: string;
+  publishedAt: string;
+};
 export type FeatureHistoryContent = SiteContent["updateTimeline"][number];
 export type UpcomingFeatureContent = SiteContent["upcoming"][number];
 export type DocumentationPageContent = {
@@ -27,33 +46,120 @@ export type AppReleaseContent = {
   sortOrder: number;
 };
 
-function buildDocumentationFallback(apps: WorkspaceContent[]): DocumentationPageContent[] {
-  return apps.map((app) => ({
-    slug: app.slug,
-    title: `${app.name} Documentation`,
-    summary: app.detail,
-    content: `## Overview
+export const emptySiteContent = {
+  navigation: {
+    mainItems: ["Features", "Workspaces", "Documentation", "Releases"],
+  },
+  dashboard: {
+    items: [] as string[],
+    stats: [] as { label: string; value: number; detail: string }[],
+    productivityHeights: [] as number[],
+  },
+  hero: {
+    eyebrow: "DawnDesk",
+    title: "DawnDesk",
+    highlight: "Desktop productivity suite.",
+    copy: "Website content is managed in Supabase.",
+    primaryCta: "Download Now",
+    secondaryCta: "Explore Features",
+  },
+  download: {
+    platforms: [] as { name: string; detail: string; icon: string; active?: boolean }[],
+    windows: {
+      title: "DawnDesk for Windows",
+      version: "",
+      size: "",
+      compatibility: "",
+      primaryCta: "Download for Windows",
+      secondaryCta: "Release notes",
+      url: "",
+    },
+  },
+  featureCards: [] as { title: string; copy: string; icon: string; tone: string }[],
+  suiteTools: [] as string[],
+  upcoming: [] as { version: string; title: string; copy: string; state: string; color: string }[],
+  updateTimeline: [] as {
+    version: string;
+    date: string;
+    title: string;
+    summary: string;
+    status: string;
+    branches: { label: string; detail: string }[];
+  }[],
+  audiences: [] as { title: string; copy: string; icon: string; tone: string }[],
+  testimonials: [] as { quote: string; name: string; role: string }[],
+  workspacesPreview: {
+    included: [] as string[],
+    items: [] as { title: string; icon: string; href: string; copy: string }[],
+  },
+  toolFeatureSets: {
+    photo: [] as { title: string; copy: string; icon: string }[],
+    video: [] as { title: string; copy: string; icon: string }[],
+    prompt: [] as { title: string; copy: string; icon: string }[],
+  },
+  toolHeroes: {
+    photo: {
+      label: "Photo Editor",
+      title: "Photo Editor",
+      accent: "",
+      copy: "",
+      button: "Open Photo Editor",
+      featureSet: "photo",
+      icon: "ImageIcon",
+    },
+    video: {
+      label: "Video Editor",
+      title: "Video Editor",
+      accent: "",
+      copy: "",
+      button: "Open Video Editor",
+      featureSet: "video",
+      icon: "Video",
+    },
+    prompt: {
+      label: "Prompt Manager",
+      title: "Prompt Manager",
+      accent: "",
+      copy: "",
+      button: "Open Prompt Manager",
+      featureSet: "prompt",
+      icon: "PenTool",
+    },
+  },
+  toolGrids: {
+    photo: {
+      kicker: "PHOTO EDITOR",
+      title: "Photo Editor",
+      notice: "",
+    },
+    video: {
+      kicker: "VIDEO EDITOR",
+      title: "Video Editor",
+      notice: "",
+    },
+    prompt: {
+      kicker: "PROMPT MANAGER",
+      title: "Prompt Manager",
+      notice: "",
+    },
+  },
+  footer: {
+    copy: "DawnDesk desktop productivity suite.",
+    copyright: "(c) 2026 DawnDesk. All rights reserved.",
+    socials: ["x", "yt"],
+    groups: [] as { title: string; items: string[] }[],
+    newsletter: {
+      title: "Stay in the loop",
+      copy: "Get DawnDesk updates.",
+      placeholder: "Enter your email",
+      button: "Subscribe",
+    },
+  },
+};
 
-${app.summary}
-
-## Key features
-
-${app.features.map((feature) => `- **${feature.title}**: ${feature.copy}`).join("\n")}
-
-## Workflow
-
-${app.workflow.map((step, index) => `${index + 1}. ${step}`).join("\n")}
-
-\`\`\`mermaid
-flowchart TD
-  Open[Open workspace] --> Work[Complete focused work]
-  Work --> Save[Save output]
-  Save --> Reuse[Reuse in DawnDesk]
-\`\`\`
-`,
-  }));
-}
-
+const emptyWorkspaces: WorkspaceContent[] = [];
+const emptyBlogPosts: BlogPostContent[] = [];
+const emptyDocumentationPages: DocumentationPageContent[] = [];
 const releaseFallback: AppReleaseContent[] = [
   {
     platform: "windows",
@@ -72,7 +178,7 @@ async function readSiteContent(): Promise<SiteContent> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return siteFallback;
+    return emptySiteContent;
   }
 
   const { data, error } = await supabase
@@ -82,7 +188,7 @@ async function readSiteContent(): Promise<SiteContent> {
     .single();
 
   if (error || !data?.content) {
-    return siteFallback;
+    return emptySiteContent;
   }
 
   const content = data.content as Record<string, unknown>;
@@ -107,7 +213,7 @@ async function readWorkspacesContent(): Promise<WorkspaceContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return workspacesFallback;
+    return emptyWorkspaces;
   }
 
   const { data, error } = await supabase
@@ -116,7 +222,7 @@ async function readWorkspacesContent(): Promise<WorkspaceContent[]> {
     .order("sort_order", { ascending: true });
 
   if (error || !data?.length) {
-    return workspacesFallback;
+    return emptyWorkspaces;
   }
 
   return data.map((row) => row.content as WorkspaceContent);
@@ -126,7 +232,7 @@ async function readBlogPostsContent(): Promise<BlogPostContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return blogPostsFallback;
+    return emptyBlogPosts;
   }
 
   const { data, error } = await supabase
@@ -135,7 +241,7 @@ async function readBlogPostsContent(): Promise<BlogPostContent[]> {
     .order("published_at", { ascending: false });
 
   if (error || !data?.length) {
-    return blogPostsFallback;
+    return emptyBlogPosts;
   }
 
   return data.map((row) => row.content as BlogPostContent);
@@ -145,7 +251,7 @@ async function readDocumentationContent(): Promise<DocumentationPageContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return buildDocumentationFallback(workspacesFallback);
+    return emptyDocumentationPages;
   }
 
   const { data, error } = await supabase
@@ -154,7 +260,7 @@ async function readDocumentationContent(): Promise<DocumentationPageContent[]> {
     .order("slug", { ascending: true });
 
   if (error || !data?.length) {
-    return buildDocumentationFallback(workspacesFallback);
+    return emptyDocumentationPages;
   }
 
   return data as DocumentationPageContent[];
@@ -194,7 +300,7 @@ async function readFeatureHistoryContent(): Promise<FeatureHistoryContent[]> {
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return siteFallback.updateTimeline;
+    return [];
   }
 
   const { data, error } = await supabase
@@ -203,7 +309,7 @@ async function readFeatureHistoryContent(): Promise<FeatureHistoryContent[]> {
     .order("sort_order", { ascending: false });
 
   if (error || !data?.length) {
-    return siteFallback.updateTimeline;
+    return [];
   }
 
   return data.map((row) => row.content as FeatureHistoryContent);
@@ -213,7 +319,7 @@ async function readUpcomingFeaturesContent(): Promise<UpcomingFeatureContent[]> 
   const supabase = createPublicSupabaseClient();
 
   if (!supabase) {
-    return siteFallback.upcoming;
+    return [];
   }
 
   const { data, error } = await supabase
@@ -222,7 +328,7 @@ async function readUpcomingFeaturesContent(): Promise<UpcomingFeatureContent[]> 
     .order("sort_order", { ascending: false });
 
   if (error || !data?.length) {
-    return siteFallback.upcoming;
+    return [];
   }
 
   return data.map((row) => row.content as UpcomingFeatureContent);

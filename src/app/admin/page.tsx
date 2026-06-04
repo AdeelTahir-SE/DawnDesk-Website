@@ -23,6 +23,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { AdminSectionNav, type AdminNavIcon, type AdminNavItem } from "@/components/AdminSectionNav";
+import { AdminSubmitButton } from "@/components/AdminSubmitButton";
 import { JsonTextarea } from "@/components/JsonTextarea";
 import { getAppReleasesContent, getBlogPostsContent, getDocumentationContent, getFeatureHistoryContent, getSiteContent, getWorkspacesContent, getUpcomingFeaturesContent } from "@/lib/content";
 import { createAdminSupabaseClient } from "@/lib/supabase";
@@ -692,7 +693,7 @@ function AdminLogin({ error }: { error?: string }) {
         <form action={signInAdmin} className="mt-7 space-y-4">
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="username" placeholder="Username" />
           <input className="w-full rounded-md border border-white/15 bg-black/35 px-4 py-3 text-sm text-white outline-none" name="password" placeholder="Password" type="password" />
-          <button className="btn-animated w-full rounded-md bg-[#ffc400] px-6 py-4 text-sm font-extrabold text-black" type="submit">Open admin</button>
+          <AdminSubmitButton className="btn-animated w-full rounded-md bg-[#ffc400] px-6 py-4 text-sm font-extrabold text-black" pendingText="Signing in...">Open admin</AdminSubmitButton>
         </form>
       </div>
     </main>
@@ -788,9 +789,9 @@ function JsonEditor({
       <div className={`grid gap-5 p-6 ${format ? "2xl:grid-cols-[minmax(0,1fr)_390px]" : ""}`}>
         <form action={action} className="space-y-4">
           <JsonTextarea defaultValue={prettyContent} minHeight="min-h-[420px]" name="content" rows={rows} />
-          <button className="btn-animated btn-animated-dark rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
+          <AdminSubmitButton className="btn-animated btn-animated-dark rounded-md bg-black px-6 py-3 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" pendingText="Saving changes...">
             {button}
-          </button>
+          </AdminSubmitButton>
         </form>
         {format && <JsonFormatGuide {...format} />}
       </div>
@@ -1387,10 +1388,10 @@ Topic/context: [PASTE YOUR NOTES]. Ensure slug is lowercase and unique.`;
       <div className="grid gap-5 p-6 lg:grid-cols-[1fr_0.85fr]">
         <form action={createWorkspaceContent} className="space-y-4">
           <JsonTextarea defaultValue={stringifyJson(example)} minHeight="min-h-[520px]" name="content" required />
-          <button className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" type="submit">
+          <AdminSubmitButton className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" pendingText="Adding workspace...">
             <PlusCircle size={18} />
             Add workspace JSON
-          </button>
+          </AdminSubmitButton>
         </form>
         <div className="rounded-md border border-black/10 bg-[#fbfaf7] p-5">
           <h3 className="text-lg font-black">Required JSON format</h3>
@@ -1434,10 +1435,10 @@ function NewBlogPostForm() {
       </div>
       <form action={saveSingleBlogPostContent} className="space-y-4 p-6">
         <JsonTextarea defaultValue={stringifyJson(example)} minHeight="min-h-[420px]" name="content" required />
-        <button className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" type="submit">
+        <AdminSubmitButton className="btn-animated inline-flex w-fit items-center gap-2 rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" pendingText="Adding blog...">
           <PlusCircle size={18} />
           Add blog JSON
-        </button>
+        </AdminSubmitButton>
       </form>
     </section>
   );
@@ -1599,10 +1600,10 @@ export default async function AdminPage(props: AdminPageProps) {
                 <CircleHelp size={17} />
               </span>
               <form action={signOutAdmin}>
-                <button className="inline-flex items-center gap-2 rounded-md border border-black/10 bg-white px-4 py-2.5 text-sm font-black text-black transition hover:border-[#ffc400] hover:bg-[#fff9df]" type="submit">
+                <AdminSubmitButton className="inline-flex items-center gap-2 rounded-md border border-black/10 bg-white px-4 py-2.5 text-sm font-black text-black transition hover:border-[#ffc400] hover:bg-[#fff9df]" pendingText="Signing out...">
                   <LogOut size={16} />
                   Sign out
-                </button>
+                </AdminSubmitButton>
               </form>
             </div>
           </div>
@@ -1631,8 +1632,8 @@ export default async function AdminPage(props: AdminPageProps) {
       </header>
 
       <div className="mx-auto max-w-[1500px] py-6">
-        {searchParams?.saved && <p className="mb-5 rounded-md border border-emerald-500/20 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">Saved `{searchParams.saved}` and revalidated cached pages.</p>}
-        {searchParams?.error && <p className="mb-5 rounded-md border border-red-500/20 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{searchParams.error}</p>}
+        {searchParams?.saved && <p className="mb-5 rounded-md border border-emerald-500/20 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-700">Saved {searchParams.saved}. Cached pages were revalidated.</p>}
+        {searchParams?.error && <p className="mb-5 rounded-md border border-red-500/20 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">Could not complete action: {searchParams.error}</p>}
         {searchParams?.media && (
           <div className="mb-5 rounded-md border border-[#ffc400]/40 bg-[#fff8d6] px-4 py-3 text-sm font-bold text-black">
             Uploaded media URL:
@@ -1692,9 +1693,9 @@ export default async function AdminPage(props: AdminPageProps) {
                           name="content"
                           rows={14}
                         />
-                        <button className="btn-animated btn-animated-dark rounded-md bg-black px-5 py-2.5 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" type="submit">
+                        <AdminSubmitButton className="btn-animated btn-animated-dark rounded-md bg-black px-5 py-2.5 text-sm font-extrabold text-white transition hover:bg-[#ffc400] hover:text-black" pendingText={`Saving ${app.name}...`}>
                           Save {app.name}
-                        </button>
+                        </AdminSubmitButton>
                       </form>
                     </article>
                   ))}
@@ -1735,7 +1736,7 @@ export default async function AdminPage(props: AdminPageProps) {
               </div>
               <form action={uploadMedia} className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <input className="rounded-md border border-black/15 px-4 py-3 text-sm" name="file" type="file" accept="image/*,video/*,.pdf" required />
-                <button className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" type="submit">Upload media</button>
+                <AdminSubmitButton className="btn-animated rounded-md bg-[#ffc400] px-6 py-3 text-sm font-extrabold text-black" pendingText="Uploading media...">Upload media</AdminSubmitButton>
               </form>
               <div className="mt-6 rounded-lg border border-black/10 bg-[#fbfaf7]">
                 <div className="flex items-center justify-between border-b border-black/10 px-4 py-3">
@@ -1774,9 +1775,9 @@ export default async function AdminPage(props: AdminPageProps) {
                           </div>
                           <form action={deleteMediaUpload}>
                             <input name="storagePath" type="hidden" value={media.storage_path} />
-                            <button className="rounded-md border border-black/15 px-4 py-2 text-xs font-extrabold text-black transition hover:border-red-400 hover:text-red-700" type="submit">
+                            <AdminSubmitButton className="rounded-md border border-black/15 px-4 py-2 text-xs font-extrabold text-black transition hover:border-red-400 hover:text-red-700" pendingText="Deleting...">
                               Delete
-                            </button>
+                            </AdminSubmitButton>
                           </form>
                         </div>
                       ))}

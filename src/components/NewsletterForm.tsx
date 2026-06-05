@@ -16,9 +16,9 @@ function NewsletterFormInner({ placeholder, buttonText }: { placeholder: string;
   }
 
   return (
-    <form action="/api/newsletter" method="post" className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
+    <form action="/api/newsletter" method="post" className="mt-7 flex min-w-0 flex-col overflow-hidden rounded-md border border-white/15 bg-black/30 sm:flex-row">
       <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" name="email" type="email" placeholder={placeholder} required />
-      <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black">{buttonText}</button>
+      <button className="btn-animated w-full bg-[#ffc400] px-5 py-4 text-sm font-extrabold text-black sm:w-auto">{buttonText}</button>
     </form>
   );
 }
@@ -26,9 +26,9 @@ function NewsletterFormInner({ placeholder, buttonText }: { placeholder: string;
 export function NewsletterForm({ placeholder, buttonText }: { placeholder: string; buttonText: string }) {
   return (
     <Suspense fallback={
-      <form className="mt-7 flex overflow-hidden rounded-md border border-white/15 bg-black/30">
+      <form className="mt-7 flex min-w-0 flex-col overflow-hidden rounded-md border border-white/15 bg-black/30 sm:flex-row">
         <input className="min-w-0 flex-1 bg-transparent px-4 py-4 text-sm outline-none" placeholder={placeholder} disabled />
-        <button className="btn-animated bg-[#ffc400] px-5 text-sm font-extrabold text-black" disabled>{buttonText}</button>
+        <button className="btn-animated w-full bg-[#ffc400] px-5 py-4 text-sm font-extrabold text-black sm:w-auto" disabled>{buttonText}</button>
       </form>
     }>
       <NewsletterFormInner placeholder={placeholder} buttonText={buttonText} />

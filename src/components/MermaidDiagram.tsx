@@ -84,8 +84,8 @@ export function MermaidDiagram({ chart }: { chart: string }) {
   }
 
   return (
-    <div className="my-8 overflow-x-auto rounded-md border border-[#ffc400]/35 bg-[#fff9df] p-5">
-      <div ref={ref} id={`mermaid-${id}`} className="mermaid min-w-[520px] text-center">
+    <div className="my-8 max-w-full overflow-x-auto rounded-md border border-[#ffc400]/35 bg-[#fff9df] p-4 sm:p-5">
+      <div ref={ref} id={`mermaid-${id}`} className="mermaid min-w-full text-center [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:max-w-full sm:min-w-[520px]">
         {chart}
       </div>
     </div>

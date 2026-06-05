@@ -150,15 +150,15 @@ export function MarkdownContent({ content }: { content: string }) {
   const blocks = parseMarkdown(content);
 
   return (
-    <div className="markdown-content">
+    <div className="markdown-content min-w-0 break-words">
       {blocks.map((block, index) => {
         if (block.type === "heading") {
           const Heading = block.depth === 2 ? "h2" : "h3";
-          return <Heading id={block.id} className={block.depth === 2 ? "scroll-mt-28 mt-10 text-3xl font-black tracking-normal text-black first:mt-0" : "scroll-mt-28 mt-8 text-2xl font-black tracking-normal text-black"} key={index}>{renderInline(block.value)}</Heading>;
+          return <Heading id={block.id} className={block.depth === 2 ? "scroll-mt-28 mt-10 text-2xl font-black tracking-normal text-black first:mt-0 sm:text-3xl" : "scroll-mt-28 mt-8 text-xl font-black tracking-normal text-black sm:text-2xl"} key={index}>{renderInline(block.value)}</Heading>;
         }
 
         if (block.type === "paragraph") {
-          return <p className="mt-5 text-lg leading-9 text-black/72" key={index}>{renderInline(block.value)}</p>;
+          return <p className="mt-5 text-base leading-8 text-black/72 sm:text-lg sm:leading-9" key={index}>{renderInline(block.value)}</p>;
         }
 
         if (block.type === "image") {
@@ -185,7 +185,7 @@ export function MarkdownContent({ content }: { content: string }) {
         }
 
         return (
-          <pre className="mt-6 overflow-x-auto rounded-md border border-black/10 bg-[#101012] p-5 text-sm leading-7 text-white" key={index}>
+          <pre className="mt-6 max-w-full overflow-x-auto rounded-md border border-black/10 bg-[#101012] p-5 text-sm leading-7 text-white" key={index}>
             <code>{block.value}</code>
           </pre>
         );

@@ -65,7 +65,7 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
             <Icon className="text-[#ffc400]" size={34} />
             <p className="text-sm font-extrabold uppercase tracking-[0.16em] text-[#ffc400]">Documentation</p>
           </div>
-          <h1 className="mt-5 max-w-4xl text-5xl font-black leading-tight md:text-7xl">{docs.title}</h1>
+          <h1 className="mt-5 max-w-4xl break-words text-4xl font-black leading-tight md:text-7xl">{docs.title}</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/70">{docs.summary}</p>
         </div>
       </section>
@@ -85,8 +85,8 @@ export default async function DocumentationPage(props: DocumentationPageProps) {
             </div>
           </aside>
 
-          <div className="space-y-8">
-            <article className="rounded-xl border border-black/10 bg-white p-8 shadow-sm">
+          <div className="min-w-0 space-y-8">
+            <article className="min-w-0 rounded-xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
               <MarkdownContent content={docs.content} />
               <Link className="btn-animated btn-animated-dark mt-10 inline-flex items-center gap-3 rounded-md bg-black px-6 py-4 text-sm font-extrabold text-white" href="/#download">
                 <Download size={18} />

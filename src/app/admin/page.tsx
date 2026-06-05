@@ -686,7 +686,6 @@ function AdminLogin({ error }: { error?: string }) {
       <div className="w-full max-w-md rounded-xl border border-white/12 bg-white/[0.06] p-8 shadow-[0_0_80px_rgba(255,196,0,0.16)]">
         <p className="eyebrow text-[#ffc400]">DawnDesk admin</p>
         <h1 className="mt-4 text-4xl font-black">Sign in</h1>
-        <p className="mt-4 leading-7 text-white/62">Use the server-side admin credentials to edit website content stored in Supabase.</p>
         {error === "invalid" && <p className="mt-5 rounded-md border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100">Invalid username or password.</p>}
         {error === "session" && <p className="mt-5 rounded-md border border-[#ffc400]/30 bg-[#ffc400]/10 px-4 py-3 text-sm font-bold text-[#ffe28a]">Please sign in to continue.</p>}
         {error === "config" && <p className="mt-5 rounded-md border border-red-400/30 bg-red-500/10 px-4 py-3 text-sm font-bold text-red-100">Admin is disabled until credentials and a session secret are configured.</p>}

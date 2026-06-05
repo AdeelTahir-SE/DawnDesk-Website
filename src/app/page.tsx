@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { FaApple, FaLinux, FaWindows } from "react-icons/fa";
 import type { ElementType } from "react";
 import { emptySiteContent, getAppReleasesContent, getFeatureHistoryContent, getSiteContent, getUpcomingFeaturesContent, type AppReleaseContent, type SiteContent } from "@/lib/content";
 import { DownloadChooser } from "@/components/DownloadChooser";
@@ -233,13 +234,9 @@ function Hero() {
           </div>
           <div className="mt-12 flex items-center gap-5 text-sm text-white/60">
             <span className="font-semibold italic">Available for</span>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-              <path d="M2 3l6.8-1 0 9.2-6.8 0 0-8.2zm7.5-1.1L21 0l0 11.2-11.5 0 0-10.1zm-7.5 10.4 6.8 0 0 9-6.8-1 0-8zm7.5 0 11.5 0 0 11.3-11.5-1.7 0-9.6z"/>
-            </svg>
-            <Apple size={20} />
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-              <path d="M12 0c-4.3 0-7.8 2.2-7.8 7.3 0 2.2 1 4.1 2.2 5.5-.3 1-.7 2.1-1.3 3-.9 1.4-2.8 2.3-2.8 4 0 .9.8 1.6 2 2.3 2 1.2 5.4 1.9 7.7 1.9 2.3 0 5.7-.7 7.7-1.9 1.2-.7 2-1.4 2-2.3 0-1.7-1.9-2.6-2.8-4-.6-.9-1-2-1.3-3 1.2-1.4 2.2-3.3 2.2-5.5C19.8 2.2 16.3 0 12 0zm0 1c3.8 0 6.8 2 6.8 6.3 0 3-1.6 5.3-3 7.1-1.2-1.3-2.2-2.4-3.8-2.4-1.6 0-2.6 1.1-3.8 2.4-1.4-1.8-3-4.1-3-7.1C5.2 3 8.2 1 12 1zm0 3c-1.3 0-2.3.9-2.3 2.5s1 2.5 2.3 2.5 2.3-.9 2.3-2.5-1-2.5-2.3-2.5zm0 1c.7 0 1.3.6 1.3 1.5s-.6 1.5-1.3 1.5-1.3-.6-1.3-1.5.6-1.5 1.3-1.5zM6.5 18c1.3.9 3.2 1.5 5.5 1.5s4.2-.6 5.5-1.5c.6.4 1 .8 1 1.2 0 1.4-4 2.8-6.5 2.8s-6.5-1.4-6.5-2.8c0-.4.4-.8 1-1.2z"/>
-            </svg>
+            <FaWindows aria-hidden="true" size={20} />
+            <FaApple aria-hidden="true" size={20} />
+            <FaLinux aria-hidden="true" size={20} />
           </div>
         </div>
         <div className="relative z-10 lg:translate-x-8">

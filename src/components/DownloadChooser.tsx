@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Apple, PackageOpen, TerminalSquare } from "lucide-react";
+import { PackageOpen } from "lucide-react";
+import { FaApple, FaLinux, FaWindows } from "react-icons/fa";
 import type { AppReleaseContent } from "@/lib/content";
 
 const platformLabels = {
@@ -19,19 +20,21 @@ function OsIcon({
   platform: AppReleaseContent["platform"];
   size?: number;
 }) {
+  const iconProps = {
+    "aria-hidden": true,
+    className,
+    size,
+  };
+
   if (platform === "windows") {
-    return (
-      <svg aria-hidden="true" className={className} fill="currentColor" height={size} viewBox="0 0 24 24" width={size}>
-        <path d="M3 4.2 10.7 3v8.2H3V4.2Zm8.9-1.4L21 1.5v9.7h-9.1V2.8ZM3 12.4h7.7v8.2L3 19.4v-7Zm8.9 0H21v9.8l-9.1-1.4v-8.4Z" />
-      </svg>
-    );
+    return <FaWindows {...iconProps} />;
   }
 
   if (platform === "macos") {
-    return <Apple aria-hidden="true" className={className} size={size} />;
+    return <FaApple {...iconProps} />;
   }
 
-  return <TerminalSquare aria-hidden="true" className={className} size={size} />;
+  return <FaLinux {...iconProps} />;
 }
 
 function detectPlatform(): AppReleaseContent["platform"] {

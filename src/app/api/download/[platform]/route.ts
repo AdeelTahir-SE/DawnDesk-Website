@@ -30,6 +30,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ platf
 
   const version = request.nextUrl.searchParams.get("version");
   const arch = request.nextUrl.searchParams.get("arch");
+  const label = request.nextUrl.searchParams.get("label");
   const supabase = createAdminSupabaseClient();
   let downloadUrl = platformFallbacks[platform];
 
@@ -45,6 +46,7 @@ export async function GET(request: NextRequest, props: { params: Promise<{ platf
 
     if (version) query = query.eq("version", version);
     if (arch) query = query.eq("arch", arch);
+    if (label) query = query.eq("label", label);
 
     const { data } = await query.maybeSingle();
     if (data?.url && isSafeDownloadUrl(data.url)) {

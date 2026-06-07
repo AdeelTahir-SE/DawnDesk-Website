@@ -53,7 +53,25 @@ export const appReleaseSchema = z.object({
   sortOrder: z.number().int(),
 });
 
-export const appReleasesSchema = z.array(appReleaseSchema).min(1, "Add at least one app release");
+export const appReleasesSchema = z.array(appReleaseSchema).min(1, "Add at least one app release").superRefine((releases, context) => {
+  const seen = new Map<string, number>();
+
+  releases.forEach((release, index) => {
+    const key = [release.platform, release.version, release.arch, release.label].map((value) => value.toLowerCase()).join("|");
+    const firstIndex = seen.get(key);
+
+    if (firstIndex === undefined) {
+      seen.set(key, index);
+      return;
+    }
+
+    context.addIssue({
+      code: "custom",
+      message: `Duplicate app release identity also appears at index ${firstIndex}`,
+      path: [index],
+    });
+  });
+});
 
 export const featureHistoryItemSchema = z.object({
   version: z.string().trim().min(1, "Version is required"),

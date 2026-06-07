@@ -442,7 +442,7 @@ async function saveReleasesContent(formData: FormData) {
 
   const { error } = await supabase
     .from("app_releases")
-    .upsert(rows, { onConflict: "platform,version,arch" });
+    .upsert(rows, { onConflict: "platform,version,arch,label" });
 
   if (error) {
     throw new Error(error.message);

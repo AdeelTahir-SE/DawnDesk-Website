@@ -48,6 +48,16 @@ function detectPlatform(): AppReleaseContent["platform"] {
   return "windows";
 }
 
+function getDownloadHref(release: AppReleaseContent) {
+  const params = new URLSearchParams({
+    version: release.version,
+    arch: release.arch,
+    label: release.label,
+  });
+
+  return `/api/download/${release.platform}?${params.toString()}`;
+}
+
 export function DownloadChooser({ releases }: { releases: AppReleaseContent[] }) {
   const availablePlatforms = useMemo(
     () => Array.from(new Set(releases.map((release) => release.platform))) as AppReleaseContent["platform"][],
@@ -95,7 +105,7 @@ export function DownloadChooser({ releases }: { releases: AppReleaseContent[] })
           </p>
           <div className="mt-7 flex flex-wrap gap-4">
             {selected && (
-              <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href={`/api/download/${selected.platform}?version=${encodeURIComponent(selected.version)}&arch=${encodeURIComponent(selected.arch)}`}>
+              <a className="btn-animated rounded-md bg-[#ffc400] px-7 py-3 text-sm font-extrabold text-black" href={getDownloadHref(selected)}>
                 Download {platformLabels[selected.platform].label}
               </a>
             )}
@@ -105,8 +115,8 @@ export function DownloadChooser({ releases }: { releases: AppReleaseContent[] })
             <div className="mt-8 grid gap-3">
               <p className="text-xs font-black uppercase tracking-[0.14em] text-black/45">Other versions</p>
               {platformReleases.map((release) => (
-                <a className="flex items-center justify-between rounded-md border border-black/10 px-4 py-3 text-sm font-bold hover:border-[#ffc400]" href={`/api/download/${release.platform}?version=${encodeURIComponent(release.version)}&arch=${encodeURIComponent(release.arch)}`} key={`${release.platform}-${release.version}-${release.arch}`}>
-                  <span>{release.version} {release.arch}</span>
+                <a className="flex items-center justify-between rounded-md border border-black/10 px-4 py-3 text-sm font-bold hover:border-[#ffc400]" href={getDownloadHref(release)} key={`${release.platform}-${release.version}-${release.arch}-${release.label}`}>
+                  <span>{release.label} - {release.version} {release.arch}</span>
                   <span className="text-black/45">{release.isRecommended ? "Recommended" : "Download"}</span>
                 </a>
               ))}

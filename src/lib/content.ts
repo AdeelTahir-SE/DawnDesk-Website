@@ -162,17 +162,50 @@ const emptyBlogPosts: BlogPostContent[] = [];
 const emptyDocumentationPages: DocumentationPageContent[] = [];
 const releaseFallback: AppReleaseContent[] = [
   {
-    platform: "windows",
-    version: "0.1.0",
-    label: "Windows installer",
-    arch: "x64",
-    url: process.env.NEXT_PUBLIC_DOWNLOAD_WINDOWS ?? "https://github.com/AdeelTahir-SE/DawnDesk/releases/download/v0.2.0/dawndesk_0.1.0_x64_en-US.msi",
-    isRecommended: true,
-    isActive: true,
-    publishedAt: "2026-06-01",
-    sortOrder: 10,
+    "platform": "windows",
+    "version": "1.1.0",
+    "label": "Windows MSI installer",
+    "arch": "x64",
+    "url": "https://github.com/AdeelTahir-SE/DawnDesk/releases/download/v1.1.0/dawndesk_1.1.0_x64_en-US.msi",
+    "isRecommended": true,
+    "isActive": true,
+    "publishedAt": "2026-06-07",
+    "sortOrder": 10
   },
-];
+  {
+    "platform": "linux",
+    "version": "1.1.0",
+    "label": "Linux AppImage",
+    "arch": "amd64",
+    "url": "https://github.com/AdeelTahir-SE/DawnDesk/releases/download/v1.1.0/dawndesk_1.1.0_amd64.AppImage",
+    "isRecommended": true,
+    "isActive": true,
+    "publishedAt": "2026-06-07",
+    "sortOrder": 20
+  },
+  {
+    "platform": "linux",
+    "version": "1.1.0",
+    "label": "Debian / Ubuntu package",
+    "arch": "amd64",
+    "url": "https://github.com/AdeelTahir-SE/DawnDesk/releases/download/v1.1.0/dawndesk_1.1.0_amd64.deb",
+    "isRecommended": false,
+    "isActive": true,
+    "publishedAt": "2026-06-07",
+    "sortOrder": 30
+  },
+  {
+    "platform": "linux",
+    "version": "1.1.0",
+    "label": "RPM package",
+    "arch": "x86_64",
+    "url": "https://github.com/AdeelTahir-SE/DawnDesk/releases/download/v1.1.0/dawndesk-1.1.0-1.x86_64.rpm",
+    "isRecommended": false,
+    "isActive": true,
+    "publishedAt": "2026-06-07",
+    "sortOrder": 40
+  }
+]
 
 async function readSiteContent(): Promise<SiteContent> {
   const supabase = createPublicSupabaseClient();

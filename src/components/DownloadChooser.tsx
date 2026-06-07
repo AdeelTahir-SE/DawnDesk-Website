@@ -117,7 +117,7 @@ export function DownloadChooser({ releases }: { releases: AppReleaseContent[] })
               {platformReleases.map((release) => (
                 <a className="flex items-center justify-between rounded-md border border-black/10 px-4 py-3 text-sm font-bold hover:border-[#ffc400]" href={getDownloadHref(release)} key={`${release.platform}-${release.version}-${release.arch}-${release.label}`}>
                   <span>{release.label} - {release.version} {release.arch}</span>
-                  <span className="text-black/45">{release.isRecommended ? "Recommended" : "Download"}</span>
+                  {/* <span className="text-black/45">{release.isRecommended ? "Recommended" : "Download"}</span> */}
                 </a>
               ))}
             </div>
